@@ -1,0 +1,11 @@
+{% extends "layout.html" %}
+{% block content %}
+<p><strong>Name: </strong>{{ item.name | safe }}</p>
+<p><strong>Location: </strong>{{ item.location | safe }}</p>
+<p><strong>Description: </strong>{{ item.description | safe }}</p>
+<form action="/begin" method="post">
+    <input type="submit" name="action" value="Skip" />
+    <input type="submit" name="action" value="Done" />
+    <input type="hidden" name="item_id" value="{{ item.id }}" />
+</form>
+{% endblock %}

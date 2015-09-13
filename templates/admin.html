@@ -1,0 +1,90 @@
+{% extends "layout.html" %}
+{% block content %}
+<h1>Admin</h1>
+
+<h2>Stats</h2>
+<p><strong>Votes: </strong>{{ votes }}</p>
+
+<h3>Items</h3>
+<table>
+    <tr>
+        <td>Id</td>
+        <td>Name</td>
+        <td>Location</td>
+        <td>Description</td>
+        <td>Mu</td>
+        <td>Sigma Squared</td>
+        <td>Votes</td>
+        <td>Delete</td>
+    </tr>
+    {% for item in items %}
+    <tr>
+        <td>{{ item.id | safe }}</td>
+        <td>{{ item.name | safe }}</td>
+        <td>{{ item.location | safe }}</td>
+        <td>{{ item.description | safe }}</td>
+        <td>{{ item.mu | safe }}</td>
+        <td>{{ item.sigma_sq | safe }}</td>
+        <td>{{ item_counts.get(item.id, 0) }}</td>
+        <td>
+            <form action="/admin/item" method="post">
+                <input type="submit" name="action" value="Delete" />
+                <input type="hidden" name="item_id" value="{{ item.id }}" />
+            </form>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+
+<h3>Annotators</h3>
+<table>
+    <tr>
+        <td>Name</td>
+        <td>Email</td>
+        <td>Description</td>
+        <td>Secret</td>
+        <td>Votes</td>
+        <td>Next (Id)</td>
+        <td>Previous (Id)</td>
+        <td>Alpha</td>
+        <td>Beta</td>
+        <td>Delete</td>
+    </tr>
+    {% for annotator in annotators %}
+    <tr>
+        <td>{{ annotator.name | safe }}</td>
+        <td>{{ annotator.email | safe }}</td>
+        <td>{{ annotator.description | safe }}</td>
+        <td>{{ annotator.secret | safe }}</td>
+        <td>{{ counts.get(annotator.id, 0) | safe }}</td>
+        <td>{{ annotator.next_id | safe }}</td>
+        <td>{{ annotator.prev_id | safe }}</td>
+        <td>{{ annotator.alpha | safe }}</td>
+        <td>{{ annotator.beta | safe }}</td>
+        <td>
+            <form action="/admin/annotator" method="post">
+                <input type="submit" name="action" value="Delete" />
+                <input type="hidden" name="annotator_id" value="{{ annotator.id }}" />
+            </form>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+
+<h2>Add</h2>
+
+<h3>Items</h3>
+<p>name, location, description (CSV format)</p>
+<textarea name="data" form="item_form"></textarea>
+<form action="/admin/item" method="post" id="item_form">
+    <input type="submit" name="action" value="Submit" />
+</form>
+
+<h3>Annotators</h3>
+<p>name, email, description (CSV format)</p>
+<textarea name="data" form="annotator_form"></textarea>
+<form action="/admin/annotator" method="post" id="annotator_form">
+    <input type="submit" name="action" value="Submit" />
+</form>
+
+{% endblock %}

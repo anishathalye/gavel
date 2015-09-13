@@ -1,0 +1,22 @@
+{% extends "layout.html" %}
+{% block content %}
+<h1>Previous</h1>
+<p><strong>Name: </strong>{{ prev.name | safe }}</p>
+<p><strong>Location: </strong>{{ prev.location | safe }}</p>
+<p><strong>Description: </strong>{{ prev.description | safe }}</p>
+
+<h1>Current</h1>
+<p><strong>Name: </strong>{{ next.name | safe }}</p>
+<p><strong>Location: </strong>{{ next.location | safe }}</p>
+<p><strong>Description: </strong>{{ next.description | safe }}</p>
+
+<h1>Vote</h1>
+<p>Which is better?
+<form action="/vote" method="post">
+    <input type="submit" name="action" value="Previous" />
+    <input type="submit" name="action" value="Current" />
+    <input type="submit" name="action" value="Skip" />
+    <input type="hidden" name="prev_id" value="{{ prev.id }}" />
+    <input type="hidden" name="next_id" value="{{ next.id }}" />
+</form>
+{% endblock %}
