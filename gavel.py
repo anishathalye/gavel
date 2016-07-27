@@ -37,7 +37,8 @@ class SerializableAlchemy(SQLAlchemy):
         return super(SerializableAlchemy, self).apply_driver_hacks(app, info, options)
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DB_URI', None) or 'postgresql://localhost/gavel'
+#Todo: Consider renaming DB_URI to DATABASE_URL for consistency across local and heroku platform.
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', None) or os.environ.get('DB_URI', None) or 'postgresql://localhost/gavel'
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'gavel-secret')
 ADMIN_PASSWORD = os.environ['ADMIN_PASSWORD']
 db = SerializableAlchemy(app)
