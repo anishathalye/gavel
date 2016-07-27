@@ -1,1 +1,1 @@
-web: python gavel.py
+web: python initialize.py && python gavel.py
