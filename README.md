@@ -39,7 +39,7 @@ work together!
 
 ## Deployment
 
-[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/anishathalye/gavel/tree/master)
 
 The web application is written in Python using Flask. It also uses NumPy and
 SciPy for math stuff. Doing a `pip install -r requirements.txt` should install
