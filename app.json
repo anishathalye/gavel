@@ -1,8 +1,7 @@
 {
   "name": "Gavel Judging System",
-  "description": "An awesome judging system for your hackathons",
-  "logo": "https://node-js-sample.herokuapp.com/node.png",
-  "keywords": ["python", "flask"],
+  "description": "An awesome judging system for hackathons",
+  "keywords": ["gavel","python", "flask"],
   "addons": ["heroku-postgresql:hobby-dev"],
   "env":{
     "ADMIN_PASSWORD":"admin12345",
