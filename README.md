@@ -5,6 +5,8 @@
 It was originally built for HackMIT and first used at HackMIT 2015. It's also
 been used by a number of other hackathons.
 
+[![Join the chat at https://gitter.im/anishathalye/gavel](https://badges.gitter.im/anishathalye/gavel.svg)](https://gitter.im/anishathalye/gavel?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 ## Design
 
 Gavel is based on the method of pairwise comparisons. Before you use Gavel,
