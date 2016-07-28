@@ -38,6 +38,18 @@ class Item(db.Model):
         self.description = description
         self.mu = crowd_bt.MU_PRIOR
         self.sigma_sq = crowd_bt.SIGMA_SQ_PRIOR
+    
+    @classmethod
+    def by_id(cls, id):
+        if id is None:
+            return None
+        try:
+            item = cls.query.get(id)
+        except NoResultFound:
+            item = None
+        return item
+
+
 
 class Annotator(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -61,6 +73,27 @@ class Annotator(db.Model):
         self.alpha = crowd_bt.ALPHA_PRIOR
         self.beta = crowd_bt.BETA_PRIOR
         self.secret = gen_secret(32)
+    
+    @classmethod
+    def by_secret(cls, secret):
+        try:
+            annotator = cls.query.filter(cls.secret == secret).one()
+        except NoResultFound:
+            annotator = None
+        return annotator
+    
+    @classmethod
+    def by_id(cls, id):
+        if id is None:
+            return None
+        try:
+            annotator = cls.query.with_for_update().get(id)
+        except NoResultFound:
+            annotator = None
+        return annotator
+
+
+
 
 class Decision(db.Model):
     id = db.Column(db.Integer, primary_key=True)

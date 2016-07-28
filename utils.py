@@ -1,5 +1,3 @@
-import os
-import base64
 from models import Item, Annotator, db, NoResultFound
 from functools import wraps
 import csv
@@ -26,31 +24,6 @@ def requires_auth(f):
         return f(*args, **kwargs)
     return decorated
 
-def get_annotator_by_secret(secret):
-    try:
-        annotator = Annotator.query.filter(Annotator.secret == secret).one()
-    except NoResultFound:
-        annotator = None
-    return annotator
-
-def get_annotator_by_id(id):
-    if id is None:
-        return None
-    try:
-        annotator = Annotator.query.with_for_update().get(id)
-    except NoResultFound:
-        annotator = None
-    return annotator
-
-def get_item_by_id(id):
-    if id is None:
-        return None
-    try:
-        item = Item.query.get(id)
-    except NoResultFound:
-        item = None
-    return item
-
 def maybe_init_annotator(annotator):
     if annotator.next is None:
         # XXX this is inefficient, better to do exclude in a query
@@ -61,7 +34,7 @@ def maybe_init_annotator(annotator):
             db.session.commit()
 
 def get_current_annotator():
-    return get_annotator_by_id(session.get(ANNOTATOR_ID, None))
+    return Annotator.by_id(session.get(ANNOTATOR_ID, None))
 
 def choose_next(annotator):
     ignored_ids = map(lambda i: i.id, annotator.ignore)

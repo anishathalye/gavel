@@ -13,10 +13,10 @@ from flask import (
     session,
     url_for,
 )
-import models
 from models import IntegrityError, Decision, Annotator, Item, db, ignore_table
 import utils
 from sqlalchemy.sql.expression import desc
+from settings import ANNOTATOR_ID
 
 
 app = Flask(__name__)
@@ -81,7 +81,7 @@ def logout():
 
 @app.route('/login/<secret>')
 def login(secret):
-    annotator = utils.get_annotator_by_secret(secret)
+    annotator = Annotator.by_secret(secret)
     if annotator is None:
         session.pop(ANNOTATOR_ID, None)
         session.modified = True
