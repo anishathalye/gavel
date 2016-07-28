@@ -16,12 +16,12 @@ from flask import (
 from models import IntegrityError, Decision, Annotator, Item, db, ignore_table
 import utils
 from sqlalchemy.sql.expression import desc
-from settings import ANNOTATOR_ID
+from settings import ANNOTATOR_ID, DB_URI, SECRET_KEY
 
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DB_URI', None) or 'postgresql://localhost/gavel'
-app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'gavel-secret')
+app.config['SQLALCHEMY_DATABASE_URI'] = DB_URI
+app.config['SECRET_KEY'] = SECRET_KEY
 db.init_app(app)
 
 
