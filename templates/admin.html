@@ -48,6 +48,7 @@
         <td>Previous (Id)</td>
         <td>Alpha</td>
         <td>Beta</td>
+        <td>Send Link</td>
         <td>Delete</td>
     </tr>
     {% for annotator in annotators %}
@@ -61,6 +62,12 @@
         <td>{{ annotator.prev_id | safe }}</td>
         <td>{{ annotator.alpha | safe }}</td>
         <td>{{ annotator.beta | safe }}</td>
+        <td>
+            <form action="/admin/annotator" method="post">
+                <input type="submit" name="action" value="Email" />
+                <input type="hidden" name="annotator_id" value="{{ annotator.id }}" />
+            </form>
+        </td>
         <td>
             <form action="/admin/annotator" method="post">
                 <input type="submit" name="action" value="Delete" />

@@ -63,6 +63,11 @@ Before starting the app, set the following environment variables:
 * `SQLALCHEMY_DATABASE_URI` - you only need to set this if you're doing
   something nonstandard
 
+The following environmental variables should be set prior to sending emails:
+
+* `MAILGUN_DOMAIN` - Already-added domain name in Mailgun.
+* `MAILGUN_API_KEY` - API key corresponding to the domain name.
+
 ## Use
 
 Using the admin interface on `/admin`, input data for all the projects and

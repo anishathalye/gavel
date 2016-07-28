@@ -15,7 +15,7 @@ from flask import (
     url_for,
 )
 from flask.ext.sqlalchemy import SQLAlchemy
-from sqlalchemy.orm.exc import NoResultFound
+from sqlalchemy.orm.exc import NoResultFound, MultipleResultsFound
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.sql.expression import func, desc
 from datetime import datetime
@@ -28,6 +28,9 @@ import crowd_bt
 from functools import wraps
 import csv
 import io
+from urlparse import urljoin
+
+from mail import send_judge_email
 
 class SerializableAlchemy(SQLAlchemy):
     def apply_driver_hacks(self, app, info, options):
@@ -343,6 +346,15 @@ def annotator():
             db.session.commit()
         except IntegrityError as e:
             return render_template('error.html', message=str(e))
+    elif action == 'Email':
+        id = request.form['annotator_id']
+        try:
+            annotator = Annotator.query.filter_by(id=id).one()
+        except (MultipleResultsFound, NoResultFound) as e:
+            return render_template('error.html', message='Invalid annotator.')
+        magic_link = urljoin(request.url_root, '/login/{secret}'.format(secret=annotator.secret))
+        send_judge_email(annotator.name, annotator.email, magic_link)
+
     return redirect(url_for('admin'))
 
 @app.route('/api/items.csv')
@@ -364,4 +376,4 @@ def annotator_dump():
 if __name__ == '__main__':
     if os.environ.get('DEBUG', False):
         app.debug = True
-    app.run()
+    app.run(debug=True)
