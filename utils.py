@@ -27,8 +27,11 @@ def requires_auth(f):
 def maybe_init_annotator(annotator):
     if annotator.next is None:
         # XXX this is inefficient, better to do exclude in a query
-        ignored_ids = map(lambda i: i.id, annotator.ignore)
-        items = filter(lambda i: i.id not in ignored_ids, Item.query.all())
+        # ignored_ids = map(lambda i: i.id, annotator.ignore)
+        # items = filter(lambda i: i.id not in ignored_ids, Item.query.all())
+        ignored_ids = {i.id for i in annotator.ignore}
+        items = [i for i in Item.query.all() if i.id not in ignored_ids]
+
         if items:
             annotator.next = choice(items)
             db.session.commit()
@@ -37,8 +40,11 @@ def get_current_annotator():
     return Annotator.by_id(session.get(ANNOTATOR_ID, None))
 
 def choose_next(annotator):
-    ignored_ids = map(lambda i: i.id, annotator.ignore)
-    items = filter(lambda i: i.id not in ignored_ids, Item.query.all())
+    # ignored_ids = map(lambda i: i.id, annotator.ignore)
+    # items = filter(lambda i: i.id not in ignored_ids, Item.query.all())
+    ignored_ids = {i.id for i in annotator.ignore}
+    items = [i for i in Item.query.all() if i.id not in ignored_ids]
+
     shuffle(items)
     if items:
         if random() < crowd_bt.EPSILON:
@@ -82,8 +88,8 @@ def data_to_csv_string(data):
     return output.getvalue()
 
 def data_from_csv_string(string):
-    input = io.BytesIO(string)
-    reader = csv.reader(input)
+    data_input = io.BytesIO(string)
+    reader = csv.reader(data_input)
     return list(reader)
 
 

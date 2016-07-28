@@ -40,11 +40,11 @@ class Item(db.Model):
         self.sigma_sq = crowd_bt.SIGMA_SQ_PRIOR
     
     @classmethod
-    def by_id(cls, id):
+    def by_id(cls, uid):
         if id is None:
             return None
         try:
-            item = cls.query.get(id)
+            item = cls.query.get(uid)
         except NoResultFound:
             item = None
         return item
@@ -83,11 +83,11 @@ class Annotator(db.Model):
         return annotator
     
     @classmethod
-    def by_id(cls, id):
+    def by_id(cls, uid):
         if id is None:
             return None
         try:
-            annotator = cls.query.with_for_update().get(id)
+            annotator = cls.query.with_for_update().get(uid)
         except NoResultFound:
             annotator = None
         return annotator

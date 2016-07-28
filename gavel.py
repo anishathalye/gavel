@@ -115,14 +115,14 @@ def item():
         csv = request.form['data']
         data = utils.data_from_csv_string(csv.encode('utf8'))
         for row in data:
-            item = Item(*row)
-            db.session.add(item)
+            _item = Item(*row)
+            db.session.add(_item)
         db.session.commit()
     elif action == 'Delete':
-        id = request.form['item_id']
+        item_id = request.form['item_id']
         try:
-            db.session.execute(ignore_table.delete(ignore_table.c.item_id == id))
-            Item.query.filter_by(id=id).delete()
+            db.session.execute(ignore_table.delete(ignore_table.c.item_id == item_id))
+            Item.query.filter_by(id=item_id).delete()
             db.session.commit()
         except IntegrityError as e:
             return render_template('error.html', message=str(e))
@@ -140,9 +140,9 @@ def create_annotator():
             db.session.add(annotator)
         db.session.commit()
     elif action == 'Delete':
-        id = request.form['annotator_id']
+        annotator_id = request.form['annotator_id']
         try:
-            db.session.execute(ignore_table.delete(ignore_table.c.annotator_id == id))
+            db.session.execute(ignore_table.delete(ignore_table.c.annotator_id == annotator_id))
             Annotator.query.filter_by(id=id).delete()
             db.session.commit()
         except IntegrityError as e:
