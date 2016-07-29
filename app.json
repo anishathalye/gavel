@@ -1,0 +1,16 @@
+{
+    "addons": [
+        "heroku-postgresql:hobby-dev"
+    ],
+    "description": "An awesome judging system for hackathons",
+    "env": {
+        "ADMIN_PASSWORD": "change-this-before-deploying",
+        "SECRET_KEY": "randomly-generate-this-before-deploying"
+    },
+    "keywords": [
+        "gavel",
+        "python",
+        "flask"
+    ],
+    "name": "Gavel Judging System"
+}
