@@ -24,7 +24,6 @@ app.config['SQLALCHEMY_DATABASE_URI'] = DB_URI
 app.config['SECRET_KEY'] = SECRET_KEY
 db.init_app(app)
 
-
 @app.route('/')
 def index():
     annotator = utils.get_current_annotator()
@@ -168,4 +167,5 @@ def annotator_dump():
 if __name__ == '__main__':
     if os.environ.get('DEBUG', False):
         app.debug = True
-    app.run()
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', port=port)
