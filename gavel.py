@@ -13,9 +13,9 @@ from flask import (
     session,
     url_for,
 )
-from models import IntegrityError, Decision, Annotator, Item, db, ignore_table
+from models import (IntegrityError, Decision, Annotator, Item, db,
+        ignore_table, desc)
 import utils
-from sqlalchemy.sql.expression import desc
 from settings import ANNOTATOR_ID, DB_URI, SECRET_KEY
 
 
@@ -129,7 +129,7 @@ def item():
 
 @app.route('/admin/annotator', methods=['POST'])
 @utils.requires_auth
-def create_annotator():
+def annotator_dash():
     action = request.form['action']
     if action == 'Submit':
         csv = request.form['data']
