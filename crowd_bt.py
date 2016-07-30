@@ -60,11 +60,11 @@ def expected_information_gain(alpha, beta, mu_a, sigma_sq_a, mu_b, sigma_sq_b):
     return \
             prob_a_ranked_above * (
                     divergence_gaussian(mu_a_1, sigma_sq_a_1, mu_a, sigma_sq_a) +
-                    divergence_gaussian(mu_b_1, sigma_sq_b_1, mu_b, sigma_sq_b) + 
+                    divergence_gaussian(mu_b_1, sigma_sq_b_1, mu_b, sigma_sq_b) +
                     GAMMA * divergence_beta(alpha_1, beta_1, alpha, beta)) + \
             (1 - prob_a_ranked_above) * (
                     divergence_gaussian(mu_a_2, sigma_sq_a_2, mu_a, sigma_sq_a) +
-                    divergence_gaussian(mu_b_2, sigma_sq_b_2, mu_b, sigma_sq_b) + 
+                    divergence_gaussian(mu_b_2, sigma_sq_b_2, mu_b, sigma_sq_b) +
                     GAMMA * divergence_beta(alpha_2, beta_2, alpha, beta))
 
 # returns (updated mu of winner, updated mu of loser)
