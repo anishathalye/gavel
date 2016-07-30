@@ -6,7 +6,8 @@ import crowd_bt
 
 from numpy.random import choice, random, shuffle
 from flask import Response, request, session
-from settings import ADMIN_PASSWORD, ANNOTATOR_ID
+from settings import ADMIN_PASSWORD
+from constants import ANNOTATOR_ID
 
 def check_auth(username, password):
     return username == 'admin' and password == ADMIN_PASSWORD

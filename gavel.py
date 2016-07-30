@@ -23,7 +23,8 @@ from models import (
     ignore_table,
 )
 import utils
-from settings import ANNOTATOR_ID, DB_URI, SECRET_KEY, PORT
+from settings import DB_URI, SECRET_KEY, PORT
+from constants import ANNOTATOR_ID
 
 
 app = Flask(__name__)

@@ -58,12 +58,11 @@ app with `gunicorn gavel:app`.
 
 ## Configuration
 
-Before starting the app, set the following environment variables:
+Before starting the app, copy `config.sample.yaml` to `config.yaml` and set all
+the required settings (the ones that don't have default values).
 
-* `ADMIN_PASSWORD`
-* `SECRET_KEY` - set this to something random
-* `SQLALCHEMY_DATABASE_URI` - you only need to set this if you're doing
-  something nonstandard
+Most settings can either be set in `config.yaml` or set as environment
+variables. There's more detailed documentation in `config.sample.yaml`.
 
 ## Use
 

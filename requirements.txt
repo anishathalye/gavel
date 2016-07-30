@@ -6,6 +6,7 @@ Jinja2==2.8
 MarkupSafe==0.23
 numpy==1.9.2
 psycopg2==2.6.1
+PyYAML==3.11
 scipy==0.16.0
 SQLAlchemy==1.0.8
 Werkzeug==0.10.4

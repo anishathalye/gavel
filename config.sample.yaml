@@ -1,0 +1,14 @@
+# can also be specified as the 'ADMIN_PASSWORD' environment variable
+admin_password: null
+
+# can also be specified as the 'DATABASE_URL' or 'DB_URI' environment variable
+# defaults to 'postgresql://localhost/gavel'
+db_uri: null
+
+# can also be specified as the 'SECRET_KEY' environment variable
+# this should be some reasonably long random string
+secret_key: null
+
+# can also be specified as the 'PORT' environment variable
+# defaults to '5000'
+port: null

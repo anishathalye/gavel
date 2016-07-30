@@ -1,8 +1,39 @@
 import os
+import yaml
 
-ADMIN_PASSWORD = os.environ['ADMIN_PASSWORD']
-ANNOTATOR_ID = 'annotator_id'
-DB_URI = os.environ.get('DATABASE_URL',
-        os.environ.get('DB_URI', 'postgresql://localhost/gavel'))
-SECRET_KEY = os.environ.get('SECRET_KEY', 'gavel-secret')
-PORT = int(os.environ.get('PORT', 5000))
+BASE_DIR = os.path.dirname(__file__)
+CONFIG_FILE = os.path.join(BASE_DIR, 'config.yaml')
+
+class Config(object):
+
+    def __init__(self, config_file):
+        with open(config_file) as f:
+            self._config = yaml.safe_load(f)
+
+    # checks for an environment variable first, then an entry in the config file,
+    # and then falls back to default
+    def get(self, name, env_names=None, default=None):
+        setting = None
+        if env_names is not None:
+            if not isinstance(env_names, list):
+                env_names = [env_names]
+            for env_name in env_names:
+                setting = os.environ.get(env_name, None)
+                if setting is not None:
+                    break
+        if setting is None:
+            setting = self._config.get(name, None)
+        if setting is None:
+            if default is not None:
+                return default
+            else:
+                raise LookupError('Cannot find value for setting %s' % name)
+        return setting
+
+config = Config(CONFIG_FILE)
+
+# note: this should be kept in sync with 'config.sample.yaml'
+ADMIN_PASSWORD = config.get('admin_password', 'ADMIN_PASSWORD')
+DB_URI = config.get('db_uri', ['DATABASE_URL', 'DB_URI'], default='postgresql://localhost/gavel')
+SECRET_KEY = config.get('secret_key', 'SECRET_KEY')
+PORT = int(config.get('port', 'PORT', default=5000))
