@@ -7,8 +7,11 @@ CONFIG_FILE = os.path.join(BASE_DIR, 'config.yaml')
 class Config(object):
 
     def __init__(self, config_file):
-        with open(config_file) as f:
-            self._config = yaml.safe_load(f)
+        if not os.environ.get('IGNORE_CONFIG_FILE', False):
+            with open(config_file) as f:
+                self._config = yaml.safe_load(f)
+        else:
+            self._config = {}
 
     # checks for an environment variable first, then an entry in the config file,
     # and then falls back to default

@@ -63,6 +63,9 @@ the required settings (the ones that don't have default values).
 Most settings can either be set in `config.yaml` or set as environment
 variables. There's more detailed documentation in `config.sample.yaml`.
 
+If you don't want to use the config file and use only environment variables,
+set the environment variable `IGNORE_CONFIG_FILE=true`.
+
 ## Use
 
 Using the admin interface on `/admin`, input data for all the projects and
