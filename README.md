@@ -32,8 +32,7 @@ you:
 If you have any questions, feel free to [email me][email].
 
 If you're able to contribute to making Gavel better, that would be **awesome**!
-We'd really appreciate pull requests, and we'll include your name in our list
-of [contributors][contributors] if you contribute any code to Gavel.
+We'd really appreciate any kind of input, especially pull requests.
 
 If you're interested in working closely with the HackMIT team to make this
 software better, email us at team@hackmit.org and we can talk about how we can
@@ -87,8 +86,6 @@ If anyone has questions, feel free to email Anish (me@anishathalye.com).
 
 Do you have a feature request, bug report, or patch? Great! See
 [CONTRIBUTING.md][contributing] for information on what you can do about that.
-We'll include your name in our list of [contributors][contributors] if you
-contribute any code to Gavel.
 
 ## License
 
@@ -101,7 +98,6 @@ license, please [contact me][email].
 [blog-1]: http://www.anishathalye.com/2015/03/07/designing-a-better-judging-system/
 [blog-2]: http://www.anishathalye.com/2015/11/09/implementing-a-scalable-judging-system/
 [issues]: https://github.com/anishathalye/gavel/issues
-[contributors]: CONTRIBUTORS.md
 [contributing]: CONTRIBUTING.md
 [license]: LICENSE.txt
 [email]: mailto:me@anishathalye.com
