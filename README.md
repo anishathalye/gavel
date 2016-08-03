@@ -78,6 +78,11 @@ issue](https://github.com/anishathalye/gavel/issues/1) for details. After the
 judges navigate to the secret link, they'll be prompted to go through projects
 and judge them.
 
+## Development
+
+Interested in hacking on Gavel? Awesome. See [DEVELOPMENT.md][development] for
+a dev setup guide.
+
 ## Notes
 
 If you do end up using this for your competition or hackathon, I would love to
@@ -103,5 +108,6 @@ license, please [contact me][email].
 [issues]: https://github.com/anishathalye/gavel/issues
 [contributing]: CONTRIBUTING.md
 [license]: LICENSE.txt
+[development]: DEVELOPMENT.md
 [email]: mailto:me@anishathalye.com
 [gunicorn]: http://gunicorn.org/
