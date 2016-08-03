@@ -19,7 +19,7 @@ Vagrant.configure(2) do |config|
 
     apt-get install -y \
       postgresql-9.4 postgresql-server-dev-9.4 \
-      python-dev python-pip libblas-dev liblapack-dev gfortran
+      python-dev python-pip
 
     pip install --upgrade pip
     sudo pip install virtualenv
