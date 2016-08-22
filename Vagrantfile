@@ -22,7 +22,7 @@ Vagrant.configure(2) do |config|
       python-dev python-pip
 
     pip install --upgrade pip
-    sudo pip install virtualenv
+    pip install virtualenv
   EOS
 
   # database setup
