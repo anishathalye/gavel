@@ -79,12 +79,12 @@ def perform_vote(annotator, next_won):
     loser.sigma_sq = u_loser_sigma_sq
 
 def data_to_csv_string(data):
-    output = io.BytesIO()
+    output = io.StringIO()
     writer = csv.writer(output)
     writer.writerows(data)
     return output.getvalue()
 
 def data_from_csv_string(string):
-    data_input = io.BytesIO(string)
+    data_input = io.StringIO(string)
     reader = csv.reader(data_input)
     return list(reader)

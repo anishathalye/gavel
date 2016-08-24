@@ -17,7 +17,7 @@ class SerializableAlchemy(SQLAlchemy):
 db = SerializableAlchemy()
 
 def gen_secret(length):
-    return base64.b32encode(os.urandom(length))[:length].lower()
+    return base64.b32encode(os.urandom(length))[:length].decode('utf8').lower()
 
 ignore_table = db.Table('ignore',
     db.Column('annotator_id', db.Integer, db.ForeignKey('annotator.id')),

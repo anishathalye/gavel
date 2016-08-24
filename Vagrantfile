@@ -19,10 +19,10 @@ Vagrant.configure(2) do |config|
 
     apt-get install -y \
       postgresql-9.4 postgresql-server-dev-9.4 \
-      python-dev python-pip
+      python3-dev python3-pip
 
-    pip install --upgrade pip
-    pip install virtualenv
+    pip3 install --upgrade pip
+    pip3 install virtualenv
   EOS
 
   # database setup

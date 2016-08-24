@@ -76,6 +76,7 @@ automatically restart (because of the debug flag).
 This is not the recommended way to do things, so this section isn't super
 detailed.
 
+* Be using Python 3
 * Install Postgres
 * Do development inside a [virtualenv][virtualenv]
 * `pip install -r requirements.txt`

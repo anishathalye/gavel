@@ -122,7 +122,7 @@ def item():
     action = request.form['action']
     if action == 'Submit':
         csv = request.form['data']
-        data = utils.data_from_csv_string(csv.encode('utf8'))
+        data = utils.data_from_csv_string(csv)
         for row in data:
             _item = Item(*row)
             db.session.add(_item)
@@ -143,7 +143,7 @@ def annotator_dash():
     action = request.form['action']
     if action == 'Submit':
         csv = request.form['data']
-        data = utils.data_from_csv_string(csv.encode('utf8'))
+        data = utils.data_from_csv_string(csv)
         for row in data:
             annotator = Annotator(*row)
             db.session.add(annotator)

@@ -42,9 +42,9 @@ work together!
 
 [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/anishathalye/gavel/tree/master)
 
-The web application is written in Python using Flask. It also uses NumPy and
-SciPy for math stuff. Doing a `pip install -r requirements.txt` should install
-all the dependencies.
+The web application is written in **Python 3** using Flask. It also uses NumPy
+and SciPy for math stuff. Doing a `pip install -r requirements.txt` should
+install all the dependencies.
 
 The application uses Postgres for the database, so you need to have that on
 your server. You need to create a database, which you can do with `createdb
