@@ -97,6 +97,11 @@ detailed.
     python initialize.py
     ```
 
+* This project uses [EditorConfig][editorconfig].
+  [Download][editorconfig-download] a plugin for your editor!
+
 [gitter]: https://gitter.im/anishathalye/gavel
 [vagrant]: https://www.vagrantup.com/
 [virtualenv]: https://virtualenv.pypa.io/en/stable/
+[editorconfig]: http://editorconfig.org/
+[editorconfig-download]: http://editorconfig.org/#download
