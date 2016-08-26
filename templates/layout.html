@@ -10,7 +10,7 @@
         <!-- Enable responsiveness on mobile devices -->
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
 
-        <title>Judging</title>
+        <title>{% block title %}{% endblock %}</title>
         {% block head %}
         {% endblock %}
     </head>
@@ -19,5 +19,10 @@
             {% block content %}
             {% endblock %}
         </div>
+        {# jQuery #}
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        {% block footer %}
+        {% endblock %}
     </body>
 </html>

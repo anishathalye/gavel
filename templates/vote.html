@@ -1,22 +1,74 @@
 {% extends "layout.html" %}
+{% block title %}Judging{% endblock %}
+
 {% block content %}
-<h1>Previous</h1>
-<p><strong>Name: </strong>{{ prev.name | safe }}</p>
-<p><strong>Location: </strong>{{ prev.location | safe }}</p>
-<p><strong>Description: </strong>{{ prev.description | safe }}</p>
+<div class="header orange">
+    <p class="note">Previous Project</p>
+    <h1 class="title" style="margin-top:0px">{{ prev.name | safe }}</h1>
+</div>
 
-<h1>Current</h1>
-<p><strong>Name: </strong>{{ next.name | safe }}</p>
-<p><strong>Location: </strong>{{ next.location | safe }}</p>
-<p><strong>Description: </strong>{{ next.description | safe }}</p>
+<div class="main">
+    <p>
+        <span class="glyphicon glyphicon-map-marker"></span>
+        {{ prev.location | safe }}
+    </p>
+    <div class="more">
+        <span class="glyphicon glyphicon-triangle-right"></span>
+        {{ prev.description | safe }}
+    </div>
+</div>
 
-<h1>Vote</h1>
-<p>Which is better?
+<div class="header blue">
+    <p class="note">Current Project</p>
+    <h1 class="title" style="margin-top:0px">{{ next.name | safe }}</h1>
+</div>
+
+<div class="main">
+    <p>
+        <span class="glyphicon glyphicon-map-marker"></span>
+        {{ next.location | safe }}
+    </p>
+    <div class="more">
+        <span class="glyphicon glyphicon-triangle-right"></span>
+        {{ next.description | safe }}
+    </div>
+
+    <p class="text-center" style="margin-bottom:0px;">Which is better?</p>
+</div>
+
 <form action="/vote" method="post">
-    <input type="submit" name="action" value="Previous" />
-    <input type="submit" name="action" value="Current" />
-    <input type="submit" name="action" value="Skip" />
+    <input class="orange compare" type="submit" name="action" value="Previous" />
+    <input class="blue compare" type="submit" name="action" value="Current" />
+    <input style="width:100%;" class="warning" type="submit" name="action" value="Skip" />
     <input type="hidden" name="prev_id" value="{{ prev.id }}" />
     <input type="hidden" name="next_id" value="{{ next.id }}" />
 </form>
 {% endblock %}
+
+{% block footer %}
+<script>
+    /* http://viralpatel.net/blogs/dynamically-shortened-text-show-more-link-jquery/ */
+    $(document).ready(function() {
+        var showChar = 200;
+        var ellipses = "...";
+        $('.more').each(function() {
+            var content = $(this).html();
+            if(content.length > showChar) {
+                var c = content.substr(0, showChar);
+                var h = content.substr(showChar, content.length - showChar);
+                var html = c + '<span class="ellipses">' + ellipses + '&nbsp;</span><span class="morecontent" style="display:none;">' + h + '</span>';
+                $(this).html(html);
+            }
+        });
+
+        $(".more").click(function(){
+            $(this).children('.ellipses').toggle();
+            $(this).children('.morecontent').toggle();
+            $(this).children('.glyphicon').toggleClass('glyphicon-triangle-right').toggleClass('glyphicon-triangle-bottom');
+            return false;
+        });
+    });
+</script>
+{% endblock %}
+
+
