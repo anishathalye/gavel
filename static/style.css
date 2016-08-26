@@ -3,28 +3,142 @@ html {
 }
 
 #content {
+    width: 100%;
+    background-color: #fffefa;
+}
+
+h1 {
+    text-align: center;
+    color: #fffefa;
+    letter-spacing: 8px;
+    line-height: 1.2em;
+    font-size: 3em;
+    font-size: 9vw;
+}
+
+.title {
+    text-transform: uppercase;
+    font-weight: 700;
+    font-family: 'Montserrat', sans-serif;
+    letter-spacing: 8px;
+}
+
+.header {
+    background-color: #c9d41b;
+    width: 100%;
+    padding: 10px;
+}
+
+.main {
     padding: 1.5rem;
+    color: #0b3b4b;
+}
+
+img {
+    display: block;
+    width: 60%;
+    height: auto;
+    margin: auto;
+}
+
+p {
+    color: #0b3b4b;
+    font-family: 'Lato', sans-serif;
+    margin-bottom: 15px;
+} .note {
+    margin-bottom: 0px;
+    opacity: .6;
+}
+
+thead {
+    font-weight: bold;
+}
+
+.form-inline input {
     width: 100%;
 }
 
-table, tr, td {
-    border: 0.1rem solid black;
-}
-
-table {
-    border-collapse: collapse;
-}
-
-td {
-    padding: 1.5rem;
-}
-
-textarea {
-    width: 100%;
-}
-
-input[type="submit"] {
-    width: 100%;
+.form-control {
+    background-color: #fffefa;
     height: 5rem;
-    margin: 0.5rem 0;
+    border: 0px;
+    border-radius: 0px;
+    font-size: 14px;
+    margin-bottom: 1vh;
+    font-family: "Courier New",Courier,monospace;
+    padding: 5px;
+} .form-control:focus {
+    -webkit-box-shadow: 0px 0px 5px 2px #0b3b4b;
+    -moz-box-shadow: 0px 0px 5px 2px #0b3b4b;
+    box-shadow: 0px 0px 5px 2px #0b3b4b;
 }
+
+input[type="submit"], button[type="submit"] {
+    height: 5rem;
+    border: 0px;
+    outline: none;
+    font-size: 20px;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    text-transform: uppercase;
+    text-align: center;
+    letter-spacing: 5px;
+} button[value="Delete"] {
+    background-color: transparent;
+    color: #fc5454;
+}
+
+form .compare {
+    width: 50%;
+    float: left;
+}
+
+.success {
+    background-color: #c9d41b;
+    color: #fffefa;
+}
+
+.warning {
+    background-color: #ffe86b;
+    color: #0b3b4b;
+}
+
+.danger {
+    background-color: #fc5454;
+    color: #fffefa;
+}
+
+.orange {
+    background-color: #ffbc29;
+    color: #fffefa;
+}
+
+.blue {
+    background-color: #4ecdc4;
+    color: #fffefa;
+}
+
+.dark {
+    background-color: #0b3b4b;
+    color: #fffefa;
+}
+
+@media screen and (min-width: 768px) {
+    img {
+        display: block;
+        max-width: 40%;
+        height: auto;
+        margin: auto;
+    } .form-inline .form-control {
+        width: 70%;
+    }
+
+
+
+}
+
+
+
+
+
+

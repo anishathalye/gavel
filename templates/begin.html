@@ -1,11 +1,55 @@
 {% extends "layout.html" %}
+{% block title %}Begin Judging{% endblock %}
+
 {% block content %}
-<p><strong>Name: </strong>{{ item.name | safe }}</p>
-<p><strong>Location: </strong>{{ item.location | safe }}</p>
-<p><strong>Description: </strong>{{ item.description | safe }}</p>
+<div class="header orange">
+    <p class="note">First Project</p>
+    <h1 class="title" style="margin-top:0px">{{ item.name | safe }}</h1>
+</div>
+
+<div class="main">
+    <p>
+        <span class="glyphicon glyphicon-map-marker"></span>
+        {{ item.location | safe }}
+    </p>
+    <div class="more">
+        <span class="glyphicon glyphicon-triangle-right"></span>
+        {{ item.description | safe }}
+    </div>
+</div>
+
 <form action="/begin" method="post">
-    <input type="submit" name="action" value="Skip" />
-    <input type="submit" name="action" value="Done" />
+    <input style="width:100%;" class="warning" type="submit" name="action" value="Skip" />
+    <input style="width:100%;" class="success" type="submit" name="action" value="Done" />
     <input type="hidden" name="item_id" value="{{ item.id }}" />
 </form>
+
 {% endblock %}
+
+{% block footer %}
+<script>
+    /* http://viralpatel.net/blogs/dynamically-shortened-text-show-more-link-jquery/ */
+    $(document).ready(function() {
+        var showChar = 200;
+        var ellipses = "...";
+        $('.more').each(function() {
+            var content = $(this).html();
+            if(content.length > showChar) {
+                var c = content.substr(0, showChar);
+                var h = content.substr(showChar, content.length - showChar);
+                var html = c + '<span class="ellipses">' + ellipses + '&nbsp;</span><span class="morecontent" style="display:none;">' + h + '</span>';
+                $(this).html(html);
+            }
+        });
+
+        $(".more").click(function(){
+            $(this).children('.ellipses').toggle();
+            $(this).children('.morecontent').toggle();
+            $(this).children('.glyphicon').toggleClass('glyphicon-triangle-right').toggleClass('glyphicon-triangle-bottom');
+            return false;
+        });
+    });
+</script>
+{% endblock %}
+
+

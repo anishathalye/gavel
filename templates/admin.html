@@ -1,90 +1,151 @@
 {% extends "layout.html" %}
+{% block title %}Admin - Judging{% endblock %}
 {% block content %}
-<h1>Admin</h1>
+<div class="header dark">
+    <h1 class="title">Admin</h1>
+</div>
 
-<h2>Stats</h2>
-<p><strong>Votes: </strong>{{ votes }}</p>
+<div class="main">
 
-<h3>Items</h3>
-<table>
-    <tr>
-        <td>Id</td>
-        <td>Name</td>
-        <td>Location</td>
-        <td>Description</td>
-        <td>Mu</td>
-        <td>Sigma Squared</td>
-        <td>Votes</td>
-        <td>Delete</td>
-    </tr>
-    {% for item in items %}
-    <tr>
-        <td>{{ item.id | safe }}</td>
-        <td>{{ item.name | safe }}</td>
-        <td>{{ item.location | safe }}</td>
-        <td>{{ item.description | safe }}</td>
-        <td>{{ item.mu | safe }}</td>
-        <td>{{ item.sigma_sq | safe }}</td>
-        <td>{{ item_counts.get(item.id, 0) }}</td>
-        <td>
-            <form action="/admin/item" method="post">
-                <input type="submit" name="action" value="Delete" />
-                <input type="hidden" name="item_id" value="{{ item.id }}" />
-            </form>
-        </td>
-    </tr>
-    {% endfor %}
-</table>
+    <h2><strong>{{ votes }}</strong> Vote(s) total so far.</h2>
 
-<h3>Annotators</h3>
-<table>
-    <tr>
-        <td>Name</td>
-        <td>Email</td>
-        <td>Description</td>
-        <td>Secret</td>
-        <td>Votes</td>
-        <td>Next (Id)</td>
-        <td>Previous (Id)</td>
-        <td>Alpha</td>
-        <td>Beta</td>
-        <td>Delete</td>
-    </tr>
-    {% for annotator in annotators %}
-    <tr>
-        <td>{{ annotator.name | safe }}</td>
-        <td>{{ annotator.email | safe }}</td>
-        <td>{{ annotator.description | safe }}</td>
-        <td>{{ annotator.secret | safe }}</td>
-        <td>{{ counts.get(annotator.id, 0) | safe }}</td>
-        <td>{{ annotator.next_id | safe }}</td>
-        <td>{{ annotator.prev_id | safe }}</td>
-        <td>{{ annotator.alpha | safe }}</td>
-        <td>{{ annotator.beta | safe }}</td>
-        <td>
-            <form action="/admin/annotator" method="post">
-                <input type="submit" name="action" value="Delete" />
-                <input type="hidden" name="annotator_id" value="{{ annotator.id }}" />
-            </form>
-        </td>
-    </tr>
-    {% endfor %}
-</table>
+    <h2 class="title">Projects</h2>
+    <div style="overflow-x:auto">
+        <table class="table table-sm">
+            <thead>
+                <tr>
+                    <td>ID</td>
+                    <td>Name</td>
+                    <td>Location</td>
+                    <td>Description</td>
+                    <td>&mu;</td>
+                    <td>&sigma;<sup>2</sup></td>
+                    <td>Votes</td>
+                    <td>Delete</td>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in items %}
+                <tr>
+                    <td>{{ item.id | safe }}</td>
+                    <td>{{ item.name | safe }}</td>
+                    <td>{{ item.location | safe }}</td>
+                    <td>
+                        <div class="more">
+                            <span class="glyphicon glyphicon-triangle-right"></span>
+                            {{ item.description | safe }}
+                        </div>
+                    </td>
+                    <td>{{ item.mu | safe }}</td>
+                    <td>{{ item.sigma_sq | safe }}</td>
+                    <td>{{ item_counts.get(item.id, 0) }}</td>
+                    <td>
+                        <form action="/admin/item" method="post">
+                            <button type="submit" name="action" value="Delete"><span class="glyphicon glyphicon-remove"></span></button>
+                            <input name="item_id" type="hidden" class="hidden" value="{{ item.id }}">
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
 
-<h2>Add</h2>
+<div class="warning">
+    <div class="main">
+        <h3 class="title">Add Project</h3>
+        <p>name, location, description (CSV format)</p>
+        <form class="form-inline" action="/admin/item" method="post">
+            <input name="data" class="form-control" placeholder="Name, location, description (CSV format)">
+            <button class="success" type="submit" name="action" value="Submit">Submit</button>
+        </form>
+    </div>
+</div>
 
-<h3>Items</h3>
-<p>name, location, description (CSV format)</p>
-<textarea name="data" form="item_form"></textarea>
-<form action="/admin/item" method="post" id="item_form">
-    <input type="submit" name="action" value="Submit" />
-</form>
+<div class="main">
+    <h2 class="title">Judges</h2>
 
-<h3>Annotators</h3>
-<p>name, email, description (CSV format)</p>
-<textarea name="data" form="annotator_form"></textarea>
-<form action="/admin/annotator" method="post" id="annotator_form">
-    <input type="submit" name="action" value="Submit" />
-</form>
+    <div style="overflow-x:auto">
+        <table class="table table-sm">
+            <thead>
+                <tr>
+                    <td>Name</td>
+                    <td>Email</td>
+                    <td>Description</td>
+                    <td>Secret</td>
+                    <td>Votes</td>
+                    <td>Next ID</td>
+                    <td>Prev. ID</td>
+                    <td>&alpha;</td>
+                    <td>&beta;</td>
+                    <td>Delete</td>
+                </tr>
+            </thead>
+            <tbody>
+                {% for annotator in annotators %}
+                <tr>
+                    <td>{{ annotator.name | safe }}</td>
+                    <td>{{ annotator.email | safe }}</td>
+                    <td>{{ annotator.description | safe }}</td>
+                    <td>{{ annotator.secret | safe }}</td>
+                    <td>{{ counts.get(annotator.id, 0) | safe }}</td>
+                    <td>{{ annotator.next_id | safe }}</td>
+                    <td>{{ annotator.prev_id | safe }}</td>
+                    <td>{{ annotator.alpha | safe }}</td>
+                    <td>{{ annotator.beta | safe }}</td>
+                    <td>
+                        <form action="/admin/annotator" method="post">
+                            <button type="submit" name="action" value="Delete"><span class="glyphicon glyphicon-remove"></span></button>
+                            <input name="annotator_id" type="hidden" class="hidden" value="{{ annotator.id }}">
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="warning">
+    <div class="main">
+        <h3 class="title">Add Judge</h3>
+        <p>name, email, description (CSV format)</p>
+        <form class="form-inline" action="/admin/annotator" method="post">
+            <input name="data" class="form-control" placeholder="Name, location, description (CSV format)">
+            <button class="success" type="submit" name="action" value="Submit">Submit</button>
+        </form>
+    </div>
+</div>
+
+</div>
 
 {% endblock %}
+
+{% block footer %}
+<script>
+/* http://viralpatel.net/blogs/dynamically-shortened-text-show-more-link-jquery/ */
+    $(document).ready(function() {
+        var showChar = 200;
+        var ellipses = "...";
+        $('.more').each(function() {
+            var content = $(this).html();
+            if(content.length > showChar) {
+                var c = content.substr(0, showChar);
+                var h = content.substr(showChar, content.length - showChar);
+                var html = c + '<span class="ellipses">' + ellipses + '&nbsp;</span><span class="morecontent" style="display:none;">' + h + '</span>';
+                $(this).html(html);
+            }
+        });
+
+        $(".more").click(function(){
+            $(this).children('.ellipses').toggle();
+            $(this).children('.morecontent').toggle();
+            $(this).children('.glyphicon').toggleClass('glyphicon-triangle-right').toggleClass('glyphicon-triangle-bottom');
+            return false;
+        });
+    });
+</script>
+{% endblock %}
+
+

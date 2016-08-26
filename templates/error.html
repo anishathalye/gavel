@@ -1,5 +1,9 @@
 {% extends "layout.html" %}
 {% block content %}
-    <h1>Error</h1>
-    <p>{{ message }}</p>
+    <div class="header danger">
+        <h1 class="title">Error</h1>
+    </div>
+    <div class="main">
+        <p>{{ message }}</p>
+    </div>
 {% endblock %}
