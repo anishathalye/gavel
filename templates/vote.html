@@ -37,9 +37,9 @@
 </div>
 
 <form action="/vote" method="post">
-    <input class="orange compare" type="submit" name="action" value="Previous" />
-    <input class="blue compare" type="submit" name="action" value="Current" />
-    <input style="width:100%;" class="warning" type="submit" name="action" value="Skip" />
+    <input class="orange compare previous" type="submit" name="action" value="Previous" />
+    <input class="blue compare next" type="submit" name="action" value="Current" />
+    <input class="button skip warning" type="submit" name="action" value="Skip" />
     <input type="hidden" name="prev_id" value="{{ prev.id }}" />
     <input type="hidden" name="next_id" value="{{ next.id }}" />
 </form>

@@ -93,6 +93,27 @@ form .compare {
     float: left;
 }
 
+.button {
+    width:100%;
+}
+
+.previous {
+    position: absolute;
+    bottom: 5rem;
+    left: 0;
+}
+
+.next {
+    position: absolute;
+    bottom: 5rem;
+    left: 50vw;
+}
+
+.skip {
+    position: absolute;
+    bottom: 0;
+}
+
 .success {
     background-color: #c9d41b;
     color: #fffefa;
@@ -132,9 +153,6 @@ form .compare {
     } .form-inline .form-control {
         width: 70%;
     }
-
-
-
 }
 
 
