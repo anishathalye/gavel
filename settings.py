@@ -35,8 +35,10 @@ class Config(object):
 
 config = Config(CONFIG_FILE)
 
-# note: this should be kept in sync with 'config.sample.yaml'
+# note: this should be kept in sync with 'config.sample.yaml' and
+# 'config.vagrant.yaml'
 ADMIN_PASSWORD = config.get('admin_password', 'ADMIN_PASSWORD')
 DB_URI = config.get('db_uri', ['DATABASE_URL', 'DB_URI'], default='postgresql://localhost/gavel')
 SECRET_KEY = config.get('secret_key', 'SECRET_KEY')
 PORT = int(config.get('port', 'PORT', default=5000))
+MIN_VIEWS = int(config.get('min_views', 'MIN_VIEWS', default=2))

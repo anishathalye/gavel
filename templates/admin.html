@@ -15,6 +15,7 @@
         <td>Mu</td>
         <td>Sigma Squared</td>
         <td>Votes</td>
+        <td>Seen</td>
         <td>Delete</td>
     </tr>
     {% for item in items %}
@@ -26,6 +27,7 @@
         <td>{{ item.mu | safe }}</td>
         <td>{{ item.sigma_sq | safe }}</td>
         <td>{{ item_counts.get(item.id, 0) }}</td>
+        <td>{{ item.viewed | length }}</td>
         <td>
             <form action="/admin/item" method="post">
                 <input type="submit" name="action" value="Delete" />

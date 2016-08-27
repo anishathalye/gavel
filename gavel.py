@@ -63,6 +63,7 @@ def vote():
                     utils.perform_vote(annotator, next_won=True)
                     decision = Decision(annotator, winner=annotator.next, loser=annotator.prev)
                 db.session.add(decision)
+                annotator.next.viewed.append(annotator)
                 annotator.prev = annotator.next
                 annotator.ignore.append(annotator.prev)
             annotator.next = utils.choose_next(annotator)
@@ -76,6 +77,7 @@ def begin():
         if annotator.next.id == int(request.form['item_id']):
             annotator.ignore.append(annotator.next)
             if request.form['action'] == 'Done':
+                annotator.next.viewed.append(annotator)
                 annotator.prev = annotator.next
                 annotator.next = utils.choose_next(annotator)
             elif request.form['action'] == 'Skip':

@@ -6,7 +6,7 @@ import crowd_bt
 
 from numpy.random import choice, random, shuffle
 from flask import Response, request, session
-from settings import ADMIN_PASSWORD
+from settings import ADMIN_PASSWORD, MIN_VIEWS
 from constants import ANNOTATOR_ID
 
 def check_auth(username, password):
@@ -25,22 +25,37 @@ def requires_auth(f):
         return f(*args, **kwargs)
     return decorated
 
+def get_current_annotator():
+    return Annotator.by_id(session.get(ANNOTATOR_ID, None))
+
+def preferred_items(annotator):
+    '''
+    Return a list of preferred items for the given annotator to look at next.
+
+    This method takes into account MIN_VIEWS, and if there are any projects
+    that haven't been seen enough times, it returns a list of only those
+    projects. Otherwise, it returns all the projects that the annotator hasn't
+    seen or skipped.
+    '''
+    # XXX this is inefficient, better to do exclude in a query
+    ignored_ids = {i.id for i in annotator.ignore}
+    available_items = [i for i in Item.query.all() if i.id not in ignored_ids]
+    less_seen = [i for i in available_items if len(i.viewed) < MIN_VIEWS]
+
+    if less_seen:
+        return less_seen
+    else:
+        return available_items
+
 def maybe_init_annotator(annotator):
     if annotator.next is None:
-        # XXX this is inefficient, better to do exclude in a query
-        ignored_ids = {i.id for i in annotator.ignore}
-        items = [i for i in Item.query.all() if i.id not in ignored_ids]
-
+        items = preferred_items(annotator)
         if items:
             annotator.next = choice(items)
             db.session.commit()
 
-def get_current_annotator():
-    return Annotator.by_id(session.get(ANNOTATOR_ID, None))
-
 def choose_next(annotator):
-    ignored_ids = {i.id for i in annotator.ignore}
-    items = [i for i in Item.query.all() if i.id not in ignored_ids]
+    items = preferred_items(annotator)
 
     shuffle(items)
     if items:

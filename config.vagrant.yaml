@@ -3,3 +3,4 @@ admin_password: admin
 secret_key: gavel
 db_uri: postgresql://localhost/gavel
 port: 5000
+min_views: 2

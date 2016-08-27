@@ -24,11 +24,17 @@ ignore_table = db.Table('ignore',
     db.Column('item_id', db.Integer, db.ForeignKey('item.id'))
 )
 
+view_table = db.Table('view',
+    db.Column('item_id', db.Integer, db.ForeignKey('item.id')),
+    db.Column('annotator_id', db.Integer, db.ForeignKey('annotator.id'))
+)
+
 class Item(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.Text)
     location = db.Column(db.Text)
     description = db.Column(db.Text)
+    viewed = db.relationship('Annotator', secondary=view_table)
 
     mu = db.Column(db.Float)
     sigma_sq = db.Column(db.Float)

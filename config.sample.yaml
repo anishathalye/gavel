@@ -6,9 +6,18 @@ admin_password: null
 db_uri: null
 
 # can also be specified as the 'SECRET_KEY' environment variable
-# this should be some reasonably long random string
+#
+# this is used to prevent tampering with sessions. this should be some
+# reasonably long random string.
 secret_key: null
 
 # can also be specified as the 'PORT' environment variable
 # defaults to '5000'
 port: null
+
+# can also be specified as the 'MIN_VIEWS' environment variable
+# defaults to '2'
+#
+# this is the minimum number of times each item needs to be seen before
+# switching to more sophisticated item selection strategies.
+min_views: null
