@@ -93,6 +93,14 @@ form .compare {
     float: left;
 }
 
+.vote-question {
+    position: absolute;
+    bottom: 10rem;
+    width: 100%;
+    text-align: center;
+    font-size: 1.5em;
+}
+
 .button {
     width:100%;
 }
@@ -112,11 +120,29 @@ form .compare {
 .skip {
     position: absolute;
     bottom: 0;
+    height: 5rem;
+    border: 0px;
+    outline: none;
+    font-size: 20px;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    text-transform: uppercase;
+    text-align: center;
+    letter-spacing: 5px;
+    padding: .7em 1em;
+    display: block;
+    text-align: center;
 }
 
 .success {
     background-color: #c9d41b;
     color: #fffefa;
+}
+
+.done {
+    position: absolute;
+    left: 0;
+    bottom: 5rem;
 }
 
 .warning {
@@ -143,6 +169,40 @@ form .compare {
     background-color: #0b3b4b;
     color: #fffefa;
 }
+
+/* Dialog*/
+
+.modal-dialog {
+    top: 20vh;
+    width: 90vw;
+    margin: 5vw;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.modal-content {
+    border-radius: 0;
+}
+
+.modal-header {
+    background: #fc5454;
+    color: #fffefa;
+    text-align: center;
+}
+
+input[type="submit"].modal-button {
+    float: right;
+    margin: .2rem;
+    height: 4rem;   
+    background: #4ecdc4;
+    color: #fffefa;
+    font-size: 1.5rem;
+    letter-spacing: .2rem;
+    border: 0px;
+    outline: none;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
 
 @media screen and (min-width: 768px) {
     img {
