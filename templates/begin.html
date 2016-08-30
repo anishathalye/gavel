@@ -6,23 +6,49 @@
     <p class="note">First Project</p>
     <h1 class="title" style="margin-top:0px">{{ item.name | safe }}</h1>
 </div>
-
-<div class="main">
-    <p>
-        <span class="glyphicon glyphicon-map-marker"></span>
-        {{ item.location | safe }}
-    </p>
-    <div class="more">
-        <span class="glyphicon glyphicon-triangle-right"></span>
-        {{ item.description | safe }}
+<div class="project-wrapper">
+    <div class="main">
+        <p>
+            <span class="glyphicon glyphicon-map-marker"></span>
+            {{ item.location | safe }}
+        </p>
+        <div class="more">
+            <span class="glyphicon glyphicon-triangle-right"></span>
+            {{ item.description | safe }}
+        </div>
     </div>
 </div>
-
 <form action="/begin" method="post">
-    <input style="width:100%;" class="warning" type="submit" name="action" value="Skip" />
-    <input style="width:100%;" class="success" type="submit" name="action" value="Done" />
+    <input class="button success done" type="submit" name="action" value="Done" />
     <input type="hidden" name="item_id" value="{{ item.id }}" />
 </form>
+
+<input type="button" class="button skip warning" data-toggle="modal" data-target="#confirmSkip" value="Skip" />
+
+<!-- Modal -->
+<div id="confirmSkip" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+    <!-- Modal content-->
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">Are you sure?</h4>
+        </div>
+        <div class="modal-body">
+            <p>Please confirm that you'd like to skip judging this project. Note that you will not be able to return to this specific project. </p>
+        </div>
+        <div class="modal-footer">
+            <input class="modal-button" type="submit" data-dismiss="modal" value= "Cancel"/>
+            <form action="/begin" method="post">
+                <input class="modal-button" type="submit" name="action" value="Skip" />
+                <input type="hidden" name="item_id" value="{{ item.id }}" />
+            </form>
+        </div>
+    </div>
+
+    </div>
+</div>
 
 {% endblock %}
 

@@ -1,5 +1,6 @@
 html {
     font-size: 62.5%;
+    background: #fffefa;
 }
 
 #content {
@@ -54,6 +55,11 @@ thead {
     font-weight: bold;
 }
 
+.project-wrapper {
+    height: 75vh;
+    overflow-y: scroll;
+}
+
 .form-inline input {
     width: 100%;
 }
@@ -74,7 +80,7 @@ thead {
 }
 
 input[type="submit"], button[type="submit"] {
-    height: 5rem;
+    height: 9vh;
     border: 0px;
     outline: none;
     font-size: 20px;
@@ -93,9 +99,57 @@ form .compare {
     float: left;
 }
 
+.vote-question {
+    position: absolute;
+    bottom: 18vh;
+    height: 5vh;
+    width: 100%;
+    text-align: center;
+    font-size: 1.5em;
+}
+
+.button {
+    width:100%;
+}
+
+.previous {
+    position: absolute;
+    bottom: 9vh;
+    left: 0;
+}
+
+.next {
+    position: absolute;
+    bottom: 9vh;
+    left: 50vw;
+}
+
+.skip {
+    position: absolute;
+    bottom: 0;
+    height: 9vh;
+    border: 0px;
+    outline: none;
+    font-size: 20px;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    text-transform: uppercase;
+    text-align: center;
+    letter-spacing: 5px;
+    padding: .7em 1em;
+    display: block;
+    text-align: center;
+}
+
 .success {
     background-color: #c9d41b;
     color: #fffefa;
+}
+
+.done {
+    position: absolute;
+    left: 0;
+    bottom: 9vh;
 }
 
 .warning {
@@ -123,6 +177,49 @@ form .compare {
     color: #fffefa;
 }
 
+
+/* Dialog*/
+
+.modal-dialog {
+    top: 20vh;
+    width: 90vw;
+    margin: 5vw;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.modal-content {
+    border-radius: 0;
+}
+
+.modal-header {
+    background: #fc5454;
+    color: #fffefa;
+    text-align: center;
+}
+
+.modal-body {
+    background: #fffefa;
+}
+
+.modal-footer {
+    background: #fffefa;
+}
+
+input[type="submit"].modal-button {
+    float: right;
+    margin: .2rem;
+    height: 4rem;   
+    background: #4ecdc4;
+    color: #fffefa;
+    font-size: 1.5rem;
+    letter-spacing: .2rem;
+    border: 0px;
+    outline: none;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+
 @media screen and (min-width: 768px) {
     img {
         display: block;
@@ -132,9 +229,6 @@ form .compare {
     } .form-inline .form-control {
         width: 70%;
     }
-
-
-
 }
 
 
