@@ -2,40 +2,40 @@
 {% block title %}Judging{% endblock %}
 
 {% block content %}
-<div class="header orange">
-    <p class="note">Previous Project</p>
-    <h1 class="title" style="margin-top:0px">{{ prev.name | safe }}</h1>
-</div>
+<div class="project-wrapper">
+    <div class="header orange">
+        <p class="note">Previous Project</p>
+        <h1 class="title" style="margin-top:0px">{{ prev.name | safe }}</h1>
+    </div>
+    <div class="main">
+        <p>
+            <span class="glyphicon glyphicon-map-marker"></span>
+            {{ prev.location | safe }}
+        </p>
+        <div class="more">
+            <span class="glyphicon glyphicon-triangle-right"></span>
+            {{ prev.description | safe }}
+        </div>
+    </div>
 
-<div class="main">
-    <p>
-        <span class="glyphicon glyphicon-map-marker"></span>
-        {{ prev.location | safe }}
-    </p>
-    <div class="more">
-        <span class="glyphicon glyphicon-triangle-right"></span>
-        {{ prev.description | safe }}
+    <div class="header blue">
+        <p class="note">Current Project</p>
+        <h1 class="title" style="margin-top:0px">{{ next.name | safe }}</h1>
+    </div>
+
+    <div class="main">
+        <p>
+            <span class="glyphicon glyphicon-map-marker"></span>
+            {{ next.location | safe }}
+        </p>
+        <div class="more">
+            <span class="glyphicon glyphicon-triangle-right"></span>
+            {{ next.description | safe }}
+        </div>
     </div>
 </div>
 
-<div class="header blue">
-    <p class="note">Current Project</p>
-    <h1 class="title" style="margin-top:0px">{{ next.name | safe }}</h1>
-</div>
-
-<div class="main">
-    <p>
-        <span class="glyphicon glyphicon-map-marker"></span>
-        {{ next.location | safe }}
-    </p>
-    <div class="more">
-        <span class="glyphicon glyphicon-triangle-right"></span>
-        {{ next.description | safe }}
-    </div>
-
-    <div class="text-center vote-question">Which is better?</div>
-</div>
-
+<div class="text-center vote-question">Which is better?</div>
 <form action="/vote" method="post">
     <input class="orange compare previous" type="submit" name="action" value="Previous" />
     <input class="blue compare next" type="submit" name="action" value="Current" />

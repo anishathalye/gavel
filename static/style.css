@@ -1,5 +1,6 @@
 html {
     font-size: 62.5%;
+    background: #fffefa;
 }
 
 #content {
@@ -54,6 +55,11 @@ thead {
     font-weight: bold;
 }
 
+.project-wrapper {
+    height: 75vh;
+    overflow-y: scroll;
+}
+
 .form-inline input {
     width: 100%;
 }
@@ -74,7 +80,7 @@ thead {
 }
 
 input[type="submit"], button[type="submit"] {
-    height: 5rem;
+    height: 9vh;
     border: 0px;
     outline: none;
     font-size: 20px;
@@ -95,7 +101,8 @@ form .compare {
 
 .vote-question {
     position: absolute;
-    bottom: 10rem;
+    bottom: 18vh;
+    height: 5vh;
     width: 100%;
     text-align: center;
     font-size: 1.5em;
@@ -107,20 +114,20 @@ form .compare {
 
 .previous {
     position: absolute;
-    bottom: 5rem;
+    bottom: 9vh;
     left: 0;
 }
 
 .next {
     position: absolute;
-    bottom: 5rem;
+    bottom: 9vh;
     left: 50vw;
 }
 
 .skip {
     position: absolute;
     bottom: 0;
-    height: 5rem;
+    height: 9vh;
     border: 0px;
     outline: none;
     font-size: 20px;
@@ -142,7 +149,7 @@ form .compare {
 .done {
     position: absolute;
     left: 0;
-    bottom: 5rem;
+    bottom: 9vh;
 }
 
 .warning {
@@ -170,6 +177,7 @@ form .compare {
     color: #fffefa;
 }
 
+
 /* Dialog*/
 
 .modal-dialog {
@@ -187,6 +195,14 @@ form .compare {
     background: #fc5454;
     color: #fffefa;
     text-align: center;
+}
+
+.modal-body {
+    background: #fffefa;
+}
+
+.modal-footer {
+    background: #fffefa;
 }
 
 input[type="submit"].modal-button {
