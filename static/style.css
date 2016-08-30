@@ -74,8 +74,6 @@ thead {
     font-family: "Courier New",Courier,monospace;
     padding: 5px;
 } .form-control:focus {
-    -webkit-box-shadow: 0px 0px 5px 2px #0b3b4b;
-    -moz-box-shadow: 0px 0px 5px 2px #0b3b4b;
     box-shadow: 0px 0px 5px 2px #0b3b4b;
 }
 
@@ -208,7 +206,7 @@ form .compare {
 input[type="submit"].modal-button {
     float: right;
     margin: .2rem;
-    height: 4rem;   
+    height: 4rem;
     background: #4ecdc4;
     color: #fffefa;
     font-size: 1.5rem;
