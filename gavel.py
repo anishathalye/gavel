@@ -154,7 +154,7 @@ def annotator_dash():
         annotator_id = request.form['annotator_id']
         try:
             db.session.execute(ignore_table.delete(ignore_table.c.annotator_id == annotator_id))
-            Annotator.query.filter_by(id=id).delete()
+            Annotator.query.filter_by(id=annotator_id).delete()
             db.session.commit()
         except IntegrityError as e:
             return render_template('error.html', message=str(e))
