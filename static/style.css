@@ -28,3 +28,7 @@ input[type="submit"] {
     height: 5rem;
     margin: 0.5rem 0;
 }
+
+.disabled {
+    background-color: #ff8080;
+}

@@ -34,6 +34,7 @@ class Item(db.Model):
     name = db.Column(db.Text)
     location = db.Column(db.Text)
     description = db.Column(db.Text)
+    active = db.Column(db.Boolean, default=True)
     viewed = db.relationship('Annotator', secondary=view_table)
 
     mu = db.Column(db.Float)

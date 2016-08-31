@@ -39,7 +39,9 @@ def preferred_items(annotator):
     '''
     # XXX this is inefficient, better to do exclude in a query
     ignored_ids = {i.id for i in annotator.ignore}
-    available_items = [i for i in Item.query.all() if i.id not in ignored_ids]
+    available_items = [
+        i for i in Item.query.all() if i.active and i.id not in ignored_ids
+    ]
     less_seen = [i for i in available_items if len(i.viewed) < MIN_VIEWS]
 
     if less_seen:
@@ -85,7 +87,8 @@ def perform_vote(annotator, next_won):
         winner.mu,
         winner.sigma_sq,
         loser.mu,
-        loser.sigma_sq)
+        loser.sigma_sq
+    )
     annotator.alpha = u_alpha
     annotator.beta = u_beta
     winner.mu = u_winner_mu

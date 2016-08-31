@@ -16,10 +16,11 @@
         <td>Sigma Squared</td>
         <td>Votes</td>
         <td>Seen</td>
+        <td>Active</td>
         <td>Delete</td>
     </tr>
     {% for item in items %}
-    <tr>
+    <tr class="{{ "disabled" if not item.active else "" }}">
         <td>{{ item.id | safe }}</td>
         <td>{{ item.name | safe }}</td>
         <td>{{ item.location | safe }}</td>
@@ -28,6 +29,12 @@
         <td>{{ item.sigma_sq | safe }}</td>
         <td>{{ item_counts.get(item.id, 0) }}</td>
         <td>{{ item.viewed | length }}</td>
+        <td>
+            <form action="/admin/item" method="post">
+                <input type="submit" name="action" value="{{ "Disable" if item.active else "Enable" }}" />
+                <input type="hidden" name="item_id" value="{{ item.id }}" />
+            </form>
+        </td>
         <td>
             <form action="/admin/item" method="post">
                 <input type="submit" name="action" value="Delete" />

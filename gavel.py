@@ -56,14 +56,16 @@ def vote():
             if request.form['action'] == 'Skip':
                 annotator.ignore.append(annotator.next)
             else:
-                if request.form['action'] == 'Previous':
-                    utils.perform_vote(annotator, next_won=False)
-                    decision = Decision(annotator, winner=annotator.prev, loser=annotator.next)
-                elif request.form['action'] == 'Current':
-                    utils.perform_vote(annotator, next_won=True)
-                    decision = Decision(annotator, winner=annotator.next, loser=annotator.prev)
-                db.session.add(decision)
-                annotator.next.viewed.append(annotator)
+                # ignore things that were deactivated in the middle of judging
+                if annotator.prev.active and annotator.next.active:
+                    if request.form['action'] == 'Previous':
+                        utils.perform_vote(annotator, next_won=False)
+                        decision = Decision(annotator, winner=annotator.prev, loser=annotator.next)
+                    elif request.form['action'] == 'Current':
+                        utils.perform_vote(annotator, next_won=True)
+                        decision = Decision(annotator, winner=annotator.next, loser=annotator.prev)
+                    db.session.add(decision)
+                annotator.next.viewed.append(annotator) # counted as viewed even if deactivated
                 annotator.prev = annotator.next
                 annotator.ignore.append(annotator.prev)
             annotator.next = utils.choose_next(annotator)
@@ -129,6 +131,11 @@ def item():
             _item = Item(*row)
             db.session.add(_item)
         db.session.commit()
+    elif action == 'Disable' or action == 'Enable':
+        item_id = request.form['item_id']
+        target_state = action == 'Enable'
+        Item.by_id(item_id).active = target_state
+        db.session.commit()
     elif action == 'Delete':
         item_id = request.form['item_id']
         try:
@@ -164,8 +171,15 @@ def annotator_dash():
 @utils.requires_auth
 def item_dump():
     items = Item.query.order_by(desc(Item.mu)).all()
-    data = [['Mu', 'Sigma Squared', 'Name', 'Location', 'Description']]
-    data += [[str(item.mu), str(item.sigma_sq), item.name, item.location, item.description] for item in items]
+    data = [['Mu', 'Sigma Squared', 'Name', 'Location', 'Description', 'Active']]
+    data += [[
+        str(item.mu),
+        str(item.sigma_sq),
+        item.name,
+        item.location,
+        item.description,
+        item.active
+    ] for item in items]
     return Response(utils.data_to_csv_string(data), mimetype='text/csv')
 
 @app.route('/api/annotators.csv')
