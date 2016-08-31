@@ -57,7 +57,7 @@
         <h3 class="title">Add Project</h3>
         <p>name, location, description (CSV format)</p>
         <form class="form-inline" action="/admin/item" method="post">
-            <input name="data" class="form-control" placeholder="Name, location, description (CSV format)">
+            <textarea name="data" class="form-control" rows="3" wrap="off" placeholder="Name, location, description (CSV format)"></textarea>
             <button class="success" type="submit" name="action" value="Submit">Submit</button>
         </form>
     </div>
@@ -112,7 +112,7 @@
         <h3 class="title">Add Judge</h3>
         <p>name, email, description (CSV format)</p>
         <form class="form-inline" action="/admin/annotator" method="post">
-            <input name="data" class="form-control" placeholder="Name, location, description (CSV format)">
+            <textarea name="data" class="form-control" rows="3" wrap="off" placeholder="Name, location, description (CSV format)"></textarea>
             <button class="success" type="submit" name="action" value="Submit">Submit</button>
         </form>
     </div>
