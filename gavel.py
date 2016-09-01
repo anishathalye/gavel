@@ -18,13 +18,14 @@ from models import (
     Decision,
     IntegrityError,
     Item,
+    Setting,
     db,
     desc,
     ignore_table,
 )
 import utils
 from settings import DB_URI, SECRET_KEY, PORT
-from constants import ANNOTATOR_ID
+from constants import *
 
 
 app = Flask(__name__)
@@ -40,6 +41,8 @@ def index():
     if annotator is None:
         return render_template('logged_out.html')
     else:
+        if Setting.value_of(SETTING_CLOSED) == SETTING_TRUE:
+            return render_template('closed.html')
         if not annotator.active:
             return render_template('disabled.html')
         utils.maybe_init_annotator(annotator)
@@ -51,6 +54,7 @@ def index():
             return render_template('vote.html', prev=annotator.prev, next=annotator.next)
 
 @app.route('/vote', methods=['POST'])
+@utils.requires_open(redirect_to='index')
 @utils.requires_active_annotator(redirect_to='index')
 def vote():
     annotator = utils.get_current_annotator()
@@ -75,6 +79,7 @@ def vote():
     return redirect(url_for('index'))
 
 @app.route('/begin', methods=['POST'])
+@utils.requires_open(redirect_to='index')
 @utils.requires_active_annotator(redirect_to='index')
 def begin():
     annotator = utils.get_current_annotator()
@@ -119,13 +124,16 @@ def admin():
         counts[a] = counts.get(a, 0) + 1
         item_counts[w] = item_counts.get(w, 0) + 1
         item_counts[l] = item_counts.get(l, 0) + 1
+    # settings
+    setting_closed = Setting.value_of(SETTING_CLOSED) == SETTING_TRUE
     return render_template(
         'admin.html',
         annotators=annotators,
         counts=counts,
         item_counts=item_counts,
         items=items,
-        votes=len(decisions)
+        votes=len(decisions),
+        setting_closed=setting_closed,
     )
 
 @app.route('/admin/item', methods=['POST'])
@@ -178,6 +186,17 @@ def annotator_dash():
             db.session.commit()
         except IntegrityError as e:
             return render_template('error.html', message=str(e))
+    return redirect(url_for('admin'))
+
+@app.route('/admin/setting', methods=['POST'])
+@utils.requires_auth
+def setting():
+    key = request.form['key']
+    if key == 'closed':
+        action = request.form['action']
+        new_value = SETTING_TRUE if action == 'Close' else SETTING_FALSE
+        Setting.set(SETTING_CLOSED, new_value)
+        db.session.commit()
     return redirect(url_for('admin'))
 
 @app.route('/api/items.csv')

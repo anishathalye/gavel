@@ -1,4 +1,4 @@
-from models import Item, Annotator, db, NoResultFound
+from models import Item, Annotator, db, NoResultFound, Setting
 from functools import wraps
 import csv
 import io
@@ -13,7 +13,7 @@ from flask import (
     url_for,
 )
 from settings import ADMIN_PASSWORD, MIN_VIEWS
-from constants import ANNOTATOR_ID
+from constants import *
 
 def check_auth(username, password):
     return username == 'admin' and password == ADMIN_PASSWORD
@@ -30,6 +30,17 @@ def requires_auth(f):
             return authenticate()
         return f(*args, **kwargs)
     return decorated
+
+def requires_open(redirect_to):
+    def decorator(f):
+        @wraps(f)
+        def decorated(*args, **kwargs):
+            if Setting.value_of(SETTING_CLOSED) == SETTING_TRUE:
+                return redirect(url_for(redirect_to))
+            else:
+                return f(*args, **kwargs)
+        return decorated
+    return decorator
 
 def requires_active_annotator(redirect_to):
     def decorator(f):
