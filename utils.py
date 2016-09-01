@@ -5,7 +5,13 @@ import io
 import crowd_bt
 
 from numpy.random import choice, random, shuffle
-from flask import Response, request, session
+from flask import (
+    Response,
+    redirect,
+    request,
+    session,
+    url_for,
+)
 from settings import ADMIN_PASSWORD, MIN_VIEWS
 from constants import ANNOTATOR_ID
 
@@ -24,6 +30,18 @@ def requires_auth(f):
             return authenticate()
         return f(*args, **kwargs)
     return decorated
+
+def requires_active_annotator(redirect_to):
+    def decorator(f):
+        @wraps(f)
+        def decorated(*args, **kwargs):
+            annotator = get_current_annotator()
+            if annotator is None or not annotator.active:
+                return redirect(url_for(redirect_to))
+            else:
+                return f(*args, **kwargs)
+        return decorated
+    return decorator
 
 def get_current_annotator():
     return Annotator.by_id(session.get(ANNOTATOR_ID, None))

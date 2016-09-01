@@ -48,6 +48,7 @@
 <h3>Annotators</h3>
 <table>
     <tr>
+        <td>Id</td>
         <td>Name</td>
         <td>Email</td>
         <td>Description</td>
@@ -57,10 +58,12 @@
         <td>Previous (Id)</td>
         <td>Alpha</td>
         <td>Beta</td>
+        <td>Active</td>
         <td>Delete</td>
     </tr>
     {% for annotator in annotators %}
-    <tr>
+    <tr class="{{ "disabled" if not annotator.active else "" }}">
+        <td>{{ annotator.id | safe }}</td>
         <td>{{ annotator.name | safe }}</td>
         <td>{{ annotator.email | safe }}</td>
         <td>{{ annotator.description | safe }}</td>
@@ -70,6 +73,12 @@
         <td>{{ annotator.prev_id | safe }}</td>
         <td>{{ annotator.alpha | safe }}</td>
         <td>{{ annotator.beta | safe }}</td>
+        <td>
+            <form action="/admin/annotator" method="post">
+                <input type="submit" name="action" value="{{ "Disable" if annotator.active else "Enable" }}" />
+                <input type="hidden" name="annotator_id" value="{{ annotator.id }}" />
+            </form>
+        </td>
         <td>
             <form action="/admin/annotator" method="post">
                 <input type="submit" name="action" value="Delete" />

@@ -40,6 +40,8 @@ def index():
     if annotator is None:
         return render_template('logged_out.html')
     else:
+        if not annotator.active:
+            return render_template('disabled.html')
         utils.maybe_init_annotator(annotator)
         if annotator.next is None:
             return render_template('wait.html')
@@ -49,42 +51,42 @@ def index():
             return render_template('vote.html', prev=annotator.prev, next=annotator.next)
 
 @app.route('/vote', methods=['POST'])
+@utils.requires_active_annotator(redirect_to='index')
 def vote():
     annotator = utils.get_current_annotator()
-    if annotator is not None:
-        if annotator.prev.id == int(request.form['prev_id']) and annotator.next.id == int(request.form['next_id']):
-            if request.form['action'] == 'Skip':
-                annotator.ignore.append(annotator.next)
-            else:
-                # ignore things that were deactivated in the middle of judging
-                if annotator.prev.active and annotator.next.active:
-                    if request.form['action'] == 'Previous':
-                        utils.perform_vote(annotator, next_won=False)
-                        decision = Decision(annotator, winner=annotator.prev, loser=annotator.next)
-                    elif request.form['action'] == 'Current':
-                        utils.perform_vote(annotator, next_won=True)
-                        decision = Decision(annotator, winner=annotator.next, loser=annotator.prev)
-                    db.session.add(decision)
-                annotator.next.viewed.append(annotator) # counted as viewed even if deactivated
-                annotator.prev = annotator.next
-                annotator.ignore.append(annotator.prev)
-            annotator.next = utils.choose_next(annotator)
-            db.session.commit()
+    if annotator.prev.id == int(request.form['prev_id']) and annotator.next.id == int(request.form['next_id']):
+        if request.form['action'] == 'Skip':
+            annotator.ignore.append(annotator.next)
+        else:
+            # ignore things that were deactivated in the middle of judging
+            if annotator.prev.active and annotator.next.active:
+                if request.form['action'] == 'Previous':
+                    utils.perform_vote(annotator, next_won=False)
+                    decision = Decision(annotator, winner=annotator.prev, loser=annotator.next)
+                elif request.form['action'] == 'Current':
+                    utils.perform_vote(annotator, next_won=True)
+                    decision = Decision(annotator, winner=annotator.next, loser=annotator.prev)
+                db.session.add(decision)
+            annotator.next.viewed.append(annotator) # counted as viewed even if deactivated
+            annotator.prev = annotator.next
+            annotator.ignore.append(annotator.prev)
+        annotator.next = utils.choose_next(annotator)
+        db.session.commit()
     return redirect(url_for('index'))
 
 @app.route('/begin', methods=['POST'])
+@utils.requires_active_annotator(redirect_to='index')
 def begin():
     annotator = utils.get_current_annotator()
-    if annotator is not None:
-        if annotator.next.id == int(request.form['item_id']):
-            annotator.ignore.append(annotator.next)
-            if request.form['action'] == 'Done':
-                annotator.next.viewed.append(annotator)
-                annotator.prev = annotator.next
-                annotator.next = utils.choose_next(annotator)
-            elif request.form['action'] == 'Skip':
-                annotator.next = None # will be reset in index
-            db.session.commit()
+    if annotator.next.id == int(request.form['item_id']):
+        annotator.ignore.append(annotator.next)
+        if request.form['action'] == 'Done':
+            annotator.next.viewed.append(annotator)
+            annotator.prev = annotator.next
+            annotator.next = utils.choose_next(annotator)
+        elif request.form['action'] == 'Skip':
+            annotator.next = None # will be reset in index
+        db.session.commit()
     return redirect(url_for('index'))
 
 @app.route('/logout')
@@ -105,7 +107,7 @@ def login(secret):
 @app.route('/admin')
 @utils.requires_auth
 def admin():
-    annotators = Annotator.query.all()
+    annotators = Annotator.query.order_by(Annotator.id).all()
     items = Item.query.order_by(desc(Item.mu)).all()
     decisions = Decision.query.all()
     counts = {}
@@ -117,8 +119,14 @@ def admin():
         counts[a] = counts.get(a, 0) + 1
         item_counts[w] = item_counts.get(w, 0) + 1
         item_counts[l] = item_counts.get(l, 0) + 1
-    annotators.sort(key=lambda i: -counts.get(i.id, 0))
-    return render_template('admin.html', annotators=annotators, counts=counts, item_counts=item_counts, items=items, votes=len(decisions))
+    return render_template(
+        'admin.html',
+        annotators=annotators,
+        counts=counts,
+        item_counts=item_counts,
+        items=items,
+        votes=len(decisions)
+    )
 
 @app.route('/admin/item', methods=['POST'])
 @utils.requires_auth
@@ -156,6 +164,11 @@ def annotator_dash():
         for row in data:
             annotator = Annotator(*row)
             db.session.add(annotator)
+        db.session.commit()
+    elif action == 'Disable' or action == 'Enable':
+        annotator_id = request.form['annotator_id']
+        target_state = action == 'Enable'
+        Annotator.by_id(annotator_id).active = target_state
         db.session.commit()
     elif action == 'Delete':
         annotator_id = request.form['annotator_id']
