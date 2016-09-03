@@ -51,9 +51,9 @@ your server. You need to create a database, which you can do with `createdb
 gavel` (unless you're using a different database name). Before you use the app,
 you need to initialize the database by running `python initialize.py`.
 
-When testing, you can run the app with `python gavel.py`. In production, you
-should use something like [Gunicorn][gunicorn] to serve this. You can run the
-app with `gunicorn gavel:app`.
+When testing, you can run the app with `python runserver.py`. In production,
+you should use something like [Gunicorn][gunicorn] to serve this. You can run
+the app with `gunicorn gavel:app`.
 
 ## Configuration
 

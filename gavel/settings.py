@@ -2,7 +2,7 @@ import os
 import yaml
 
 BASE_DIR = os.path.dirname(__file__)
-CONFIG_FILE = os.path.join(BASE_DIR, 'config.yaml')
+CONFIG_FILE = os.path.join(BASE_DIR, '..', 'config.yaml')
 
 class Config(object):
 

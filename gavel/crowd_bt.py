@@ -1,8 +1,3 @@
-# Copyright (c) 2015-2016 Anish Athalye (me@anishathalye.com)
-#
-# This software is released under AGPLv3. See the included LICENSE.txt for
-# details.
-
 from numpy import (
     exp,
     log,

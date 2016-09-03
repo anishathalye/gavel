@@ -58,7 +58,7 @@ python initialize.py
 Finally, you're ready to run Gavel:
 
 ```bash
-DEBUG=true python gavel.py
+DEBUG=true python runserver.py
 ```
 
 Now, on your local machine, you should be able to navigate to
