@@ -33,12 +33,14 @@
             <form action="/admin/item" method="post">
                 <input type="submit" name="action" value="{{ 'Disable' if item.active else 'Enable' }}" />
                 <input type="hidden" name="item_id" value="{{ item.id }}" />
+                <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
             </form>
         </td>
         <td>
             <form action="/admin/item" method="post">
                 <input type="submit" name="action" value="Delete" />
                 <input type="hidden" name="item_id" value="{{ item.id }}" />
+                <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
             </form>
         </td>
     </tr>
@@ -77,12 +79,14 @@
             <form action="/admin/annotator" method="post">
                 <input type="submit" name="action" value="{{ 'Disable' if annotator.active else 'Enable' }}" />
                 <input type="hidden" name="annotator_id" value="{{ annotator.id }}" />
+                <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
             </form>
         </td>
         <td>
             <form action="/admin/annotator" method="post">
                 <input type="submit" name="action" value="Delete" />
                 <input type="hidden" name="annotator_id" value="{{ annotator.id }}" />
+                <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
             </form>
         </td>
     </tr>
@@ -96,6 +100,7 @@
 <textarea name="data" form="item_form"></textarea>
 <form action="/admin/item" method="post" id="item_form">
     <input type="submit" name="action" value="Submit" />
+    <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
 </form>
 
 <h3>Annotators</h3>
@@ -103,6 +108,7 @@
 <textarea name="data" form="annotator_form"></textarea>
 <form action="/admin/annotator" method="post" id="annotator_form">
     <input type="submit" name="action" value="Submit" />
+    <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
 </form>
 
 <h2>Global Settings</h2>
@@ -119,6 +125,7 @@
             <form action="/admin/setting" method="post">
                 <input type="submit" name="action" value="{{ 'Open' if setting_closed else 'Close' }}" />
                 <input type="hidden" name="key" value="closed" />
+                <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
             </form>
         </td>
     </tr>

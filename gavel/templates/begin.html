@@ -7,5 +7,6 @@
     <input type="submit" name="action" value="Skip" />
     <input type="submit" name="action" value="Done" />
     <input type="hidden" name="item_id" value="{{ item.id }}" />
+    <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
 </form>
 {% endblock %}
