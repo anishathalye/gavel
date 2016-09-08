@@ -14,5 +14,8 @@ trim_trailing_whitespace = false
 [*.yaml]
 indent_size = 2
 
+[*.{css,scss}]
+indent_size = 2
+
 [Vagrantfile]
 indent_size = 2

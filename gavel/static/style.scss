@@ -1,0 +1,216 @@
+@import 'constants';
+
+* {
+  -webkit-box-sizing: border-box;
+     -moz-box-sizing: border-box;
+          box-sizing: border-box;
+  -webkit-font-smoothing: antialiased;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-family: $body-font;
+  font-size: 16px;
+  font-weight: 300;
+  line-height: 1.5;
+}
+
+body {
+  color: $text-color;
+  background-color: $light;
+}
+
+div {
+  padding: 0;
+  margin: 0;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  line-height: 1.25;
+  margin: 0;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  font-family: $heading-font;
+  font-weight: bold;
+}
+
+p {
+  padding-top: 0;
+  padding-bottom: 0.5rem;
+}
+
+input, textarea, {
+  font-family: $body-font;
+}
+
+input {
+  font-weight: bold;
+}
+
+strong {
+  font-weight: bold;
+}
+
+table, tr, td {
+  border: 0.1rem solid black;
+}
+
+table {
+  border-collapse: collapse;
+}
+
+td {
+  padding: 0 0.25rem;
+}
+
+tr:first-child td {
+  background: $light-grey;
+  font-weight: bold;
+}
+
+textarea {
+  width: 100%;
+}
+
+a {
+  text-decoration: none;
+  color: $link-color;
+}
+
+.item {
+  padding-bottom: 1rem;
+}
+
+.info {
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+}
+
+.compact {
+  padding: 0 0;
+}
+
+.center {
+  text-align: center;
+}
+
+.banner {
+  text-align: center;
+  margin-bottom: 0.5rem;
+  color: $light;
+  background-color: $dark;
+}
+
+.banner-tight {
+  @extend .banner;
+  margin-bottom: 0;
+}
+
+#admin-header {
+  background-color: $admin-color;
+}
+
+#wait-header {
+  background-color: $wait-color;
+  color: $dark;
+}
+
+#error-header {
+  background-color: $error-color;
+}
+
+#previous-header {
+  background-color: $previous-color;
+}
+
+#previous-body {
+  background-color: mix($previous-color, white, 25%);
+}
+
+#current-header {
+  background-color: $current-color;
+}
+
+#current-body {
+  background-color: mix($current-color, white, 25%);
+}
+
+#vote-header {
+  background-color: $vote-color;
+}
+
+input[type=submit] {
+  color: $light;
+  background-color: $dark;
+  border: 1px solid $dark;
+  font-size: 1.2rem;
+  text-transform: uppercase;
+  text-align: center;
+  height: 3rem;
+  -webkit-border-radius: 0; // fix rounded buttons on iOS
+  td & {
+    border: none;
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.button-left {
+  float: left;
+  width: 48%;
+}
+
+.button-right {
+  float: right;
+  width: 48%;
+}
+
+.button-full {
+  width: 100%;
+}
+
+.button-gap {
+  margin-top: 0.75rem;
+}
+
+#vote-previous {
+  background-color: $previous-color;
+}
+
+#vote-current {
+  background-color: $current-color;
+}
+
+#vote-skip {
+  background-color: $vote-skip-color;
+  color: $dark;
+}
+
+#vote-done {
+  background-color: $vote-done-color;
+}
+
+input[type=submit].positive {
+  background-color: $positive-color;
+}
+
+input[type=submit].negative {
+  background-color: $negative-color;
+}
+
+.disabled {
+  background-color: $disabled-color;
+}
+
+#footer {
+  margin-top: 2rem;
+  border-top: 1px solid $light-grey;
+  p {
+    font-size: 0.75rem;
+    text-align: center;
+  }
+}

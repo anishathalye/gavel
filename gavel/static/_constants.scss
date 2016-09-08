@@ -1,0 +1,27 @@
+$branding-orange: #ffbc29;
+$branding-turquoise: #4ecdc4;
+$branding-red: #fc5454;
+$branding-yellow: #ffe86b;
+$branding-green: #c9d41b;
+$branding-dark: #0b3b4b;
+$branding-pink: #ffe8e8;
+
+$wait-color: $branding-yellow;
+$error-color: $branding-red;
+$previous-color: $branding-orange;
+$current-color: $branding-turquoise;
+$vote-color: $branding-red;
+$vote-skip-color: $branding-yellow;
+$vote-done-color: $branding-green;
+$admin-color: $branding-dark;
+$disabled-color: $branding-pink;
+$positive-color: $branding-green;
+$negative-color: $branding-red;
+
+$text-color: #000000;
+$link-color: mix($branding-turquoise, black, 50%);
+$light: #fffefa;
+$light-grey: #e8e8e8;
+$dark: $branding-dark;
+$heading-font: "Montserrat", "Helvetica Neue", Helvetica, Arial, sans-serif;
+$body-font: "Lato", "Helvetica Neue", Helvetica, Arial, sans-serif;

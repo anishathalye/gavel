@@ -1,12 +1,23 @@
 {% extends "layout.html" %}
+{% block title %}Start{% endblock %}
 {% block content %}
-<p><strong>Name: </strong>{{ item.name | safe }}</p>
-<p><strong>Location: </strong>{{ item.location | safe }}</p>
-<p><strong>Description: </strong>{{ item.description | safe }}</p>
-<form action="/begin" method="post">
-    <input type="submit" name="action" value="Skip" />
-    <input type="submit" name="action" value="Done" />
-    <input type="hidden" name="item_id" value="{{ item.id }}" />
-    <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}" />
-</form>
+<div class="item">
+    <div class="banner-tight">
+        <h1>Start</h1>
+    </div>
+    {% with item=item %}
+    {% include "_item.html" %}
+    {% endwith %}
+</div>
+
+<div class="item">
+    <div class="info">
+        <form action="/begin" method="post">
+            <input type="submit" name="action" value="Skip" id="vote-skip" class="button-full">
+            <input type="submit" name="action" value="Done" id="vote-done" class="button-full button-gap">
+            <input type="hidden" name="item_id" value="{{ item.id }}">
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+        </form>
+    </div>
+</div>
 {% endblock %}

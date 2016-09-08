@@ -1,4 +1,12 @@
 {% extends "layout.html" %}
+{% block title %}Disabled{% endblock %}
 {% block content %}
-    <p>Your account is currently disabled.</p>
+<div class="item">
+    <div class="banner" id="error">
+        <h1>Disabled</h1>
+    </div>
+    <div class="info">
+        <p>Your account is currently disabled. Reload the page to try again.</p>
+    </div>
+</div>
 {% endblock %}

@@ -1,5 +1,13 @@
 {% extends "layout.html" %}
+{% block title %}Wait{% endblock %}
 {% block content %}
-    <p>Wait for a little bit and refresh to try again. Or if you've looked at
-    all the projects already, then you're done.</p>
+<div class="item">
+    <div class="banner" id="wait-header">
+        <h1>Wait</h1>
+    </div>
+    <div class="info">
+        <p>Wait for a little bit and reload the page to try again.</p>
+        <p>If you've looked at all the projects already, then you're done.</p>
+    </div>
+</div>
 {% endblock %}

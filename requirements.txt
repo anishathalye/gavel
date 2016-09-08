@@ -1,5 +1,6 @@
 click==6.6
 Flask==0.11.1
+Flask-Assets==0.12
 Flask-SQLAlchemy==2.1
 gunicorn==19.6.0
 itsdangerous==0.24
@@ -7,7 +8,10 @@ Jinja2==2.8
 MarkupSafe==0.23
 numpy==1.11.1
 psycopg2==2.6.2
+pyScss==1.3.5
 PyYAML==3.11
 scipy==0.18.0
+six==1.10.0
 SQLAlchemy==1.0.14
+webassets==0.12.0
 Werkzeug==0.11.10
