@@ -9,7 +9,7 @@ from flask import (
     url_for,
 )
 
-@app.route('/admin')
+@app.route('/admin/')
 @utils.requires_auth
 def admin():
     annotators = Annotator.query.order_by(Annotator.id).all()

@@ -1,0 +1,23 @@
+{% extends "layout.html" %}
+{% block title %}Welcome{% endblock %}
+{% block content %}
+<div class="item">
+    <div class="banner">
+        <h1>Welcome</h1>
+    </div>
+    <div class="info">
+        {% for paragraph in paragraphs %}
+            <p>{{ paragraph }}</p>
+        {% endfor %}
+    </div>
+</div>
+
+<div class="item">
+    <div class="info">
+        <form action="/welcome/done" method="post">
+            <input type="submit" name="action" value="Done" class="button-full button-gap positive">
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+        </form>
+    </div>
+</div>
+{% endblock %}

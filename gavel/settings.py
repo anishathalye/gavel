@@ -1,3 +1,4 @@
+from gavel.constants import DEFAULT_WELCOME_MESSAGE
 import os
 import yaml
 
@@ -42,3 +43,4 @@ DB_URI = config.get('db_uri', ['DATABASE_URL', 'DB_URI'], default='postgresql://
 SECRET_KEY = config.get('secret_key', 'SECRET_KEY')
 PORT = int(config.get('port', 'PORT', default=5000))
 MIN_VIEWS = int(config.get('min_views', 'MIN_VIEWS', default=2))
+WELCOME_MESSAGE = config.get('welcome_message', default=DEFAULT_WELCOME_MESSAGE)

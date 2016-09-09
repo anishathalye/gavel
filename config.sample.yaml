@@ -21,3 +21,13 @@ port: null
 # this is the minimum number of times each item needs to be seen before
 # switching to more sophisticated item selection strategies.
 min_views: null
+
+# can't be specified via environment variable
+# defaults to gavel.constants.DEFAULT_WELCOME_MESSAGE
+#
+# this is the welcome message that's shown to judges before they can start
+# using the system. when the message is displayed, single newlines are
+# converted into spaces and text separated by two or more newlines is converted
+# into separate paragraphs. it's recommended to use the YAML multiline string
+# syntax when overriding this.
+welcome_message: null

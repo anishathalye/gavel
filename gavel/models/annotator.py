@@ -13,6 +13,7 @@ class Annotator(db.Model):
     name = db.Column(db.String(120))
     email = db.Column(db.String(120))
     active = db.Column(db.Boolean, default=True)
+    read_welcome = db.Column(db.Boolean, default=False)
     description = db.Column(db.Text)
     secret = db.Column(db.String(32), unique=True, nullable=False)
     next_id = db.Column(db.Integer, db.ForeignKey('item.id'))

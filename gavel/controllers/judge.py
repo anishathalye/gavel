@@ -1,7 +1,7 @@
 from gavel import app
 from gavel.models import *
 from gavel.constants import *
-from gavel.settings import MIN_VIEWS
+from gavel.settings import MIN_VIEWS, WELCOME_MESSAGE
 import gavel.crowd_bt as crowd_bt
 from flask import (
     redirect,
@@ -12,6 +12,7 @@ from flask import (
 )
 from numpy.random import choice, random, shuffle
 from functools import wraps
+import re
 
 def requires_open(redirect_to):
     def decorator(f):
@@ -47,6 +48,8 @@ def index():
             return render_template('closed.html')
         if not annotator.active:
             return render_template('disabled.html')
+        if not annotator.read_welcome:
+            return redirect(url_for('welcome'))
         maybe_init_annotator(annotator)
         if annotator.next is None:
             return render_template('wait.html')
@@ -101,7 +104,7 @@ def logout():
     session.pop(ANNOTATOR_ID, None)
     return redirect(url_for('index'))
 
-@app.route('/login/<secret>')
+@app.route('/login/<secret>/')
 def login(secret):
     annotator = Annotator.by_secret(secret)
     if annotator is None:
@@ -109,6 +112,23 @@ def login(secret):
         session.modified = True
     else:
         session[ANNOTATOR_ID] = annotator.id
+    return redirect(url_for('index'))
+
+@app.route('/welcome/')
+@requires_active_annotator(redirect_to='index')
+def welcome():
+    message = WELCOME_MESSAGE
+    paragraphs = re.split(r'\n\n+', message)
+    paragraphs = [i.replace('\n', ' ') for i in paragraphs if i]
+    return render_template('welcome.html', paragraphs=paragraphs)
+
+@app.route('/welcome/done', methods=['POST'])
+@requires_active_annotator(redirect_to='index')
+def welcome_done():
+    annotator = get_current_annotator()
+    if request.form['action'] == 'Done':
+        annotator.read_welcome = True
+    db.session.commit()
     return redirect(url_for('index'))
 
 def get_current_annotator():
