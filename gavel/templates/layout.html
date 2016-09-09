@@ -2,10 +2,13 @@
 <html lang="en">
     <head>
         <!-- Stylesheets -->
+        <link rel=stylesheet type=text/css href="{{ url_for('static', filename='normalize.css') }}">
         {% assets "scss_all" %}
-        <link rel=stylesheet type=text/css href="/static/normalize.css">
         <link rel=stylesheet type=text/css href="{{ ASSET_URL }}">
         {% endassets %}
+
+        <!-- Favicon -->
+        <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
 
         <!-- Fonts -->
         <link href="//fonts.googleapis.com/css?family=Montserrat:700" rel="stylesheet" type="text/css">
