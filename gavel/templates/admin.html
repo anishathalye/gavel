@@ -36,12 +36,12 @@
             </tr>
             {% for item in items %}
             <tr class="{{ "disabled" if not item.active else "" }}">
-                <td>{{ item.id | safe }}</td>
+                <td>{{ item.id }}</td>
                 <td>{{ item.name | safe }}</td>
                 <td>{{ item.location | safe }}</td>
                 <td>{{ item.description | safe }}</td>
-                <td>{{ item.mu | safe }}</td>
-                <td>{{ item.sigma_sq | safe }}</td>
+                <td>{{ item.mu | round(4) }}</td>
+                <td>{{ item.sigma_sq | round(4) }}</td>
                 <td>{{ item_counts.get(item.id, 0) }}</td>
                 <td>{{ item.viewed | length }}</td>
                 <td class="compact">
@@ -79,6 +79,7 @@
                 <td>Votes</td>
                 <td>Next (Id)</td>
                 <td>Previous (Id)</td>
+                <td>Updated</td>
                 <td>Alpha</td>
                 <td>Beta</td>
                 <td>Active</td>
@@ -86,16 +87,17 @@
             </tr>
             {% for annotator in annotators %}
             <tr class="{{ "disabled" if not annotator.active else "" }}">
-                <td>{{ annotator.id | safe }}</td>
+                <td>{{ annotator.id }}</td>
                 <td>{{ annotator.name | safe }}</td>
                 <td>{{ annotator.email | safe }}</td>
                 <td>{{ annotator.description | safe }}</td>
-                <td>{{ annotator.secret | safe }}</td>
-                <td>{{ counts.get(annotator.id, 0) | safe }}</td>
-                <td>{{ annotator.next_id | safe }}</td>
-                <td>{{ annotator.prev_id | safe }}</td>
-                <td>{{ annotator.alpha | safe }}</td>
-                <td>{{ annotator.beta | safe }}</td>
+                <td>{{ annotator.secret }}</td>
+                <td>{{ counts.get(annotator.id, 0) }}</td>
+                <td>{{ annotator.next_id }}</td>
+                <td>{{ annotator.prev_id }}</td>
+                <td>{{ annotator.updated | utcdatetime_local }}</td>
+                <td>{{ annotator.alpha | round(4) }}</td>
+                <td>{{ annotator.beta | round(4) }}</td>
                 <td class="compact">
                     <form action="/admin/annotator" method="post">
                         <input type="submit" name="action" value="{{ 'Disable' if annotator.active else 'Enable' }}" class="{{ 'negative' if annotator.active else 'positive' }}">

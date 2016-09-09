@@ -2,6 +2,7 @@ from gavel.models import db
 import gavel.utils as utils
 import gavel.crowd_bt as crowd_bt
 from sqlalchemy.orm.exc import NoResultFound
+from datetime import datetime
 
 ignore_table = db.Table('ignore',
     db.Column('annotator_id', db.Integer, db.ForeignKey('annotator.id')),
@@ -18,6 +19,7 @@ class Annotator(db.Model):
     secret = db.Column(db.String(32), unique=True, nullable=False)
     next_id = db.Column(db.Integer, db.ForeignKey('item.id'))
     next = db.relationship('Item', foreign_keys=[next_id], uselist=False)
+    updated = db.Column(db.DateTime)
     prev_id = db.Column(db.Integer, db.ForeignKey('item.id'))
     prev = db.relationship('Item', foreign_keys=[prev_id], uselist=False)
     ignore = db.relationship('Item', secondary=ignore_table)
@@ -32,6 +34,10 @@ class Annotator(db.Model):
         self.alpha = crowd_bt.ALPHA_PRIOR
         self.beta = crowd_bt.BETA_PRIOR
         self.secret = utils.gen_secret(32)
+
+    def update_next(self, new_next):
+        self.next = new_next
+        self.updated = datetime.utcnow()
 
     @classmethod
     def by_secret(cls, secret):

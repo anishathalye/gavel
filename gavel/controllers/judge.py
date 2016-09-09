@@ -1,7 +1,7 @@
 from gavel import app
 from gavel.models import *
 from gavel.constants import *
-from gavel.settings import MIN_VIEWS, WELCOME_MESSAGE
+from gavel.settings import MIN_VIEWS, WELCOME_MESSAGE, TIMEOUT
 import gavel.crowd_bt as crowd_bt
 from flask import (
     redirect,
@@ -13,6 +13,7 @@ from flask import (
 from numpy.random import choice, random, shuffle
 from functools import wraps
 import re
+from datetime import datetime
 
 def requires_open(redirect_to):
     def decorator(f):
@@ -79,7 +80,7 @@ def vote():
             annotator.next.viewed.append(annotator) # counted as viewed even if deactivated
             annotator.prev = annotator.next
             annotator.ignore.append(annotator.prev)
-        annotator.next = choose_next(annotator)
+        annotator.update_next(choose_next(annotator))
         db.session.commit()
     return redirect(url_for('index'))
 
@@ -93,7 +94,7 @@ def begin():
         if request.form['action'] == 'Done':
             annotator.next.viewed.append(annotator)
             annotator.prev = annotator.next
-            annotator.next = choose_next(annotator)
+            annotator.update_next(choose_next(annotator))
         elif request.form['action'] == 'Skip':
             annotator.next = None # will be reset in index
         db.session.commit()
@@ -143,23 +144,28 @@ def preferred_items(annotator):
     projects. Otherwise, it returns all the projects that the annotator hasn't
     seen or skipped.
     '''
-    # XXX this is inefficient, better to do exclude in a query
     ignored_ids = {i.id for i in annotator.ignore}
-    available_items = [
-        i for i in Item.query.all() if i.active and i.id not in ignored_ids
-    ]
-    less_seen = [i for i in available_items if len(i.viewed) < MIN_VIEWS]
+    available_items = Item.query.filter(
+        (Item.active == True) & (~Item.id.in_(ignored_ids))
+    ).all()
 
-    if less_seen:
-        return less_seen
-    else:
-        return available_items
+    annotators = Annotator.query.filter(
+        (Annotator.active == True) & (Annotator.next != None) & (Annotator.updated != None)
+    ).all()
+    busy = set([i.next.id for i in annotators if \
+        (datetime.utcnow() - i.updated).total_seconds() < TIMEOUT * 60])
+    nonbusy = [i for i in available_items if i.id not in busy]
+    preferred = nonbusy if nonbusy else available_items
+
+    less_seen = [i for i in preferred if len(i.viewed) < MIN_VIEWS]
+
+    return less_seen if less_seen else preferred
 
 def maybe_init_annotator(annotator):
     if annotator.next is None:
         items = preferred_items(annotator)
         if items:
-            annotator.next = choice(items)
+            annotator.update_next(choice(items))
             db.session.commit()
 
 def choose_next(annotator):

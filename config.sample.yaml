@@ -22,6 +22,14 @@ port: null
 # switching to more sophisticated item selection strategies.
 min_views: null
 
+# can also be specified as the 'TIMEOUT' environment variable
+# defaults to '5.0'
+#
+# this is the maximum amount of time (in minutes) a judge will have a project
+# to themselves before other judges can also be assigned to the same project.
+# having a timeout can be useful in situations where judges disappear.
+timeout: null
+
 # can't be specified via environment variable
 # defaults to gavel.constants.DEFAULT_WELCOME_MESSAGE
 #

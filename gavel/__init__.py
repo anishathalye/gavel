@@ -27,4 +27,6 @@ from gavel.models import db
 db.app = app
 db.init_app(app)
 
+import gavel.template_filters # registers template filters
+
 import gavel.controllers # registers controllers

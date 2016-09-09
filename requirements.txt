@@ -3,6 +3,7 @@ Flask==0.11.1
 Flask-Assets==0.12
 Flask-SQLAlchemy==2.1
 gunicorn==19.6.0
+humanize==0.5.1
 itsdangerous==0.24
 Jinja2==2.8
 MarkupSafe==0.23
