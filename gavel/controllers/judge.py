@@ -2,6 +2,7 @@ from gavel import app
 from gavel.models import *
 from gavel.constants import *
 from gavel.settings import MIN_VIEWS, WELCOME_MESSAGE, TIMEOUT
+import gavel.utils as utils
 import gavel.crowd_bt as crowd_bt
 from flask import (
     redirect,
@@ -12,7 +13,6 @@ from flask import (
 )
 from numpy.random import choice, random, shuffle
 from functools import wraps
-import re
 from datetime import datetime
 
 def requires_open(redirect_to):
@@ -119,8 +119,7 @@ def login(secret):
 @requires_active_annotator(redirect_to='index')
 def welcome():
     message = WELCOME_MESSAGE
-    paragraphs = re.split(r'\n\n+', message)
-    paragraphs = [i.replace('\n', ' ') for i in paragraphs if i]
+    paragraphs = utils.get_paragraphs(message)
     return render_template('welcome.html', paragraphs=paragraphs)
 
 @app.route('/welcome/done', methods=['POST'])

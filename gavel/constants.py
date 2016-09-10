@@ -26,3 +26,19 @@ absolutely necessary.
 Gavel makes it really simple for you to submit votes, but please think hard
 before you vote. Once you make a decision, you can't take it back.
 '''.strip()
+
+DEFAULT_EMAIL_SUBJECT = 'Welcome to Gavel!'
+
+DEFAULT_EMAIL_BODY = '''
+Hi {name},
+
+Welcome to Gavel, the online expo judging system. This email contains your
+magic link to the judging system.
+
+DO NOT SHARE this email with others, as it contains your personal magic link.
+
+To access the system, visit {link}.
+
+Once you're in, please take the time to read the welcome message and
+instructions before continuing.
+'''.strip()

@@ -1,3 +1,9 @@
+# can also be specified as the 'BASE_URL' environment variable
+# defaults to ''
+#
+# this must be set for emailed links to work properly.
+base_url: null
+
 # can also be specified as the 'ADMIN_PASSWORD' environment variable
 admin_password: null
 
@@ -39,3 +45,45 @@ timeout: null
 # into separate paragraphs. it's recommended to use the YAML multiline string
 # syntax when overriding this.
 welcome_message: null
+
+# can also be specified as the 'DISABLE_EMAIL' environment variable
+# defaults to 'False'
+#
+# setting this to true disables email functionality.
+disable_email: null
+
+# can also be specified as the 'EMAIL_HOST' environment variable
+# defaults to 'smtp.gmail.com'
+#
+# when using gmail, you must turn on access for less secure apps via this link:
+# https://www.google.com/settings/security/lesssecureapps. if at any point,
+# your account gets locked, visiting this link may help:
+# http://www.google.com/accounts/DisplayUnlockCaptcha.
+email_host: null
+
+# can also be specified as the 'EMAIL_PORT' environment variable
+# defaults to '587'
+email_port: null
+
+# can also be specified as the 'EMAIL_FROM' environment variable
+email_from: null
+
+# can also be specified as the 'EMAIL_PASSWORD' environment variable
+email_password: null
+
+# can't be specified via environment variable
+# defaults to gavel.constants.DEFAULT_EMAIL_SUBJECT
+#
+# this is the subject line of the email that's sent to judges.
+email_subject: null
+
+# can't be specified via environment variable
+# defaults to gavel.constants.DEFAULT_EMAIL_BODY
+#
+# this is the body of the email that's sent to judges when they're signed up
+# for the system. when the text is processed, '{name}' and '{link}' are
+# replaced with the relevant content, single newlines are converted into
+# spaces, and text separated by two or more newlines is converted into separate
+# paragraphs. it's recommended to use the YAML multiline string syntax when
+# overriding this.
+email_body: null

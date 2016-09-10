@@ -6,6 +6,10 @@
     "env": {
         "ADMIN_PASSWORD": "change-this-before-deploying",
         "SECRET_KEY": "randomly-generate-this-before-deploying",
+        "DISABLE_EMAIL": "true",
+        "BASE_URL": "_unused_",
+        "EMAIL_FROM": "_unused_",
+        "EMAIL_PASSWORD": "_unused_",
         "IGNORE_CONFIG_FILE": "true"
     },
     "keywords": [

@@ -82,6 +82,7 @@
                 <td>Updated</td>
                 <td>Alpha</td>
                 <td>Beta</td>
+                <td>Email</td>
                 <td>Active</td>
                 <td>Delete</td>
             </tr>
@@ -98,6 +99,13 @@
                 <td>{{ annotator.updated | utcdatetime_local }}</td>
                 <td>{{ annotator.alpha | round(4) }}</td>
                 <td>{{ annotator.beta | round(4) }}</td>
+                <td class="compact">
+                    <form action="/admin/annotator" method="post">
+                        <input type="submit" name="action" value="Email" class="neutral">
+                        <input type="hidden" name="annotator_id" value="{{ annotator.id }}">
+                        <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+                    </form>
+                </td>
                 <td class="compact">
                     <form action="/admin/annotator" method="post">
                         <input type="submit" name="action" value="{{ 'Disable' if annotator.active else 'Enable' }}" class="{{ 'negative' if annotator.active else 'positive' }}">
@@ -123,7 +131,6 @@
         <h2>Add Items</h2>
     </div>
     <div class="info">
-        <h3>Items</h3>
         <p>name, location, description (CSV format)</p>
         <textarea name="data" form="item_form"></textarea>
         <form action="/admin/item" method="post" id="item_form">

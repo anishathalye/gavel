@@ -1,4 +1,4 @@
-from gavel.constants import DEFAULT_WELCOME_MESSAGE
+import gavel.constants as constants
 import os
 import yaml
 
@@ -34,14 +34,32 @@ class Config(object):
                 raise LookupError('Cannot find value for setting %s' % name)
         return setting
 
-config = Config(CONFIG_FILE)
+c = Config(CONFIG_FILE)
+
+def _bool(truth_value):
+    if isinstance(truth_value, bool):
+        return truth_value
+    if isinstance(truth_value, int):
+        return bool(truth_value)
+    if isinstance(truth_value, str):
+        lower = truth_value.lower()
+        return lower.startswith('t') or lower.startswith('y') # accepts things like 'yes', 'True', ...
+    raise ValueError('invalid type for bool coercion')
 
 # note: this should be kept in sync with 'config.sample.yaml' and
 # 'config.vagrant.yaml'
-ADMIN_PASSWORD = config.get('admin_password', 'ADMIN_PASSWORD')
-DB_URI = config.get('db_uri', ['DATABASE_URL', 'DB_URI'], default='postgresql://localhost/gavel')
-SECRET_KEY = config.get('secret_key', 'SECRET_KEY')
-PORT = int(config.get('port', 'PORT', default=5000))
-MIN_VIEWS = int(config.get('min_views', 'MIN_VIEWS', default=2))
-TIMEOUT = float(config.get('timeout', 'TIMEOUT', default=5.0)) # in minutes
-WELCOME_MESSAGE = config.get('welcome_message', default=DEFAULT_WELCOME_MESSAGE)
+BASE_URL =              c.get('base_url',       'BASE_URL')
+ADMIN_PASSWORD =        c.get('admin_password', 'ADMIN_PASSWORD')
+DB_URI =                c.get('db_uri',         ['DATABASE_URL', 'DB_URI'], default='postgresql://localhost/gavel')
+SECRET_KEY =            c.get('secret_key',     'SECRET_KEY')
+PORT =              int(c.get('port',           'PORT',                     default=5000))
+MIN_VIEWS =         int(c.get('min_views',      'MIN_VIEWS',                default=2))
+TIMEOUT =         float(c.get('timeout',        'TIMEOUT',                  default=5.0)) # in minutes
+WELCOME_MESSAGE =       c.get('welcome_message',                            default=constants.DEFAULT_WELCOME_MESSAGE)
+DISABLE_EMAIL =   _bool(c.get('disable_email',  'DISABLE_EMAIL',            default=False))
+EMAIL_HOST =            c.get('email_host',     'EMAIL_HOST',               default='smtp.gmail.com')
+EMAIL_PORT =        int(c.get('email_port',     'EMAIL_PORT',               default=587))
+EMAIL_FROM =            c.get('email_from',     'EMAIL_FROM')
+EMAIL_PASSWORD =        c.get('email_password', 'EMAIL_PASSWORD')
+EMAIL_SUBJECT =         c.get('email_subject',                              default=constants.DEFAULT_EMAIL_SUBJECT)
+EMAIL_BODY =            c.get('email_body',                                 default=constants.DEFAULT_EMAIL_BODY)

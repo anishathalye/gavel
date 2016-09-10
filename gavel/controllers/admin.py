@@ -1,6 +1,7 @@
 from gavel import app
 from gavel.models import *
 from gavel.constants import *
+import gavel.settings as settings
 import gavel.utils as utils
 from flask import (
     redirect,
@@ -8,6 +9,7 @@ from flask import (
     request,
     url_for,
 )
+import urllib.parse
 
 @app.route('/admin/')
 @utils.requires_auth
@@ -69,10 +71,16 @@ def annotator():
     if action == 'Submit':
         csv = request.form['data']
         data = utils.data_from_csv_string(csv)
+        added = []
         for row in data:
             annotator = Annotator(*row)
+            added.append(annotator)
             db.session.add(annotator)
         db.session.commit()
+        email_invite_links(added)
+    elif action == 'Email':
+        annotator_id = request.form['annotator_id']
+        email_invite_links(Annotator.by_id(annotator_id))
     elif action == 'Disable' or action == 'Enable':
         annotator_id = request.form['annotator_id']
         target_state = action == 'Enable'
@@ -98,3 +106,18 @@ def setting():
         Setting.set(SETTING_CLOSED, new_value)
         db.session.commit()
     return redirect(url_for('admin'))
+
+def email_invite_links(annotators):
+    if settings.DISABLE_EMAIL or annotators is None:
+        return
+    if not isinstance(annotators, list):
+        annotators = [annotators]
+
+    emails = []
+    for annotator in annotators:
+        link = urllib.parse.urljoin(settings.BASE_URL, '/login/%s' % annotator.secret)
+        raw_body = settings.EMAIL_BODY.format(name=annotator.name, link=link)
+        body = '\n\n'.join(utils.get_paragraphs(raw_body))
+        emails.append((annotator.email, settings.EMAIL_SUBJECT, body))
+
+    utils.send_emails(emails)

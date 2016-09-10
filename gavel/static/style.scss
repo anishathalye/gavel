@@ -197,6 +197,11 @@ input[type=submit].negative {
   background-color: $negative-color;
 }
 
+input[type=submit].neutral {
+  background-color: $neutral-color;
+  color: $dark;
+}
+
 .disabled {
   background-color: $disabled-color;
 }

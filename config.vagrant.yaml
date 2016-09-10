@@ -1,4 +1,8 @@
 # settings optimized for development in a Vagrant VM
+base_url: http://localhost:5000/
 admin_password: admin
 secret_key: gavel
 db_uri: postgresql://localhost/gavel
+disable_email: true
+email_from: '' # needs to be set to something even though email is disabled
+email_password: ''
