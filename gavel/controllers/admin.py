@@ -107,6 +107,16 @@ def setting():
         db.session.commit()
     return redirect(url_for('admin'))
 
+@app.route('/admin/item/<item_id>/')
+@utils.requires_auth
+def item_detail(item_id):
+    item = Item.by_id(item_id)
+    if not item:
+        return render_template('error.html', message='Item not found.')
+    else:
+        assigned = Annotator.query.filter(Annotator.next == item).all()
+        return render_template('admin_item.html', item=item, assigned=assigned)
+
 def email_invite_links(annotators):
     if settings.DISABLE_EMAIL or annotators is None:
         return

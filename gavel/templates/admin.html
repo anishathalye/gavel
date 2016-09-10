@@ -21,7 +21,7 @@
         <h2>Items</h2>
     </div>
     <div class="info">
-        <table>
+        <table class="header-row">
             <tr>
                 <td>Id</td>
                 <td>Name</td>
@@ -36,7 +36,7 @@
             </tr>
             {% for item in items %}
             <tr class="{{ "disabled" if not item.active else "" }}">
-                <td>{{ item.id }}</td>
+                <td><a href="/admin/item/{{ item.id }}/">{{ item.id }}</a></td>
                 <td>{{ item.name | safe }}</td>
                 <td>{{ item.location | safe }}</td>
                 <td>{{ item.description | safe }}</td>
@@ -69,7 +69,7 @@
         <h2>Annotators</h2>
     </div>
     <div class="info">
-        <table>
+        <table class="header-row">
             <tr>
                 <td>Id</td>
                 <td>Name</td>
@@ -159,7 +159,7 @@
         <h2>Global Settings</h2>
     </div>
     <div class="info">
-        <table>
+        <table class="header-row">
             <tr>
                 <td>Setting</td>
                 <td>Value</td>

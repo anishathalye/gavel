@@ -62,7 +62,12 @@ td {
   padding: 0 0.25rem;
 }
 
-tr:first-child td {
+.header-row tr:first-child td {
+  background: $light-grey;
+  font-weight: bold;
+}
+
+.header-column td:first-child {
   background: $light-grey;
   font-weight: bold;
 }
@@ -74,6 +79,7 @@ textarea {
 a {
   text-decoration: none;
   color: $link-color;
+  font-weight: bold;
 }
 
 .item {
