@@ -8,11 +8,11 @@ view_table = db.Table('view',
 )
 
 class Item(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.Text)
-    location = db.Column(db.Text)
-    description = db.Column(db.Text)
-    active = db.Column(db.Boolean, default=True)
+    id = db.Column(db.Integer, primary_key=True, nullable=False)
+    name = db.Column(db.Text, nullable=False)
+    location = db.Column(db.Text, nullable=False)
+    description = db.Column(db.Text, nullable=False)
+    active = db.Column(db.Boolean, default=True, nullable=False)
     viewed = db.relationship('Annotator', secondary=view_table)
 
     mu = db.Column(db.Float)
