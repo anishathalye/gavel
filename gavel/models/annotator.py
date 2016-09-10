@@ -36,8 +36,12 @@ class Annotator(db.Model):
         self.secret = utils.gen_secret(32)
 
     def update_next(self, new_next):
+        if new_next is not None:
+            new_next.prioritized = False # it's now assigned, so cancel the prioritization
+            # it could happen that the judge skips the project, but that
+            # doesn't re-prioritize the project
+            self.updated = datetime.utcnow()
         self.next = new_next
-        self.updated = datetime.utcnow()
 
     @classmethod
     def by_secret(cls, secret):

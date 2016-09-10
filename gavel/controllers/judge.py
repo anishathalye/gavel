@@ -138,23 +138,27 @@ def preferred_items(annotator):
     '''
     Return a list of preferred items for the given annotator to look at next.
 
-    This method takes into account MIN_VIEWS, and if there are any projects
-    that haven't been seen enough times, it returns a list of only those
-    projects. Otherwise, it returns all the projects that the annotator hasn't
-    seen or skipped.
+    This method uses a variety of strategies to try to select good candidate
+    projects.
     '''
+    items = []
     ignored_ids = {i.id for i in annotator.ignore}
+
     available_items = Item.query.filter(
         (Item.active == True) & (~Item.id.in_(ignored_ids))
     ).all()
+
+    prioritized_items = [i for i in available_items if i.prioritized]
+
+    items = prioritized_items if prioritized_items else available_items
 
     annotators = Annotator.query.filter(
         (Annotator.active == True) & (Annotator.next != None) & (Annotator.updated != None)
     ).all()
     busy = set([i.next.id for i in annotators if \
         (datetime.utcnow() - i.updated).total_seconds() < TIMEOUT * 60])
-    nonbusy = [i for i in available_items if i.id not in busy]
-    preferred = nonbusy if nonbusy else available_items
+    nonbusy = [i for i in items if i.id not in busy]
+    preferred = nonbusy if nonbusy else items
 
     less_seen = [i for i in preferred if len(i.viewed) < MIN_VIEWS]
 

@@ -31,11 +31,12 @@
                 <td>Sigma Squared</td>
                 <td>Votes</td>
                 <td>Seen</td>
+                <td>Prioritize</td>
                 <td>Active</td>
                 <td>Delete</td>
             </tr>
             {% for item in items %}
-            <tr class="{{ "disabled" if not item.active else "" }}">
+            <tr class="{{ 'disabled' if not item.active else 'prioritized' if item.prioritized else '' }}">
                 <td><a href="/admin/item/{{ item.id }}/">{{ item.id }}</a></td>
                 <td>{{ item.name | safe }}</td>
                 <td>{{ item.location | safe }}</td>
@@ -44,6 +45,13 @@
                 <td>{{ item.sigma_sq | round(4) }}</td>
                 <td>{{ item_counts.get(item.id, 0) }}</td>
                 <td>{{ item.viewed | length }}</td>
+                <td class="compact">
+                    <form action="/admin/item" method="post">
+                        <input type="submit" name="action" value="{{ 'Prioritize' if not item.prioritized else 'Cancel' }}" class="{{ 'positive' if not item.prioritized else 'negative' }}">
+                        <input type="hidden" name="item_id" value="{{ item.id }}">
+                        <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+                    </form>
+                </td>
                 <td class="compact">
                     <form action="/admin/item" method="post">
                         <input type="submit" name="action" value="{{ 'Disable' if item.active else 'Enable' }}" class="{{ 'negative' if item.active else 'positive' }}">
@@ -87,7 +95,7 @@
                 <td>Delete</td>
             </tr>
             {% for annotator in annotators %}
-            <tr class="{{ "disabled" if not annotator.active else "" }}">
+            <tr class="{{ 'disabled' if not annotator.active else '' }}">
                 <td>{{ annotator.id }}</td>
                 <td>{{ annotator.name | safe }}</td>
                 <td>{{ annotator.email | safe }}</td>

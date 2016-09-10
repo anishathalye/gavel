@@ -212,6 +212,10 @@ input[type=submit].neutral {
   background-color: $disabled-color;
 }
 
+.prioritized {
+  background-color: $prioritized-color;
+}
+
 #footer {
   margin-top: 2rem;
   border-top: 1px solid $light-grey;

@@ -49,6 +49,11 @@ def item():
             _item = Item(*row)
             db.session.add(_item)
         db.session.commit()
+    elif action == 'Prioritize' or action == 'Cancel':
+        item_id = request.form['item_id']
+        target_state = action == 'Prioritize'
+        Item.by_id(item_id).prioritized = target_state
+        db.session.commit()
     elif action == 'Disable' or action == 'Enable':
         item_id = request.form['item_id']
         target_state = action == 'Enable'
@@ -115,7 +120,13 @@ def item_detail(item_id):
         return render_template('error.html', message='Item not found.')
     else:
         assigned = Annotator.query.filter(Annotator.next == item).all()
-        return render_template('admin_item.html', item=item, assigned=assigned)
+        multiple_views = len(item.viewed) > 1
+        return render_template(
+            'admin_item.html',
+            item=item,
+            assigned=assigned,
+            multiple_views=multiple_views
+        )
 
 def email_invite_links(annotators):
     if settings.DISABLE_EMAIL or annotators is None:

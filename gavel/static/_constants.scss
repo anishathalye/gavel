@@ -4,7 +4,6 @@ $branding-red: #fc5454;
 $branding-yellow: #ffe86b;
 $branding-green: #c9d41b;
 $branding-dark: #0b3b4b;
-$branding-pink: #ffe8e8;
 
 $wait-color: $branding-yellow;
 $error-color: $branding-red;
@@ -14,7 +13,8 @@ $vote-color: $branding-red;
 $vote-skip-color: $branding-yellow;
 $vote-done-color: $branding-green;
 $admin-color: $branding-dark;
-$disabled-color: $branding-pink;
+$disabled-color: mix($branding-red, white, 25%);
+$prioritized-color: mix($branding-green, white, 25%);
 $positive-color: $branding-green;
 $negative-color: $branding-red;
 $neutral-color: $branding-yellow;
