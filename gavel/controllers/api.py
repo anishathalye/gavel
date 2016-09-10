@@ -23,5 +23,23 @@ def item_dump():
 def annotator_dump():
     annotators = Annotator.query.all()
     data = [['Name', 'Email', 'Description', 'Secret']]
-    data += [[str(a.name), a.email, a.description, a.secret] for a in annotators]
+    data += [[
+        str(a.name),
+        a.email,
+        a.description,
+        a.secret
+    ] for a in annotators]
+    return Response(utils.data_to_csv_string(data), mimetype='text/csv')
+
+@app.route('/api/decisions.csv')
+@utils.requires_auth
+def decisions_dump():
+    decisions = Decision.query.all()
+    data = [['Annotator ID', 'Winner ID', 'Loser ID', 'Time']]
+    data += [[
+        str(d.annotator.id),
+        str(d.winner.id),
+        str(d.loser.id),
+        str(d.time)
+    ] for d in decisions]
     return Response(utils.data_to_csv_string(data), mimetype='text/csv')
