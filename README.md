@@ -1,9 +1,9 @@
-# Gavel
+<img src="https://raw.githubusercontent.com/anishathalye/gavel/docs/banner.png" width="450" height="150" alt="Gavel banner">
 
 **Gavel** is a project expo judging system.
 
-It was originally built for HackMIT and first used at HackMIT 2015. It's also
-been used by a number of other hackathons.
+It was originally built for HackMIT and first used at HackMIT 2015. It's been
+used at a number of other events since then.
 
 [![Join the chat at https://gitter.im/anishathalye/gavel](https://badges.gitter.im/anishathalye/gavel.svg)](https://gitter.im/anishathalye/gavel?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
@@ -11,36 +11,33 @@ been used by a number of other hackathons.
 
 Gavel is based on the method of pairwise comparisons. Before you use Gavel,
 it's *highly recommended* that you read about the philosophy behind the
-implementation, as well as hints on how to use it in practice. Read [this blog
+implementation as well as hints on how to use it in practice. Read [this blog
 post][blog-1] first, and then read [this blog post][blog-2].
 
 ## Status
 
-Gavel is currently **beta software**! We've used it successfully at HackMIT
-2015, and a bunch of other hackathons have used it too, but it's still pretty
-rough around the edges.
+Gavel is stable software. We've used it successfully at HackMIT, and a bunch of
+other hackathons and events have used it too.
 
-If you want to use this for your hackathon or event, we highly recommend that
-you:
+Gavel is a pretty different way of doing judging. If you want to use this for
+your hackathon or event, we highly recommend that you:
 
 * Deploy it and play around with it ahead of time to get a feel for how the
   system works
-* Take a look at the [issues][issues] to see the current state of affairs and
-  learn about some things that might be nonintuitive
-* Read the blog posts linked above to get a feel for how many judges you need
+* Read the blog posts linked above to get an idea of how to structure the
+  judging process
 
 If you have any questions, feel free to [email me][email].
 
 If you're able to contribute to making Gavel better, that would be **awesome**!
 We'd really appreciate any kind of input, especially pull requests.
 
-If you're interested in working closely with the HackMIT team to make this
-software better, email us at team@hackmit.org and we can talk about how we can
-work together!
-
 ## Deployment
 
 [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/anishathalye/gavel/tree/master)
+
+The latest stable version is the `master` branch (and it's signed and tagged).
+Development happens in the `develop` branch.
 
 The web application is written in **Python 3** using Flask. It also uses NumPy
 and SciPy for math stuff. Doing a `pip install -r requirements.txt` should
@@ -49,11 +46,12 @@ install all the dependencies.
 The application uses Postgres for the database, so you need to have that on
 your server. You need to create a database, which you can do with `createdb
 gavel` (unless you're using a different database name). Before you use the app,
-you need to initialize the database by running `python initialize.py`.
+you need to initialize the database by running `python initialize.py`. **Note
+that Gavel does not preserve database schema compatibility between versions.**
 
 When testing, you can run the app with `python runserver.py`. In production,
 you should use something like [Gunicorn][gunicorn] to serve this. You can run
-the app with `gunicorn gavel:app`.
+the app with `gunicorn -b :<PORT> -w <number of workers> gavel:app`.
 
 ## Configuration
 
@@ -68,15 +66,35 @@ set the environment variable `IGNORE_CONFIG_FILE=true`.
 
 ## Use
 
-Using the admin interface on `/admin`, input data for all the projects and
-input information for all the judges.
+To set up the system, use the admin interface on `/admin`. Log in with the
+username `admin` and the password you set. Once you're logged in, you can input
+information for all the projects and judges.
 
-After that, get the "magic link" to each of the judges. The judge should
-navigate to `http://example.com/login/{secret}`. This is a bit clunky, and it
-should be fixed soon: see [this
-issue](https://github.com/anishathalye/gavel/issues/1) for details. After the
-judges navigate to the secret link, they'll be prompted to go through projects
-and judge them.
+As you add judges, they'll automatically get emails with invitation links.
+After that, the judging and ranking process is fully automated - the judge will
+be able to read the welcome text, and then they'll be able to start judging.
+
+The admin panel will rank projects in real time, ordered by their inferred
+quality (Mu).
+
+### Admin Panel Features
+
+* If you want to (temporarily) close the judging system, click the "Close"
+  button under "Global Settings"
+* If you need to force re-send the invite email, use the "Email" button for the
+  judge in the admin panel
+* If you need to manually give a judge a login link, direct them to
+  `/login/<secret>`
+* If you want to send the next available judge to a certain project, use the
+  "Prioritize" button
+* If you need to deactivate projects or judges at any point, use the "Disable"
+  button
+* If a project hasn't been judged yet, you can delete it using the "Delete"
+  button
+* If a judge hasn't started yet, you can delete them using the "Delete" button
+* If you need to see details for a project or judge, click on the item ID in
+  the admin panel
+* If you want to sort the items in the admin panel, click on the table headers
 
 ## Development
 
@@ -99,9 +117,6 @@ Do you have a feature request, bug report, or patch? Great! See
 
 Copyright (c) 2015-2016 Anish Athalye. Released under AGPLv3. See
 [LICENSE.txt][license] for details.
-
-If you're interested in getting access to this system under a different
-license, please [contact me][email].
 
 [blog-1]: http://www.anishathalye.com/2015/03/07/designing-a-better-judging-system/
 [blog-2]: http://www.anishathalye.com/2015/11/09/implementing-a-scalable-judging-system/

@@ -1,5 +1,8 @@
 # Development
 
+Development happens in the `develop` branch, while the latest stable version is
+in the `master` branch.
+
 ## Setup
 
 The easiest way to get started on hacking on Gavel is to use [Vagrant][vagrant]
