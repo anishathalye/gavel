@@ -7,7 +7,7 @@
     </div>
     <div class="info">
         {% for paragraph in paragraphs %}
-            <p>{{ paragraph }}</p>
+            <p>{{ paragraph | safe }}</p>
         {% endfor %}
     </div>
 </div>
