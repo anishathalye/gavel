@@ -8,7 +8,13 @@ if __name__ == '__main__':
     from gavel.settings import PORT
     import os
 
+    extra_files = []
     if os.environ.get('DEBUG', False):
         app.debug = True
-    port = PORT
-    app.run(host='0.0.0.0', port=port)
+        extra_files.append('./config.yaml')
+
+    app.run(
+        host='0.0.0.0',
+        port=PORT,
+        extra_files=extra_files
+    )
