@@ -1,6 +1,7 @@
 import gavel.settings as settings
 import gavel.crowd_bt as crowd_bt
-from flask import Response, request
+from flask import Markup, Response, request
+import markdown
 from functools import wraps
 import base64
 import os
@@ -72,3 +73,6 @@ def send_emails(emails):
             pass # XXX is there a better way to handle this?
 
     server.quit()
+
+def render_markdown(content):
+    return Markup(markdown.markdown(content))

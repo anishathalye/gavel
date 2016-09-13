@@ -8,19 +8,19 @@ admin_password: null
 # can also be specified as the 'BASE_URL' environment variable
 #
 # this must be set for emailed links to work properly. if you are setting
-# DISABLE_EMAIL, you can set this setting to '' (empty string).
+# DISABLE_EMAIL, you can set this setting to '_unused_' (or anything else).
 base_url: null
 
 # can also be specified as the 'EMAIL_FROM' environment variable
 #
-# if you are setting DISABLE_EMAIL, you can set this setting to '' (empty
-# string).
+# if you are setting DISABLE_EMAIL, you can set this setting to '_unused_' (or
+# anything else).
 email_from: null
 
 # can also be specified as the 'EMAIL_PASSWORD' environment variable
 #
-# if you are setting DISABLE_EMAIL, you can set this setting to '' (empty
-# string).
+# if you are setting DISABLE_EMAIL, you can set this setting to '_unused_' (or
+# anything else).
 email_password: null
 
 # can also be specified as the 'SECRET_KEY' environment variable
@@ -60,11 +60,37 @@ timeout: null
 # defaults to gavel.constants.DEFAULT_WELCOME_MESSAGE
 #
 # this is the welcome message that's shown to judges before they can start
-# using the system. when the message is displayed, single newlines are
-# converted into spaces and text separated by two or more newlines is converted
-# into separate paragraphs. it's recommended to use the YAML multiline string
-# syntax when overriding this.
+# using the system. the message is rendered as Markdown.
 welcome_message: null
+
+# can't be specified via environment variable
+# defaults to gavel.constants.DEFAULT_CLOSED_MESSAGE
+#
+# this is the message that's shown to judges when the judging system is closed.
+# the message is rendered as Markdown.
+closed_message: null
+
+# can't be specified via environment variable
+# defaults to gavel.constants.DEFAULT_DISABLED_MESSAGE
+#
+# this is the message that's shown to judges when their account is disabled.
+# the message is rendered as Markdown.
+disabled_message: null
+
+# can't be specified via environment variable
+# defaults to gavel.constants.DEFAULT_LOGGED_OUT_MESSAGE
+#
+# this is the message that's shown to judges when they are logged out. the
+# message is rendered as Markdown.
+logged_out_message: null
+
+# can't be specified via environment variable
+# defaults to gavel.constants.DEFAULT_WAIT_MESSAGE
+#
+# this is the message that's shown to judges when they don't have any pending
+# assignments (and can reload the page to check again). the message is rendered
+# as Markdown.
+wait_message: null
 
 # can also be specified as the 'DISABLE_EMAIL' environment variable
 # defaults to 'False'

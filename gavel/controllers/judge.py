@@ -1,7 +1,7 @@
 from gavel import app
 from gavel.models import *
 from gavel.constants import *
-from gavel.settings import MIN_VIEWS, WELCOME_MESSAGE, TIMEOUT
+import gavel.settings as settings
 import gavel.utils as utils
 import gavel.crowd_bt as crowd_bt
 from flask import (
@@ -43,17 +43,29 @@ def requires_active_annotator(redirect_to):
 def index():
     annotator = get_current_annotator()
     if annotator is None:
-        return render_template('logged_out.html')
+        return render_template(
+            'logged_out.html',
+            content=utils.render_markdown(settings.LOGGED_OUT_MESSAGE)
+        )
     else:
         if Setting.value_of(SETTING_CLOSED) == SETTING_TRUE:
-            return render_template('closed.html')
+            return render_template(
+                'closed.html',
+                content=utils.render_markdown(settings.CLOSED_MESSAGE)
+            )
         if not annotator.active:
-            return render_template('disabled.html')
+            return render_template(
+                'disabled.html',
+                content=utils.render_markdown(settings.DISABLED_MESSAGE)
+            )
         if not annotator.read_welcome:
             return redirect(url_for('welcome'))
         maybe_init_annotator(annotator)
         if annotator.next is None:
-            return render_template('wait.html')
+            return render_template(
+                'wait.html',
+                content=utils.render_markdown(settings.WAIT_MESSAGE)
+            )
         elif annotator.prev is None:
             return render_template('begin.html', item=annotator.next)
         else:
@@ -116,13 +128,16 @@ def login(secret):
     return redirect(url_for('index'))
 
 @app.route('/welcome/')
+@requires_open(redirect_to='index')
 @requires_active_annotator(redirect_to='index')
 def welcome():
-    message = WELCOME_MESSAGE
-    paragraphs = utils.get_paragraphs(message)
-    return render_template('welcome.html', paragraphs=paragraphs)
+    return render_template(
+        'welcome.html',
+        content=utils.render_markdown(settings.WELCOME_MESSAGE)
+    )
 
 @app.route('/welcome/done', methods=['POST'])
+@requires_open(redirect_to='index')
 @requires_active_annotator(redirect_to='index')
 def welcome_done():
     annotator = get_current_annotator()
@@ -156,11 +171,11 @@ def preferred_items(annotator):
         (Annotator.active == True) & (Annotator.next != None) & (Annotator.updated != None)
     ).all()
     busy = set([i.next.id for i in annotators if \
-        (datetime.utcnow() - i.updated).total_seconds() < TIMEOUT * 60])
+        (datetime.utcnow() - i.updated).total_seconds() < settings.TIMEOUT * 60])
     nonbusy = [i for i in items if i.id not in busy]
     preferred = nonbusy if nonbusy else items
 
-    less_seen = [i for i in preferred if len(i.viewed) < MIN_VIEWS]
+    less_seen = [i for i in preferred if len(i.viewed) < settings.MIN_VIEWS]
 
     return less_seen if less_seen else preferred
 
