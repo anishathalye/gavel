@@ -82,10 +82,16 @@ def annotator():
             added.append(annotator)
             db.session.add(annotator)
         db.session.commit()
-        email_invite_links(added)
+        try:
+            email_invite_links(added)
+        except Exception as e:
+            return render_template('error.html', message=str(e))
     elif action == 'Email':
         annotator_id = request.form['annotator_id']
-        email_invite_links(Annotator.by_id(annotator_id))
+        try:
+            email_invite_links(Annotator.by_id(annotator_id))
+        except Exception as e:
+            return render_template('error.html', message=str(e))
     elif action == 'Disable' or action == 'Enable':
         annotator_id = request.form['annotator_id']
         target_state = action == 'Enable'

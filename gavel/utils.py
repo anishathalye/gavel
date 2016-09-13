@@ -60,6 +60,7 @@ def send_emails(emails):
     server.ehlo()
     server.login(settings.EMAIL_FROM, settings.EMAIL_PASSWORD)
 
+    exceptions = []
     for e in emails:
         try:
             to_address, subject, body = e
@@ -69,10 +70,12 @@ def send_emails(emails):
             msg['Subject'] = subject
             msg.attach(email.mime.text.MIMEText(body, 'plain'))
             server.sendmail(settings.EMAIL_FROM, to_address, msg.as_string())
-        except Exception:
-            pass # XXX is there a better way to handle this?
+        except Exception as e:
+            exceptions.append(e) # XXX is there a cleaner way to handle this?
 
     server.quit()
+    if exceptions:
+        raise Exception('Error sending some emails: %s' % exceptions)
 
 def render_markdown(content):
     return Markup(markdown.markdown(content))
