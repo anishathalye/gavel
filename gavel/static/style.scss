@@ -7,7 +7,8 @@
   -webkit-font-smoothing: antialiased;
 }
 
-html, body {
+html,
+body {
   margin: 0;
   padding: 0;
 }
@@ -29,7 +30,12 @@ div {
   margin: 0;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   line-height: 1.25;
   margin: 0;
   padding-top: 0.5rem;
@@ -42,7 +48,8 @@ p {
   padding-bottom: 0.25rem;
 }
 
-input, textarea, {
+input,
+textarea {
   font-family: $body-font;
 }
 
@@ -54,7 +61,9 @@ strong {
   font-weight: bold;
 }
 
-table, tr, td {
+table,
+tr,
+td {
   border: 0.1rem solid black;
 }
 
@@ -85,6 +94,12 @@ a {
   color: $link-color;
   font-weight: bold;
 }
+
+a:hover,
+a:focus {
+  text-decoration: underline;
+}
+
 
 hr {
   position: relative;
