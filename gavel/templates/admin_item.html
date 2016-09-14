@@ -3,7 +3,7 @@
 {% block content %}
 <div class="item">
   <div class="banner" id="admin-header">
-    <h1>Item</h1>
+    <a href="{{ url_for('admin') }}"><h1>Item</h1></a>
   </div>
   <div class="info">
     <table class="header-column">
@@ -57,7 +57,7 @@
         <td>
           <ul>
             {% for annotator in item.viewed %}
-            <li><a href="/admin/annotator/{{ annotator.id }}/">{{ annotator.name | safe }} [{{ annotator.id }}]</a></li>
+            <li><a href="{{ url_for('annotator_detail', annotator_id=annotator.id) }}" class="colored">{{ annotator.name | safe }} [{{ annotator.id }}]</a></li>
             {% endfor %}
           </ul>
         </td>
@@ -67,7 +67,7 @@
         <td>
           <ul>
             {% for annotator in assigned %}
-            <li><a href="/admin/annotator/{{ annotator.id }}/">{{ annotator.name | safe }} [{{ annotator.id }}]</a></li>
+            <li><a href="{{ url_for('annotator_detail', annotator_id=annotator.id) }}" class="colored">{{ annotator.name | safe }} [{{ annotator.id }}]</a></li>
             {% endfor %}
           </ul>
         </td>
@@ -77,7 +77,7 @@
         <td>
           <ul>
             {% for annotator in skipped %}
-            <li><a href="/admin/annotator/{{ annotator.id }}/">{{ annotator.name | safe }} [{{ annotator.id }}]</a></li>
+            <li><a href="{{ url_for('annotator_detail', annotator_id=annotator.id) }}" class="colored">{{ annotator.name | safe }} [{{ annotator.id }}]</a></li>
             {% endfor %}
           </ul>
         </td>

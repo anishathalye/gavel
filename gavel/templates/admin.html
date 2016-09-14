@@ -37,7 +37,7 @@
       </tr>
       {% for item in items %}
       <tr class="{{ 'disabled' if not item.active else 'prioritized' if item.prioritized else '' }}">
-        <td><a href="/admin/item/{{ item.id }}/">{{ item.id }}</a></td>
+        <td><a href="{{ url_for('item_detail', item_id=item.id) }}" class="colored">{{ item.id }}</a></td>
         <td>{{ item.name | safe }}</td>
         <td>{{ item.location | safe }}</td>
         <td>{{ item.description | safe }}</td>
@@ -96,7 +96,7 @@
       </tr>
       {% for annotator in annotators %}
       <tr class="{{ 'disabled' if not annotator.active else '' }}">
-        <td><a href="/admin/annotator/{{ annotator.id }}/">{{ annotator.id }}</a></td>
+        <td><a href="{{ url_for('annotator_detail', annotator_id=annotator.id) }}" class="colored">{{ annotator.id }}</a></td>
         <td>{{ annotator.name | safe }}</td>
         <td>{{ annotator.email | safe }}</td>
         <td>{{ annotator.description | safe }}</td>

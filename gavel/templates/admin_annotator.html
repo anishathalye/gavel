@@ -3,7 +3,7 @@
 {% block content %}
 <div class="item">
   <div class="banner" id="admin-header">
-    <h1>Annotator</h1>
+    <a href="{{ url_for('admin') }}"><h1>Annotator</h1></a>
   </div>
   <div class="info">
     <table class="header-column">
@@ -30,7 +30,7 @@
       <tr>
         <td>Next</td>
         {% if annotator.next %}
-        <td><a href="/admin/item/{{ annotator.next.id }}">{{ annotator.next.name | safe }} [{{ annotator.next_id }}]</a></td>
+        <td><a href="{{ url_for('item_detail', item_id=annotator.next.id) }}" class="colored">{{ annotator.next.name | safe }} [{{ annotator.next_id }}]</a></td>
         {% else %}
         <td>None</td>
         {% endif %}
@@ -38,7 +38,7 @@
       <tr>
         <td>Previous</td>
         {% if annotator.prev %}
-        <td><a href="/admin/item/{{ annotator.prev.id }}">{{ annotator.prev.name | safe }} [{{ annotator.prev_id }}]</a></td>
+        <td><a href="{{ url_for('item_detail', item_id=annotator.prev.id) }}" class="colored">{{ annotator.prev.name | safe }} [{{ annotator.prev_id }}]</a></td>
         {% else %}
         <td>None</td>
         {% endif %}
@@ -60,7 +60,7 @@
         <td>
           <ul>
             {% for item in seen %}
-            <li><a href="/admin/item/{{ item.id }}">{{ item.name | safe }} [{{ item.id }}]</a></li>
+            <li><a href="{{ url_for('item_detail', item_id=item.id) }}" class="colored">{{ item.name | safe }} [{{ item.id }}]</a></li>
             {% endfor %}
           </ul>
         </td>
@@ -70,7 +70,7 @@
         <td>
           <ul>
             {% for item in skipped %}
-            <li><a href="/admin/item/{{ item.id }}">{{ item.name | safe }} [{{ item.id }}]</a></li>
+            <li><a href="{{ url_for('item_detail', item_id=item.id) }}" class="colored">{{ item.name | safe }} [{{ item.id }}]</a></li>
             {% endfor %}
           </ul>
         </td>

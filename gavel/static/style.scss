@@ -96,8 +96,12 @@ input[type=text] {
 
 a {
   text-decoration: none;
-  color: $link-color;
+  color: inherit;
   font-weight: bold;
+}
+
+a.colored {
+  color: $link-color;
 }
 
 a:hover,
