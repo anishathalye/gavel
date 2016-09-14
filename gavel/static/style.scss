@@ -69,6 +69,7 @@ td {
 
 table {
   border-collapse: collapse;
+  width: 100%;
 }
 
 td {
@@ -85,8 +86,12 @@ td {
   font-weight: bold;
 }
 
-textarea {
+textarea,
+input[type=text] {
+  font-weight: normal;
   width: 100%;
+  margin-top: 0.25rem;
+  margin-bottom: 0.25rem;
 }
 
 a {

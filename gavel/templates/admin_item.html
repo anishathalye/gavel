@@ -13,15 +13,36 @@
       </tr>
       <tr>
         <td>Name</td>
-        <td>{{ item.name | safe }}</td>
+        <td>
+          <form action="/admin/item_patch" method="post">
+            <input type="text" name="name" value="{{ item.name | safe }}">
+            <input type="submit" name="action" value="Update" class="neutral">
+            <input type="hidden" name="item_id" value="{{ item.id }}">
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+          </form>
+        </td>
       </tr>
       <tr>
         <td>Location</td>
-        <td>{{ item.location | safe }}</td>
+        <td>
+          <form action="/admin/item_patch" method="post">
+            <input type="text" name="location" value="{{ item.location | safe }}">
+            <input type="submit" name="action" value="Update" class="neutral">
+            <input type="hidden" name="item_id" value="{{ item.id }}">
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+          </form>
+        </td>
       </tr>
       <tr>
         <td>Description</td>
-        <td>{{ item.description | safe }}</td>
+        <td>
+          <textarea name="description" form="description_form">{{ item.description | safe }}</textarea>
+          <form action="/admin/item_patch" method="post" id="description_form">
+            <input type="submit" name="action" value="Update" class="neutral">
+            <input type="hidden" name="item_id" value="{{ item.id }}">
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+          </form>
+        </td>
       </tr>
       <tr>
         <td>Mu</td>

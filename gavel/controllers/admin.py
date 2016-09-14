@@ -69,6 +69,21 @@ def item():
             return render_template('error.html', message=str(e))
     return redirect(url_for('admin'))
 
+@app.route('/admin/item_patch', methods=['POST'])
+@utils.requires_auth
+def item_patch():
+    item = Item.by_id(request.form['item_id'])
+    if not item:
+        return render_template('error.html', message='Item not found.')
+    if 'location' in request.form:
+        item.location = request.form['location']
+    if 'name' in request.form:
+        item.name = request.form['name']
+    if 'description' in request.form:
+        item.description = request.form['description']
+    db.session.commit()
+    return redirect(url_for('item_detail', item_id=item.id))
+
 @app.route('/admin/annotator', methods=['POST'])
 @utils.requires_auth
 def annotator():
