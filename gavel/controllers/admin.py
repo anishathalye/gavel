@@ -126,12 +126,34 @@ def item_detail(item_id):
         return render_template('error.html', message='Item not found.')
     else:
         assigned = Annotator.query.filter(Annotator.next == item).all()
-        multiple_views = len(item.viewed) > 1
+        viewed_ids = {i.id for i in item.viewed}
+        skipped = Annotator.query.filter(
+            Annotator.ignore.contains(item) & ~Annotator.id.in_(viewed_ids)
+        )
         return render_template(
             'admin_item.html',
             item=item,
             assigned=assigned,
-            multiple_views=multiple_views
+            skipped=skipped
+        )
+
+@app.route('/admin/annotator/<annotator_id>/')
+@utils.requires_auth
+def annotator_detail(annotator_id):
+    annotator = Annotator.by_id(annotator_id)
+    if not annotator:
+        return render_template('error.html', message='Annotator not found.')
+    else:
+        seen = Item.query.filter(Item.viewed.contains(annotator)).all()
+        ignored_ids = {i.id for i in annotator.ignore}
+        skipped = Item.query.filter(
+            Item.id.in_(ignored_ids) & ~Item.viewed.contains(annotator)
+        )
+        return render_template(
+            'admin_annotator.html',
+            annotator=annotator,
+            seen=seen,
+            skipped=skipped
         )
 
 def email_invite_links(annotators):

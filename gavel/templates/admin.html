@@ -96,7 +96,7 @@
             </tr>
             {% for annotator in annotators %}
             <tr class="{{ 'disabled' if not annotator.active else '' }}">
-                <td>{{ annotator.id }}</td>
+                <td><a href="/admin/annotator/{{ annotator.id }}/">{{ annotator.id }}</a></td>
                 <td>{{ annotator.name | safe }}</td>
                 <td>{{ annotator.email | safe }}</td>
                 <td>{{ annotator.description | safe }}</td>

@@ -32,25 +32,31 @@
                 <td>{{ item.sigma_sq }}</td>
             </tr>
             <tr>
-                <td>Seen</td>
-                <td>{{ item.viewed | length }} time{{ 's' if multiple_views else '' }}</td>
-            </tr>
-            <tr>
                 <td>Seen By</td>
                 <td>
                     <ul>
                         {% for annotator in item.viewed %}
-                            <li>{{ annotator.name | safe }} ({{ annotator.email | safe }}) [{{ annotator.id }}]</li>
+                            <li><a href="/admin/annotator/{{ annotator.id }}/">{{ annotator.name | safe }} [{{ annotator.id }}]</a></li>
                         {% endfor %}
                     </ul>
                 </td>
             </tr>
             <tr>
-                <td>Currently Assigned</td>
+                <td>Assigned To</td>
                 <td>
                     <ul>
                         {% for annotator in assigned %}
-                            <li>{{ annotator.name | safe }} ({{ annotator.email | safe }}) [{{ annotator.id }}]</li>
+                            <li><a href="/admin/annotator/{{ annotator.id }}/">{{ annotator.name | safe }} [{{ annotator.id }}]</a></li>
+                        {% endfor %}
+                    </ul>
+                </td>
+            </tr>
+            <tr>
+                <td>Skipped By</td>
+                <td>
+                    <ul>
+                        {% for annotator in skipped %}
+                            <li><a href="/admin/annotator/{{ annotator.id }}/">{{ annotator.name | safe }} [{{ annotator.id }}]</a></li>
                         {% endfor %}
                     </ul>
                 </td>
