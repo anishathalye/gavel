@@ -38,6 +38,10 @@ h1, h2, h3, h4, h5, h6 {
   font-weight: bold;
 }
 
+p {
+  padding-bottom: 0.25rem;
+}
+
 input, textarea, {
   font-family: $body-font;
 }
@@ -95,8 +99,8 @@ hr {
 }
 
 .info {
-  padding-left: 0.5rem;
-  padding-right: 0.5rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
 }
 
 .compact {
@@ -109,6 +113,7 @@ hr {
 
 .banner {
   text-align: center;
+  text-transform: uppercase;
   margin-bottom: 0.5rem;
   color: $light;
   background-color: $dark;
