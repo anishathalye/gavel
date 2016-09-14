@@ -80,7 +80,7 @@ detailed.
 * Install Postgres
 * Do development inside a [virtualenv][virtualenv]
 * `pip install -r requirements.txt`
-* `cp config.sample.yaml config.yaml`
+* `cp config.template.yaml config.yaml`
 * Edit config file for your setup
 * `python initialize.py`
 * `DEBUG=true python gavel.py`

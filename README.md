@@ -57,11 +57,11 @@ the app with `gunicorn gavel:app`.
 
 ## Configuration
 
-Before starting the app, copy `config.sample.yaml` to `config.yaml` and set all
-the required settings (the ones that don't have default values).
+Before starting the app, copy `config.template.yaml` to `config.yaml` and set
+all the required settings (the ones that don't have default values).
 
 Most settings can either be set in `config.yaml` or set as environment
-variables. There's more detailed documentation in `config.sample.yaml`.
+variables. There's more detailed documentation in `config.template.yaml`.
 
 If you don't want to use the config file and use only environment variables,
 set the environment variable `IGNORE_CONFIG_FILE=true`.
