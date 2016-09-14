@@ -2,66 +2,66 @@
 {% block title %}Item{% endblock %}
 {% block content %}
 <div class="item">
-    <div class="banner" id="admin-header">
-        <h1>Item</h1>
-    </div>
-    <div class="info">
-        <table class="header-column">
-            <tr>
-                <td>Id</td>
-                <td>{{ item.id }}</td>
-            </tr>
-            <tr>
-                <td>Name</td>
-                <td>{{ item.name | safe }}</td>
-            </tr>
-            <tr>
-                <td>Location</td>
-                <td>{{ item.location | safe }}</td>
-            </tr>
-            <tr>
-                <td>Description</td>
-                <td>{{ item.description | safe }}</td>
-            </tr>
-            <tr>
-                <td>Mu</td>
-                <td>{{ item.mu }}</td>
-            </tr>
-            <tr>
-                <td>Sigma Squared</td>
-                <td>{{ item.sigma_sq }}</td>
-            </tr>
-            <tr>
-                <td>Seen By</td>
-                <td>
-                    <ul>
-                        {% for annotator in item.viewed %}
-                            <li><a href="/admin/annotator/{{ annotator.id }}/">{{ annotator.name | safe }} [{{ annotator.id }}]</a></li>
-                        {% endfor %}
-                    </ul>
-                </td>
-            </tr>
-            <tr>
-                <td>Assigned To</td>
-                <td>
-                    <ul>
-                        {% for annotator in assigned %}
-                            <li><a href="/admin/annotator/{{ annotator.id }}/">{{ annotator.name | safe }} [{{ annotator.id }}]</a></li>
-                        {% endfor %}
-                    </ul>
-                </td>
-            </tr>
-            <tr>
-                <td>Skipped By</td>
-                <td>
-                    <ul>
-                        {% for annotator in skipped %}
-                            <li><a href="/admin/annotator/{{ annotator.id }}/">{{ annotator.name | safe }} [{{ annotator.id }}]</a></li>
-                        {% endfor %}
-                    </ul>
-                </td>
-            </tr>
-        </table>
-    </div>
+  <div class="banner" id="admin-header">
+    <h1>Item</h1>
+  </div>
+  <div class="info">
+    <table class="header-column">
+      <tr>
+        <td>Id</td>
+        <td>{{ item.id }}</td>
+      </tr>
+      <tr>
+        <td>Name</td>
+        <td>{{ item.name | safe }}</td>
+      </tr>
+      <tr>
+        <td>Location</td>
+        <td>{{ item.location | safe }}</td>
+      </tr>
+      <tr>
+        <td>Description</td>
+        <td>{{ item.description | safe }}</td>
+      </tr>
+      <tr>
+        <td>Mu</td>
+        <td>{{ item.mu }}</td>
+      </tr>
+      <tr>
+        <td>Sigma Squared</td>
+        <td>{{ item.sigma_sq }}</td>
+      </tr>
+      <tr>
+        <td>Seen By</td>
+        <td>
+          <ul>
+            {% for annotator in item.viewed %}
+            <li><a href="/admin/annotator/{{ annotator.id }}/">{{ annotator.name | safe }} [{{ annotator.id }}]</a></li>
+            {% endfor %}
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td>Assigned To</td>
+        <td>
+          <ul>
+            {% for annotator in assigned %}
+            <li><a href="/admin/annotator/{{ annotator.id }}/">{{ annotator.name | safe }} [{{ annotator.id }}]</a></li>
+            {% endfor %}
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td>Skipped By</td>
+        <td>
+          <ul>
+            {% for annotator in skipped %}
+            <li><a href="/admin/annotator/{{ annotator.id }}/">{{ annotator.name | safe }} [{{ annotator.id }}]</a></li>
+            {% endfor %}
+          </ul>
+        </td>
+      </tr>
+    </table>
+  </div>
 </div>
 {% endblock %}

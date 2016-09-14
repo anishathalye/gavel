@@ -1,34 +1,34 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <!-- Stylesheets -->
-        <link rel=stylesheet type=text/css href="{{ url_for('static', filename='normalize.css') }}">
-        {% assets "scss_all" %}
-        <link rel=stylesheet type=text/css href="{{ ASSET_URL }}">
-        {% endassets %}
+  <head>
+    <!-- Stylesheets -->
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='normalize.css') }}">
+    {% assets "scss_all" %}
+    <link rel=stylesheet type=text/css href="{{ ASSET_URL }}">
+    {% endassets %}
 
-        <!-- Favicon -->
-        <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
 
-        <!-- Fonts -->
-        <link href="//fonts.googleapis.com/css?family=Montserrat:700" rel="stylesheet" type="text/css">
-        <link href="//fonts.googleapis.com/css?family=Lato:300,700" rel="stylesheet" type="text/css">
+    <!-- Fonts -->
+    <link href="//fonts.googleapis.com/css?family=Montserrat:700" rel="stylesheet" type="text/css">
+    <link href="//fonts.googleapis.com/css?family=Lato:300,700" rel="stylesheet" type="text/css">
 
-        <!-- Enable responsiveness on mobile devices -->
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+    <!-- Enable responsiveness on mobile devices -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
 
-        <title>{% block title %}{% endblock %} &middot; Gavel</title>
-        {% block head %}
-        {% endblock %}
-    </head>
-    <body>
-        <div id="content">
-            {% block content %}
-            {% endblock %}
-        </div>
-        <div id="footer">
-            <!-- Please don't remove this -->
-            <p>Powered by <a href="https://github.com/anishathalye/gavel">Gavel</a></p>
-        </div>
-    </body>
+    <title>{% block title %}{% endblock %} &middot; Gavel</title>
+    {% block head %}
+    {% endblock %}
+  </head>
+  <body>
+    <div id="content">
+      {% block content %}
+      {% endblock %}
+    </div>
+    <div id="footer">
+      <!-- Please don't remove this -->
+      <p>Powered by <a href="https://github.com/anishathalye/gavel">Gavel</a></p>
+    </div>
+  </body>
 </html>

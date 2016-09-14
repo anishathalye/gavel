@@ -2,41 +2,41 @@
 {% block title %}Vote{% endblock %}
 {% block content %}
 <div class="item">
-    <div class="banner-tight" id="previous-header">
-        <h1>Previous</h1>
-    </div>
-    <div id="previous-body">
-        {% with item=prev %}
-        {% include "_item.html" %}
-        {% endwith %}
-    </div>
+  <div class="banner-tight" id="previous-header">
+    <h1>Previous</h1>
+  </div>
+  <div id="previous-body">
+    {% with item=prev %}
+    {% include "_item.html" %}
+    {% endwith %}
+  </div>
 </div>
 
 <div class="item">
-    <div class="banner-tight" id="current-header">
-        <h1>Current</h1>
-    </div>
-    <div id="current-body">
-        {% with item=next %}
-        {% include "_item.html" %}
-        {% endwith %}
-    </div>
+  <div class="banner-tight" id="current-header">
+    <h1>Current</h1>
+  </div>
+  <div id="current-body">
+    {% with item=next %}
+    {% include "_item.html" %}
+    {% endwith %}
+  </div>
 </div>
 
 <div class="item">
-    <div class="banner" id="vote-header">
-        <h1>Vote</h1>
-    </div>
-    <div class="info">
-        <form action="/vote" method="post">
-            <p class="center">Which one is better?</p>
-            <input type="submit" name="action" value="Previous" id="vote-previous" class="button-left">
-            <input type="submit" name="action" value="Current" id="vote-current" class="button-right">
-            <input type="submit" name="action" value="Skip" id="vote-skip" class="button-full button-gap">
-            <input type="hidden" name="prev_id" value="{{ prev.id }}">
-            <input type="hidden" name="next_id" value="{{ next.id }}">
-            <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
-        </form>
-    </div>
+  <div class="banner" id="vote-header">
+    <h1>Vote</h1>
+  </div>
+  <div class="info">
+    <form action="/vote" method="post">
+      <p class="center">Which one is better?</p>
+      <input type="submit" name="action" value="Previous" id="vote-previous" class="button-left">
+      <input type="submit" name="action" value="Current" id="vote-current" class="button-right">
+      <input type="submit" name="action" value="Skip" id="vote-skip" class="button-full button-gap">
+      <input type="hidden" name="prev_id" value="{{ prev.id }}">
+      <input type="hidden" name="next_id" value="{{ next.id }}">
+      <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+    </form>
+  </div>
 </div>
 {% endblock %}

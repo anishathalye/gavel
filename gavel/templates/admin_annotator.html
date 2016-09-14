@@ -2,80 +2,80 @@
 {% block title %}Annotator{% endblock %}
 {% block content %}
 <div class="item">
-    <div class="banner" id="admin-header">
-        <h1>Annotator</h1>
-    </div>
-    <div class="info">
-        <table class="header-column">
-            <tr>
-                <td>Id</td>
-                <td>{{ annotator.id }}</td>
-            </tr>
-            <tr>
-                <td>Name</td>
-                <td>{{ annotator.name | safe }}</td>
-            </tr>
-            <tr>
-                <td>Email</td>
-                <td>{{ annotator.email | safe }}</td>
-            </tr>
-            <tr>
-                <td>Description</td>
-                <td>{{ annotator.description | safe }}</td>
-            </tr>
-            <tr>
-                <td>Secret</td>
-                <td>{{ annotator.secret }}</td>
-            </tr>
-            <tr>
-                <td>Next</td>
-                {% if annotator.next %}
-                    <td><a href="/admin/item/{{ annotator.next.id }}">{{ annotator.next.name | safe }} [{{ annotator.next_id }}]</a></td>
-                {% else %}
-                    <td>None</td>
-                {% endif %}
-            </tr>
-            <tr>
-                <td>Previous</td>
-                {% if annotator.prev %}
-                    <td><a href="/admin/item/{{ annotator.prev.id }}">{{ annotator.prev.name | safe }} [{{ annotator.prev_id }}]</a></td>
-                {% else %}
-                    <td>None</td>
-                {% endif %}
-            </tr>
-            <tr>
-                <td>Updated</td>
-                <td>{{ annotator.updated | utcdatetime_local }}</td>
-            </tr>
-            <tr>
-                <td>Alpha</td>
-                <td>{{ annotator.alpha | round(4) }}</td>
-            </tr>
-            <tr>
-                <td>Beta</td>
-                <td>{{ annotator.beta | round(4) }}</td>
-            </tr>
-            <tr>
-                <td>Seen</td>
-                <td>
-                    <ul>
-                        {% for item in seen %}
-                            <li><a href="/admin/item/{{ item.id }}">{{ item.name | safe }} [{{ item.id }}]</a></li>
-                        {% endfor %}
-                    </ul>
-                </td>
-            </tr>
-            <tr>
-                <td>Skipped</td>
-                <td>
-                    <ul>
-                        {% for item in skipped %}
-                            <li><a href="/admin/item/{{ item.id }}">{{ item.name | safe }} [{{ item.id }}]</a></li>
-                        {% endfor %}
-                    </ul>
-                </td>
-            </tr>
-        </table>
-    </div>
+  <div class="banner" id="admin-header">
+    <h1>Annotator</h1>
+  </div>
+  <div class="info">
+    <table class="header-column">
+      <tr>
+        <td>Id</td>
+        <td>{{ annotator.id }}</td>
+      </tr>
+      <tr>
+        <td>Name</td>
+        <td>{{ annotator.name | safe }}</td>
+      </tr>
+      <tr>
+        <td>Email</td>
+        <td>{{ annotator.email | safe }}</td>
+      </tr>
+      <tr>
+        <td>Description</td>
+        <td>{{ annotator.description | safe }}</td>
+      </tr>
+      <tr>
+        <td>Secret</td>
+        <td>{{ annotator.secret }}</td>
+      </tr>
+      <tr>
+        <td>Next</td>
+        {% if annotator.next %}
+        <td><a href="/admin/item/{{ annotator.next.id }}">{{ annotator.next.name | safe }} [{{ annotator.next_id }}]</a></td>
+        {% else %}
+        <td>None</td>
+        {% endif %}
+      </tr>
+      <tr>
+        <td>Previous</td>
+        {% if annotator.prev %}
+        <td><a href="/admin/item/{{ annotator.prev.id }}">{{ annotator.prev.name | safe }} [{{ annotator.prev_id }}]</a></td>
+        {% else %}
+        <td>None</td>
+        {% endif %}
+      </tr>
+      <tr>
+        <td>Updated</td>
+        <td>{{ annotator.updated | utcdatetime_local }}</td>
+      </tr>
+      <tr>
+        <td>Alpha</td>
+        <td>{{ annotator.alpha | round(4) }}</td>
+      </tr>
+      <tr>
+        <td>Beta</td>
+        <td>{{ annotator.beta | round(4) }}</td>
+      </tr>
+      <tr>
+        <td>Seen</td>
+        <td>
+          <ul>
+            {% for item in seen %}
+            <li><a href="/admin/item/{{ item.id }}">{{ item.name | safe }} [{{ item.id }}]</a></li>
+            {% endfor %}
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td>Skipped</td>
+        <td>
+          <ul>
+            {% for item in skipped %}
+            <li><a href="/admin/item/{{ item.id }}">{{ item.name | safe }} [{{ item.id }}]</a></li>
+            {% endfor %}
+          </ul>
+        </td>
+      </tr>
+    </table>
+  </div>
 </div>
 {% endblock %}
