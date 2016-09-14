@@ -127,9 +127,12 @@ def item_detail(item_id):
     else:
         assigned = Annotator.query.filter(Annotator.next == item).all()
         viewed_ids = {i.id for i in item.viewed}
-        skipped = Annotator.query.filter(
-            Annotator.ignore.contains(item) & ~Annotator.id.in_(viewed_ids)
-        )
+        if viewed_ids:
+            skipped = Annotator.query.filter(
+                Annotator.ignore.contains(item) & ~Annotator.id.in_(viewed_ids)
+            )
+        else:
+            skipped = Annotator.query.filter(Annotator.ignore.contains(item))
         return render_template(
             'admin_item.html',
             item=item,
@@ -146,9 +149,12 @@ def annotator_detail(annotator_id):
     else:
         seen = Item.query.filter(Item.viewed.contains(annotator)).all()
         ignored_ids = {i.id for i in annotator.ignore}
-        skipped = Item.query.filter(
-            Item.id.in_(ignored_ids) & ~Item.viewed.contains(annotator)
-        )
+        if ignored_ids:
+            skipped = Item.query.filter(
+                Item.id.in_(ignored_ids) & ~Item.viewed.contains(annotator)
+            )
+        else:
+            skipped = []
         return render_template(
             'admin_annotator.html',
             annotator=annotator,
