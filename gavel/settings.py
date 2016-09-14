@@ -46,6 +46,11 @@ def _bool(truth_value):
         return lower.startswith('t') or lower.startswith('y') # accepts things like 'yes', 'True', ...
     raise ValueError('invalid type for bool coercion')
 
+def _list(item):
+    if isinstance(item, list):
+        return item
+    return [item]
+
 # note: this should be kept in sync with 'config.sample.yaml' and
 # 'config.vagrant.yaml'
 BASE_URL =            c.get('base_url',       'BASE_URL')
@@ -64,6 +69,7 @@ DISABLE_EMAIL = _bool(c.get('disable_email',  'DISABLE_EMAIL',            defaul
 EMAIL_HOST =          c.get('email_host',     'EMAIL_HOST',               default='smtp.gmail.com')
 EMAIL_PORT =      int(c.get('email_port',     'EMAIL_PORT',               default=587))
 EMAIL_FROM =          c.get('email_from',     'EMAIL_FROM')
+EMAIL_CC =      _list(c.get('email_cc',       'EMAIL_CC',                 default=[]))
 EMAIL_PASSWORD =      c.get('email_password', 'EMAIL_PASSWORD')
 EMAIL_SUBJECT =       c.get('email_subject',                              default=constants.DEFAULT_EMAIL_SUBJECT)
 EMAIL_BODY =          c.get('email_body',                                 default=constants.DEFAULT_EMAIL_BODY)

@@ -67,9 +67,13 @@ def send_emails(emails):
             msg = email.mime.multipart.MIMEMultipart()
             msg['From'] = settings.EMAIL_FROM
             msg['To'] = to_address
+            recipients = [to_address]
+            if settings.EMAIL_CC:
+                msg['Cc'] = ', '.join(settings.EMAIL_CC)
+                recipients.extend(settings.EMAIL_CC)
             msg['Subject'] = subject
             msg.attach(email.mime.text.MIMEText(body, 'plain'))
-            server.sendmail(settings.EMAIL_FROM, to_address, msg.as_string())
+            server.sendmail(settings.EMAIL_FROM, recipients, msg.as_string())
         except Exception as e:
             exceptions.append(e) # XXX is there a cleaner way to handle this?
 

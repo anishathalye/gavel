@@ -111,6 +111,13 @@ email_host: null
 # defaults to '587'
 email_port: null
 
+# can also be specified as the 'EMAIL_CC' environment variable
+# defaults to '[]'
+#
+# this is the single email address (or YAML list of email addresses) to CC when
+# sending invitation emails.
+email_cc: null
+
 # can't be specified via environment variable
 # defaults to gavel.constants.DEFAULT_EMAIL_SUBJECT
 #
