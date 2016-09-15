@@ -88,13 +88,10 @@
           <th>Name</th>
           <th>Email</th>
           <th>Description</th>
-          <th>Secret</th>
           <th>Votes</th>
           <th>Next (Id)</th>
           <th>Previous (Id)</th>
           <th>Updated</th>
-          <th>Alpha</th>
-          <th>Beta</th>
           <th>Email</th>
           <th>Active</th>
           <th>Delete</th>
@@ -107,13 +104,10 @@
           <td>{{ annotator.name | safe }}</td>
           <td>{{ annotator.email | safe }}</td>
           <td>{{ annotator.description | safe }}</td>
-          <td>{{ annotator.secret }}</td>
           <td>{{ counts.get(annotator.id, 0) }}</td>
           <td>{{ annotator.next_id }}</td>
           <td>{{ annotator.prev_id }}</td>
           <td data-sort="{{ annotator.updated | utcdatetime_epoch }}">{{ annotator.updated | utcdatetime_local }}</td>
-          <td>{{ annotator.alpha | round(4) }}</td>
-          <td>{{ annotator.beta | round(4) }}</td>
           <td class="compact" class="no-sort">
             <form action="/admin/annotator" method="post">
               <input type="submit" name="action" value="Email" class="neutral">
