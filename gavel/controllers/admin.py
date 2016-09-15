@@ -15,7 +15,7 @@ import urllib.parse
 @utils.requires_auth
 def admin():
     annotators = Annotator.query.order_by(Annotator.id).all()
-    items = Item.query.order_by(desc(Item.mu)).all()
+    items = Item.query.order_by(Item.id).all()
     decisions = Decision.query.all()
     counts = {}
     item_counts = {}

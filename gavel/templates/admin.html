@@ -28,7 +28,7 @@
           <th>Name</th>
           <th>Location</th>
           <th>Description</th>
-          <th>Mu</th>
+          <th class="sort-default" data-sort-order="desc">Mu</th>
           <th>Sigma Squared</th>
           <th>Votes</th>
           <th>Seen</th>
@@ -84,7 +84,7 @@
     <table id="annotators">
       <thead>
         <tr>
-          <th>Id</th>
+          <th class="sort-default">Id</th>
           <th>Name</th>
           <th>Email</th>
           <th>Description</th>
@@ -111,7 +111,7 @@
           <td>{{ counts.get(annotator.id, 0) }}</td>
           <td>{{ annotator.next_id }}</td>
           <td>{{ annotator.prev_id }}</td>
-          <td>{{ annotator.updated | utcdatetime_local }}</td>
+          <td data-sort="{{ annotator.updated | utcdatetime_epoch }}">{{ annotator.updated | utcdatetime_local }}</td>
           <td>{{ annotator.alpha | round(4) }}</td>
           <td>{{ annotator.beta | round(4) }}</td>
           <td class="compact" class="no-sort">
