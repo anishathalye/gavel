@@ -24,17 +24,17 @@
     <table id="items">
       <thead>
         <tr>
-          <th>Id</th>
-          <th>Name</th>
-          <th>Location</th>
-          <th>Description</th>
-          <th class="sort-default" data-sort-order="desc">Mu</th>
-          <th>Sigma Squared</th>
-          <th>Votes</th>
-          <th>Seen</th>
-          <th>Prioritize</th>
-          <th>Active</th>
-          <th>Delete</th>
+          <th data-sort-method="number">Id</th>
+          <th data-sort-method="caseInsensitiveSort">Name</th>
+          <th data-sort-method="caseInsensitiveSort">Location</th>
+          <th data-sort-method="caseInsensitiveSort">Description</th>
+          <th class="sort-default" data-sort-method="number" data-sort-order="desc">Mu</th>
+          <th data-sort-method="number">Sigma Squared</th>
+          <th data-sort-method="number">Votes</th>
+          <th data-sort-method="number">Seen</th>
+          <th data-sort-method="caseInsensitiveSort">Prioritize</th>
+          <th data-sort-method="caseInsensitiveSort">Active</th>
+          <th class="no-sort">Delete</th>
         </tr>
       </thead>
       <tbody>
@@ -62,7 +62,7 @@
               <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
             </form>
           </td>
-          <td class="compact" class="no-sort">
+          <td class="compact">
             <form action="/admin/item" method="post">
               <input type="submit" name="action" value="Delete" class="negative">
               <input type="hidden" name="item_id" value="{{ item.id }}">
@@ -84,17 +84,17 @@
     <table id="annotators">
       <thead>
         <tr>
-          <th class="sort-default">Id</th>
-          <th>Name</th>
-          <th>Email</th>
-          <th>Description</th>
-          <th>Votes</th>
-          <th>Next (Id)</th>
-          <th>Previous (Id)</th>
-          <th>Updated</th>
-          <th>Email</th>
-          <th>Active</th>
-          <th>Delete</th>
+          <th class="sort-default" data-sort-method="number">Id</th>
+          <th data-sort-method="caseInsensitiveSort">Name</th>
+          <th data-sort-method="caseInsensitiveSort">Email</th>
+          <th data-sort-method="caseInsensitiveSort">Description</th>
+          <th data-sort-method="number">Votes</th>
+          <th data-sort-method="number">Next (Id)</th>
+          <th data-sort-method="number">Previous (Id)</th>
+          <th data-sort-method="number" data-sort-order="desc">Updated</th>
+          <th class="no-sort">Email</th>
+          <th data-sort-method="caseInsensitiveSort">Active</th>
+          <th class="no-sort">Delete</th>
         </tr>
       </thead>
       <tbody>
@@ -105,10 +105,10 @@
           <td>{{ annotator.email | safe }}</td>
           <td>{{ annotator.description | safe }}</td>
           <td>{{ counts.get(annotator.id, 0) }}</td>
-          <td>{{ annotator.next_id }}</td>
-          <td>{{ annotator.prev_id }}</td>
+          <td data-sort="{{ annotator.next_id or -1 }}">{{ annotator.next_id }}</td>
+          <td data-sort="{{ annotator.prev_id or -1 }}">{{ annotator.prev_id }}</td>
           <td data-sort="{{ annotator.updated | utcdatetime_epoch }}">{{ annotator.updated | utcdatetime_local }}</td>
-          <td class="compact" class="no-sort">
+          <td class="compact">
             <form action="/admin/annotator" method="post">
               <input type="submit" name="action" value="Email" class="neutral">
               <input type="hidden" name="annotator_id" value="{{ annotator.id }}">
@@ -122,7 +122,7 @@
               <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
             </form>
           </td>
-          <td class="compact" class="no-sort">
+          <td class="compact">
             <form action="/admin/annotator" method="post">
               <input type="submit" name="action" value="Delete" class="negative">
               <input type="hidden" name="annotator_id" value="{{ annotator.id }}">
