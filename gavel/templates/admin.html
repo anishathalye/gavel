@@ -21,53 +21,57 @@
     <h2>Items</h2>
   </div>
   <div class="info">
-    <table class="header-row">
-      <tr>
-        <td>Id</td>
-        <td>Name</td>
-        <td>Location</td>
-        <td>Description</td>
-        <td>Mu</td>
-        <td>Sigma Squared</td>
-        <td>Votes</td>
-        <td>Seen</td>
-        <td>Prioritize</td>
-        <td>Active</td>
-        <td>Delete</td>
-      </tr>
-      {% for item in items %}
-      <tr class="{{ 'disabled' if not item.active else 'prioritized' if item.prioritized else '' }}">
-        <td><a href="{{ url_for('item_detail', item_id=item.id) }}" class="colored">{{ item.id }}</a></td>
-        <td>{{ item.name | safe }}</td>
-        <td>{{ item.location | safe }}</td>
-        <td>{{ item.description | safe }}</td>
-        <td>{{ item.mu | round(4) }}</td>
-        <td>{{ item.sigma_sq | round(4) }}</td>
-        <td>{{ item_counts.get(item.id, 0) }}</td>
-        <td>{{ item.viewed | length }}</td>
-        <td class="compact">
-          <form action="/admin/item" method="post">
-            <input type="submit" name="action" value="{{ 'Prioritize' if not item.prioritized else 'Cancel' }}" class="{{ 'positive' if not item.prioritized else 'negative' }}">
-            <input type="hidden" name="item_id" value="{{ item.id }}">
-            <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
-          </form>
-        </td>
-        <td class="compact">
-          <form action="/admin/item" method="post">
-            <input type="submit" name="action" value="{{ 'Disable' if item.active else 'Enable' }}" class="{{ 'negative' if item.active else 'positive' }}">
-            <input type="hidden" name="item_id" value="{{ item.id }}">
-            <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
-          </form>
-        </td>
-        <td class="compact">
-          <form action="/admin/item" method="post">
-            <input type="submit" name="action" value="Delete" class="negative">
-            <input type="hidden" name="item_id" value="{{ item.id }}">
-            <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
-          </form>
-        </td>
-      </tr>
-      {% endfor %}
+    <table id="items">
+      <thead>
+        <tr>
+          <th>Id</th>
+          <th>Name</th>
+          <th>Location</th>
+          <th>Description</th>
+          <th>Mu</th>
+          <th>Sigma Squared</th>
+          <th>Votes</th>
+          <th>Seen</th>
+          <th>Prioritize</th>
+          <th>Active</th>
+          <th>Delete</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in items %}
+        <tr class="{{ 'disabled' if not item.active else 'prioritized' if item.prioritized else '' }}">
+          <td><a href="{{ url_for('item_detail', item_id=item.id) }}" class="colored">{{ item.id }}</a></td>
+          <td>{{ item.name | safe }}</td>
+          <td>{{ item.location | safe }}</td>
+          <td>{{ item.description | safe }}</td>
+          <td>{{ item.mu | round(4) }}</td>
+          <td>{{ item.sigma_sq | round(4) }}</td>
+          <td>{{ item_counts.get(item.id, 0) }}</td>
+          <td>{{ item.viewed | length }}</td>
+          <td class="compact" data-sort="{{ item.prioritized }}">
+            <form action="/admin/item" method="post">
+              <input type="submit" name="action" value="{{ 'Prioritize' if not item.prioritized else 'Cancel' }}" class="{{ 'positive' if not item.prioritized else 'negative' }}">
+              <input type="hidden" name="item_id" value="{{ item.id }}">
+              <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+            </form>
+          </td>
+          <td class="compact" data-sort="{{ item.active }}">
+            <form action="/admin/item" method="post">
+              <input type="submit" name="action" value="{{ 'Disable' if item.active else 'Enable' }}" class="{{ 'negative' if item.active else 'positive' }}">
+              <input type="hidden" name="item_id" value="{{ item.id }}">
+              <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+            </form>
+          </td>
+          <td class="compact" class="no-sort">
+            <form action="/admin/item" method="post">
+              <input type="submit" name="action" value="Delete" class="negative">
+              <input type="hidden" name="item_id" value="{{ item.id }}">
+              <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
     </table>
   </div>
 </div>
@@ -77,59 +81,63 @@
     <h2>Annotators</h2>
   </div>
   <div class="info">
-    <table class="header-row">
-      <tr>
-        <td>Id</td>
-        <td>Name</td>
-        <td>Email</td>
-        <td>Description</td>
-        <td>Secret</td>
-        <td>Votes</td>
-        <td>Next (Id)</td>
-        <td>Previous (Id)</td>
-        <td>Updated</td>
-        <td>Alpha</td>
-        <td>Beta</td>
-        <td>Email</td>
-        <td>Active</td>
-        <td>Delete</td>
-      </tr>
-      {% for annotator in annotators %}
-      <tr class="{{ 'disabled' if not annotator.active else '' }}">
-        <td><a href="{{ url_for('annotator_detail', annotator_id=annotator.id) }}" class="colored">{{ annotator.id }}</a></td>
-        <td>{{ annotator.name | safe }}</td>
-        <td>{{ annotator.email | safe }}</td>
-        <td>{{ annotator.description | safe }}</td>
-        <td>{{ annotator.secret }}</td>
-        <td>{{ counts.get(annotator.id, 0) }}</td>
-        <td>{{ annotator.next_id }}</td>
-        <td>{{ annotator.prev_id }}</td>
-        <td>{{ annotator.updated | utcdatetime_local }}</td>
-        <td>{{ annotator.alpha | round(4) }}</td>
-        <td>{{ annotator.beta | round(4) }}</td>
-        <td class="compact">
-          <form action="/admin/annotator" method="post">
-            <input type="submit" name="action" value="Email" class="neutral">
-            <input type="hidden" name="annotator_id" value="{{ annotator.id }}">
-            <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
-          </form>
-        </td>
-        <td class="compact">
-          <form action="/admin/annotator" method="post">
-            <input type="submit" name="action" value="{{ 'Disable' if annotator.active else 'Enable' }}" class="{{ 'negative' if annotator.active else 'positive' }}">
-            <input type="hidden" name="annotator_id" value="{{ annotator.id }}">
-            <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
-          </form>
-        </td>
-        <td class="compact">
-          <form action="/admin/annotator" method="post">
-            <input type="submit" name="action" value="Delete" class="negative">
-            <input type="hidden" name="annotator_id" value="{{ annotator.id }}">
-            <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
-          </form>
-        </td>
-      </tr>
-      {% endfor %}
+    <table id="annotators">
+      <thead>
+        <tr>
+          <th>Id</th>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Description</th>
+          <th>Secret</th>
+          <th>Votes</th>
+          <th>Next (Id)</th>
+          <th>Previous (Id)</th>
+          <th>Updated</th>
+          <th>Alpha</th>
+          <th>Beta</th>
+          <th>Email</th>
+          <th>Active</th>
+          <th>Delete</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for annotator in annotators %}
+        <tr class="{{ 'disabled' if not annotator.active else '' }}">
+          <td><a href="{{ url_for('annotator_detail', annotator_id=annotator.id) }}" class="colored">{{ annotator.id }}</a></td>
+          <td>{{ annotator.name | safe }}</td>
+          <td>{{ annotator.email | safe }}</td>
+          <td>{{ annotator.description | safe }}</td>
+          <td>{{ annotator.secret }}</td>
+          <td>{{ counts.get(annotator.id, 0) }}</td>
+          <td>{{ annotator.next_id }}</td>
+          <td>{{ annotator.prev_id }}</td>
+          <td>{{ annotator.updated | utcdatetime_local }}</td>
+          <td>{{ annotator.alpha | round(4) }}</td>
+          <td>{{ annotator.beta | round(4) }}</td>
+          <td class="compact" class="no-sort">
+            <form action="/admin/annotator" method="post">
+              <input type="submit" name="action" value="Email" class="neutral">
+              <input type="hidden" name="annotator_id" value="{{ annotator.id }}">
+              <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+            </form>
+          </td>
+          <td class="compact" data-sort="{{ annotator.active }}">
+            <form action="/admin/annotator" method="post">
+              <input type="submit" name="action" value="{{ 'Disable' if annotator.active else 'Enable' }}" class="{{ 'negative' if annotator.active else 'positive' }}">
+              <input type="hidden" name="annotator_id" value="{{ annotator.id }}">
+              <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+            </form>
+          </td>
+          <td class="compact" class="no-sort">
+            <form action="/admin/annotator" method="post">
+              <input type="submit" name="action" value="Delete" class="negative">
+              <input type="hidden" name="annotator_id" value="{{ annotator.id }}">
+              <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
     </table>
   </div>
 </div>
@@ -168,23 +176,40 @@
   </div>
   <div class="info">
     <table class="header-row">
-      <tr>
-        <td>Setting</td>
-        <td>Value</td>
-        <td>Edit</td>
-      </tr>
-      <tr class="{{ 'disabled' if setting_closed else '' }}">
-        <td>Closed</td>
-        <td>{{ 'Closed' if setting_closed else 'Open' }}</td>
-        <td class="compact">
-          <form action="/admin/setting" method="post">
-            <input type="submit" name="action" value="{{ 'Open' if setting_closed else 'Close' }}" class="{{ 'positive' if setting_closed else 'negative' }}">
-            <input type="hidden" name="key" value="closed">
-            <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
-          </form>
-        </td>
-      </tr>
+      <thead>
+        <tr>
+          <th>Setting</th>
+          <th>Value</th>
+          <th>Edit</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="{{ 'disabled' if setting_closed else '' }}">
+          <td>Closed</td>
+          <td>{{ 'Closed' if setting_closed else 'Open' }}</td>
+          <td class="compact">
+            <form action="/admin/setting" method="post">
+              <input type="submit" name="action" value="{{ 'Open' if setting_closed else 'Close' }}" class="{{ 'positive' if setting_closed else 'negative' }}">
+              <input type="hidden" name="key" value="closed">
+              <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+            </form>
+          </td>
+        </tr>
+      </tbody>
     </table>
   </div>
 </div>
+{% endblock %}
+{% block end %}
+<script src="{{ url_for('static', filename='js/vendor/tablesort.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/vendor/tablesort.number.js') }}"></script>
+<script>
+var tables = [
+  document.getElementById('items'),
+  document.getElementById('annotators'),
+];
+for (var i = 0; i < tables.length; i++) {
+  new Tablesort(tables[i]);
+}
+</script>
 {% endblock %}

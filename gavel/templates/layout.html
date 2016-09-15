@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <!-- Stylesheets -->
-    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='normalize.css') }}">
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/vendor/normalize.css') }}">
     {% assets "scss_all" %}
     <link rel=stylesheet type=text/css href="{{ ASSET_URL }}">
     {% endassets %}
@@ -30,5 +30,7 @@
       <!-- Please don't remove this -->
       <p>Powered by <a href="https://github.com/anishathalye/gavel" class="colored">Gavel</a></p>
     </div>
+    {% block end %}
+    {% endblock %}
   </body>
 </html>

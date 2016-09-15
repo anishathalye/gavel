@@ -63,7 +63,8 @@ strong {
 
 table,
 tr,
-td {
+td,
+th {
   border: 0.1rem solid black;
 }
 
@@ -76,14 +77,16 @@ td {
   padding: 0 0.25rem;
 }
 
-.header-row tr:first-child td {
+th {
   background: $light-grey;
   font-weight: bold;
 }
 
-.header-column td:first-child {
-  background: $light-grey;
-  font-weight: bold;
+th.sort-header {
+  cursor: pointer;
+  &::selection {
+    background:transparent;
+  }
 }
 
 textarea,

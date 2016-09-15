@@ -16,7 +16,7 @@ assets = Environment(app)
 assets.config['pyscss_style'] = 'expanded'
 assets.url = app.static_url_path
 scss = Bundle(
-    'style.scss',
+    'css/style.scss',
     depends='**/*.scss',
     filters=('pyscss',),
     output='all.css'

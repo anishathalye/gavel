@@ -6,13 +6,13 @@
     <a href="{{ url_for('admin') }}"><h1>Item</h1></a>
   </div>
   <div class="info">
-    <table class="header-column">
+    <table>
       <tr>
-        <td>Id</td>
+        <th>Id</th>
         <td>{{ item.id }}</td>
       </tr>
       <tr>
-        <td>Name</td>
+        <th>Name</th>
         <td>
           <form action="/admin/item_patch" method="post">
             <input type="text" name="name" value="{{ item.name | safe }}">
@@ -23,7 +23,7 @@
         </td>
       </tr>
       <tr>
-        <td>Location</td>
+        <th>Location</th>
         <td>
           <form action="/admin/item_patch" method="post">
             <input type="text" name="location" value="{{ item.location | safe }}">
@@ -34,7 +34,7 @@
         </td>
       </tr>
       <tr>
-        <td>Description</td>
+        <th>Description</th>
         <td>
           <textarea name="description" form="description_form">{{ item.description | safe }}</textarea>
           <form action="/admin/item_patch" method="post" id="description_form">
@@ -45,15 +45,15 @@
         </td>
       </tr>
       <tr>
-        <td>Mu</td>
+        <th>Mu</th>
         <td>{{ item.mu }}</td>
       </tr>
       <tr>
-        <td>Sigma Squared</td>
+        <th>Sigma Squared</th>
         <td>{{ item.sigma_sq }}</td>
       </tr>
       <tr>
-        <td>Seen By</td>
+        <th>Seen By</th>
         <td>
           <ul>
             {% for annotator in item.viewed %}
@@ -63,7 +63,7 @@
         </td>
       </tr>
       <tr>
-        <td>Assigned To</td>
+        <th>Assigned To</th>
         <td>
           <ul>
             {% for annotator in assigned %}
@@ -73,7 +73,7 @@
         </td>
       </tr>
       <tr>
-        <td>Skipped By</td>
+        <th>Skipped By</th>
         <td>
           <ul>
             {% for annotator in skipped %}

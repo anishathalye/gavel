@@ -6,29 +6,29 @@
     <a href="{{ url_for('admin') }}"><h1>Annotator</h1></a>
   </div>
   <div class="info">
-    <table class="header-column">
+    <table>
       <tr>
-        <td>Id</td>
+        <th>Id</th>
         <td>{{ annotator.id }}</td>
       </tr>
       <tr>
-        <td>Name</td>
+        <th>Name</th>
         <td>{{ annotator.name | safe }}</td>
       </tr>
       <tr>
-        <td>Email</td>
+        <th>Email</th>
         <td>{{ annotator.email | safe }}</td>
       </tr>
       <tr>
-        <td>Description</td>
+        <th>Description</th>
         <td>{{ annotator.description | safe }}</td>
       </tr>
       <tr>
-        <td>Secret</td>
+        <th>Secret</th>
         <td>{{ annotator.secret }}</td>
       </tr>
       <tr>
-        <td>Next</td>
+        <th>Next</th>
         {% if annotator.next %}
         <td><a href="{{ url_for('item_detail', item_id=annotator.next.id) }}" class="colored">{{ annotator.next.name | safe }} [{{ annotator.next_id }}]</a></td>
         {% else %}
@@ -36,7 +36,7 @@
         {% endif %}
       </tr>
       <tr>
-        <td>Previous</td>
+        <th>Previous</th>
         {% if annotator.prev %}
         <td><a href="{{ url_for('item_detail', item_id=annotator.prev.id) }}" class="colored">{{ annotator.prev.name | safe }} [{{ annotator.prev_id }}]</a></td>
         {% else %}
@@ -44,19 +44,19 @@
         {% endif %}
       </tr>
       <tr>
-        <td>Updated</td>
+        <th>Updated</th>
         <td>{{ annotator.updated | utcdatetime_local }}</td>
       </tr>
       <tr>
-        <td>Alpha</td>
+        <th>Alpha</th>
         <td>{{ annotator.alpha | round(4) }}</td>
       </tr>
       <tr>
-        <td>Beta</td>
+        <th>Beta</th>
         <td>{{ annotator.beta | round(4) }}</td>
       </tr>
       <tr>
-        <td>Seen</td>
+        <th>Seen</th>
         <td>
           <ul>
             {% for item in seen %}
@@ -66,7 +66,7 @@
         </td>
       </tr>
       <tr>
-        <td>Skipped</td>
+        <th>Skipped</th>
         <td>
           <ul>
             {% for item in skipped %}
