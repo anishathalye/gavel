@@ -80,6 +80,7 @@ td {
 th {
   background: $light-grey;
   font-weight: bold;
+  white-space: nowrap;
 }
 
 th.sort-header {
@@ -87,6 +88,27 @@ th.sort-header {
   &::selection {
     background:transparent;
   }
+}
+
+table th.sort-header::after {
+  content: " ( )";
+  visibility: hidden;
+  font-family: "Source Code Pro", "Courier New", monospace;
+  opacity: 0.5;
+}
+
+table th.sort-header:hover::after {
+  visibility: visible;
+}
+
+table th.sort-up::after {
+  content: " (+)";
+  visibility: visible;
+}
+
+table th.sort-down::after {
+  content: " (-)";
+  visibility: visible;
 }
 
 textarea,
