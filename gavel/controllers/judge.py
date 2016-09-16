@@ -173,8 +173,8 @@ def preferred_items(annotator):
     annotators = Annotator.query.filter(
         (Annotator.active == True) & (Annotator.next != None) & (Annotator.updated != None)
     ).all()
-    busy = set([i.next.id for i in annotators if \
-        (datetime.utcnow() - i.updated).total_seconds() < settings.TIMEOUT * 60])
+    busy = {i.next.id for i in annotators if \
+        (datetime.utcnow() - i.updated).total_seconds() < settings.TIMEOUT * 60}
     nonbusy = [i for i in items if i.id not in busy]
     preferred = nonbusy if nonbusy else items
 
@@ -192,7 +192,7 @@ def maybe_init_annotator(annotator):
 def choose_next(annotator):
     items = preferred_items(annotator)
 
-    shuffle(items)
+    shuffle(items) # useful for argmax case as well in the case of ties
     if items:
         if random() < crowd_bt.EPSILON:
             return items[0]
