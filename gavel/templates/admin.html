@@ -43,7 +43,7 @@
           <td><a href="{{ url_for('item_detail', item_id=item.id) }}" class="colored">{{ item.id }}</a></td>
           <td>{{ item.name | safe }}</td>
           <td>{{ item.location | safe }}</td>
-          <td>{{ item.description | safe }}</td>
+          <td class="preserve-formatting">{{ item.description | safe }}</td>
           <td>{{ item.mu | round(4) }}</td>
           <td>{{ item.sigma_sq | round(4) }}</td>
           <td>{{ item_counts.get(item.id, 0) }}</td>

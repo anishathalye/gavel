@@ -48,6 +48,10 @@ p {
   padding-bottom: 0.25rem;
 }
 
+.preserve-formatting {
+  white-space: pre-wrap;
+}
+
 input,
 textarea {
   font-family: $body-font;
