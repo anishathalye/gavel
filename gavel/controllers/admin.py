@@ -26,6 +26,12 @@ def admin():
         counts[a] = counts.get(a, 0) + 1
         item_counts[w] = item_counts.get(w, 0) + 1
         item_counts[l] = item_counts.get(l, 0) + 1
+    viewed = {i.id: {a.id for a in i.viewed} for i in items}
+    skipped = {}
+    for a in annotators:
+        for i in a.ignore:
+            if a.id not in viewed[i.id]:
+                skipped[i.id] = skipped.get(i.id, 0) + 1
     # settings
     setting_closed = Setting.value_of(SETTING_CLOSED) == SETTING_TRUE
     return render_template(
@@ -33,6 +39,7 @@ def admin():
         annotators=annotators,
         counts=counts,
         item_counts=item_counts,
+        skipped=skipped,
         items=items,
         votes=len(decisions),
         setting_closed=setting_closed,
