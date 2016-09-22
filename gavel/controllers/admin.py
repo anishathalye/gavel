@@ -192,7 +192,7 @@ def email_invite_links(annotators):
 
     emails = []
     for annotator in annotators:
-        link = urllib.parse.urljoin(settings.BASE_URL, '/login/%s' % annotator.secret)
+        link = urllib.parse.urljoin(settings.BASE_URL, url_for('login', secret=annotator.secret))
         raw_body = settings.EMAIL_BODY.format(name=annotator.name, link=link)
         body = '\n\n'.join(utils.get_paragraphs(raw_body))
         emails.append((annotator.email, settings.EMAIL_SUBJECT, body))
