@@ -94,6 +94,8 @@ quality (Mu).
 * If a judge hasn't started yet, you can delete them using the "Delete" button
 * If you need to see details for a project or judge, click on the item ID in
   the admin panel
+    * If you need to edit a project (name, location, or description), you can
+      do so on the item detail page
 * If you want to sort the items in the admin panel, click on the table headers
 
 ## Development
