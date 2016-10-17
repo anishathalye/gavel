@@ -7,6 +7,17 @@ used at a number of other events since then.
 
 [![Join the chat at https://gitter.im/anishathalye/gavel](https://badges.gitter.im/anishathalye/gavel.svg)](https://gitter.im/anishathalye/gavel?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
+## Demo
+
+<p align="center">
+    <a href="http://www.anishathalye.com/2016/09/19/gavel-an-expo-judging-system/">
+        <img src="https://raw.githubusercontent.com/anishathalye/gavel/docs/screenshot.png" width="320" height="568" alt="Gavel screenshot">
+    </a>
+</p>
+
+See the demo video
+[here](http://www.anishathalye.com/2016/09/19/gavel-an-expo-judging-system/)!
+
 ## Design
 
 Gavel is based on the method of pairwise comparisons. Before you use Gavel,
