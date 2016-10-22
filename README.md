@@ -114,6 +114,12 @@ quality (Mu).
 Interested in hacking on Gavel? Awesome. See [DEVELOPMENT.md][development] for
 a dev setup guide.
 
+## Users
+
+See [here](https://github.com/anishathalye/gavel/wiki/Users) for a list of
+groups that have used Gavel in the past. If you use Gavel for anything, please
+add yourself to the list (anyone can edit it)!
+
 ## Notes
 
 If you do end up using this for your competition or hackathon, I would love to
