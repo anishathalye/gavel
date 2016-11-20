@@ -8,7 +8,7 @@ CONFIG_FILE = os.path.join(BASE_DIR, '..', 'config.yaml')
 class Config(object):
 
     def __init__(self, config_file):
-        if not os.environ.get('IGNORE_CONFIG_FILE', False):
+        if not _bool(os.environ.get('IGNORE_CONFIG_FILE', False)):
             with open(config_file) as f:
                 self._config = yaml.safe_load(f)
         else:
@@ -34,8 +34,6 @@ class Config(object):
                 raise LookupError('Cannot find value for setting %s' % name)
         return setting
 
-c = Config(CONFIG_FILE)
-
 def _bool(truth_value):
     if isinstance(truth_value, bool):
         return truth_value
@@ -50,6 +48,8 @@ def _list(item):
     if isinstance(item, list):
         return item
     return [item]
+
+c = Config(CONFIG_FILE)
 
 # note: this should be kept in sync with 'config.template.yaml' and
 # 'config.vagrant.yaml'
