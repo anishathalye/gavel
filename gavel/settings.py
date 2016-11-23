@@ -40,6 +40,8 @@ def _bool(truth_value):
     if isinstance(truth_value, int):
         return bool(truth_value)
     if isinstance(truth_value, str):
+        if truth_value.isnumeric():
+            return bool(int(truth_value))
         lower = truth_value.lower()
         return lower.startswith('t') or lower.startswith('y') # accepts things like 'yes', 'True', ...
     raise ValueError('invalid type for bool coercion')
