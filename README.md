@@ -18,6 +18,15 @@ used at a number of other events since then.
 See the demo video
 [here](http://www.anishathalye.com/2016/09/19/gavel-an-expo-judging-system/)!
 
+## Users
+
+See [here](https://github.com/anishathalye/gavel/wiki/Users) for a list of
+events that have used Gavel in the past.
+
+**If you use Gavel for your event, please add yourself to the list!** (Anyone
+can edit it.) Adding yourself to the list helps keep me motivated to continue
+working on the software.
+
 ## Design
 
 Gavel is based on the method of pairwise comparisons. Before you use Gavel,
@@ -113,12 +122,6 @@ quality (Mu).
 
 Interested in hacking on Gavel? Awesome. See [DEVELOPMENT.md][development] for
 a dev setup guide.
-
-## Users
-
-See [here](https://github.com/anishathalye/gavel/wiki/Users) for a list of
-groups that have used Gavel in the past. If you use Gavel for anything, please
-add yourself to the list (anyone can edit it)!
 
 ## Notes
 
