@@ -137,7 +137,7 @@ Do you have a feature request, bug report, or patch? Great! See
 
 ## License
 
-Copyright (c) 2015-2016 Anish Athalye. Released under AGPLv3. See
+Copyright (c) 2015-2017 Anish Athalye. Released under AGPLv3. See
 [LICENSE.txt][license] for details.
 
 [blog-1]: http://www.anishathalye.com/2015/03/07/designing-a-better-judging-system/
