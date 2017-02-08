@@ -30,3 +30,12 @@ db.init_app(app)
 import gavel.template_filters # registers template filters
 
 import gavel.controllers # registers controllers
+
+# send usage stats
+import gavel.utils
+gavel.utils.send_telemetry('gavel-boot', {
+    'base-url': settings.BASE_URL or '',
+    'min-views': settings.MIN_VIEWS,
+    'timeout': settings.TIMEOUT,
+    'disable-email': settings.DISABLE_EMAIL
+})

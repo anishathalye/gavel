@@ -6,3 +6,4 @@ db_uri: postgresql://localhost/gavel
 disable_email: true
 email_from: '' # needs to be set to something even though email is disabled
 email_password: ''
+send_stats: false # disabled for development
