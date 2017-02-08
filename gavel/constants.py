@@ -1,4 +1,5 @@
 ANNOTATOR_ID = 'annotator_id'
+TELEMETRY_URL = 'https://telemetry.anish.io/api/v1/submit'
 
 # Setting
 # keys
@@ -8,6 +9,7 @@ SETTING_TRUE = 'true'
 SETTING_FALSE = 'false'
 
 # Defaults
+# these can be overridden via the config file
 DEFAULT_WELCOME_MESSAGE = '''
 Welcome to Gavel.
 

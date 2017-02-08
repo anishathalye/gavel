@@ -1,7 +1,9 @@
 import gavel.settings as settings
 import gavel.crowd_bt as crowd_bt
+import gavel.constants as constants
 from flask import Markup, Response, request
 import markdown
+import requests
 from functools import wraps
 import base64
 import os
@@ -83,3 +85,15 @@ def send_emails(emails):
 
 def render_markdown(content):
     return Markup(markdown.markdown(content))
+
+def send_telemetry(identifier, data):
+    if not settings.SEND_STATS:
+        return
+    try:
+        requests.post(
+            constants.TELEMETRY_URL,
+            json={'identifier': identifier, 'data': data},
+            timeout=5
+        )
+    except Exception:
+        pass # don't want this to break anything else
