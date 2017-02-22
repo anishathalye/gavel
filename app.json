@@ -9,6 +9,7 @@
         "DISABLE_EMAIL": "true",
         "BASE_URL": "_unused_",
         "EMAIL_FROM": "_unused_",
+        "EMAIL_USER": "_unused_",
         "EMAIL_PASSWORD": "_unused_",
         "IGNORE_CONFIG_FILE": "true"
     },

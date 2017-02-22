@@ -56,11 +56,18 @@ def send_emails(emails):
 
     This function takes a list [(to_address, subject, body)].
     '''
-    server = smtplib.SMTP(settings.EMAIL_HOST, settings.EMAIL_PORT)
-    server.ehlo()
-    server.starttls()
-    server.ehlo()
-    server.login(settings.EMAIL_FROM, settings.EMAIL_PASSWORD)
+
+    if settings.EMAIL_AUTH_MODE == 'tls':
+        server = smtplib.SMTP(settings.EMAIL_HOST, settings.EMAIL_PORT)
+        server.ehlo()
+        server.starttls()
+        server.ehlo()
+    elif settings.EMAIL_AUTH_MODE == 'ssl':
+        server = smtplib.SMTP_SSL(settings.EMAIL_HOST, settings.EMAIL_PORT)
+    else:
+        raise ValueError('unsupported auth mode: %s' % settings.EMAIL_AUTH_MODE)
+
+    server.login(settings.EMAIL_USER, settings.EMAIL_PASSWORD)
 
     exceptions = []
     for e in emails:
