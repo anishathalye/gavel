@@ -12,6 +12,12 @@ admin_password: null
 # '_unused_' (or anything else).
 base_url: null
 
+# can also be specified as the 'EMAIL_USER' environment variable
+#
+# this is the username that'll be used for SMTP authentication. if you are setting
+# DISABLE_EMAIL, you can set this setting to '_unused_' (or anything else).
+email_user: null
+
 # can also be specified as the 'EMAIL_FROM' environment variable
 #
 # if you are setting DISABLE_EMAIL, you can set this setting to '_unused_' (or
@@ -23,6 +29,12 @@ email_from: null
 # if you are setting DISABLE_EMAIL, you can set this setting to '_unused_' (or
 # anything else).
 email_password: null
+
+# can also be specified as the 'EMAIl_AUTH_MODE' environment variable
+#
+# can either be tls or ssl. if you are setting DISABLE_EMAIL, you can set
+# this setting to '_unused_' (or anything else).
+email_auth_mode: tls
 
 # can also be specified as the 'SECRET_KEY' environment variable
 #
