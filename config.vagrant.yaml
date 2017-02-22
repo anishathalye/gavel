@@ -4,6 +4,8 @@ admin_password: admin
 secret_key: gavel
 db_uri: postgresql://localhost/gavel
 disable_email: true
-email_from: '' # needs to be set to something even though email is disabled
+email_user: '' # needs to be set to something even though email is disabled
+email_from: ''
 email_password: ''
+email_auth_mode: 'tls'
 send_stats: false # disabled for development
