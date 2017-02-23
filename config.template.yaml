@@ -18,6 +18,13 @@ base_url: null
 # anything else).
 email_from: null
 
+# can also be specified as the 'EMAIL_USER' environment variable
+#
+# this is the username that'll be used for SMTP authentication. if you are
+# setting DISABLE_EMAIL, you can set this setting to '_unused_' (or anything
+# else).
+email_user: null
+
 # can also be specified as the 'EMAIL_PASSWORD' environment variable
 #
 # if you are setting DISABLE_EMAIL, you can set this setting to '_unused_' (or
@@ -98,6 +105,13 @@ wait_message: null
 #
 # setting this to true disables email functionality.
 disable_email: null
+
+# can also be specified as the 'EMAIl_AUTH_MODE' environment variable
+# defaults to 'tls'
+#
+# can either be 'tls' or 'ssl'. if you are setting DISABLE_EMAIL, you can set
+# this setting to '_unused_' (or anything else).
+email_auth_mode: null
 
 # can also be specified as the 'EMAIL_HOST' environment variable
 # defaults to 'smtp.gmail.com'
