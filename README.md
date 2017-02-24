@@ -135,6 +135,20 @@ If anyone has questions, feel free to email Anish (me@anishathalye.com).
 Do you have a feature request, bug report, or patch? Great! See
 [CONTRIBUTING.md][contributing] for information on what you can do about that.
 
+## Citation
+
+If you use Gavel in any way in academic work, please cite the following:
+
+```
+@misc{athalye2016gavel,
+  author = {Anish Athalye},
+  title = {Gavel},
+  year = {2016},
+  howpublished = {\url{https://github.com/anishathalye/gavel}},
+  note = {commit xxxxxxx}
+}
+```
+
 ## License
 
 Copyright (c) 2015-2017 Anish Athalye. Released under AGPLv3. See
