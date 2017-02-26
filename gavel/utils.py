@@ -60,7 +60,7 @@ def send_emails(emails):
     server.ehlo()
     server.starttls()
     server.ehlo()
-    server.login(settings.EMAIL_FROM, settings.EMAIL_PASSWORD)
+    server.login(settings.EMAIL_USER, settings.EMAIL_PASSWORD)
 
     exceptions = []
     for e in emails:

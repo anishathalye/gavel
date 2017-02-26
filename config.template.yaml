@@ -34,6 +34,14 @@ secret_key: null
 # Optional Settings #
 #####################
 
+
+# can also be specified as the 'EMAIL_USER' environment variable
+#
+# if you are setting DISABLE_EMAIL, you can set this setting to '_unused_' (or
+# anything else).
+# defaults to value in constant EMAIL_FROM (email_from)
+email_user: null
+
 # can also be specified as the 'DATABASE_URL' or 'DB_URI' environment variable
 # defaults to 'postgresql://localhost/gavel'
 db_uri: null
