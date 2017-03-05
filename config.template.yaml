@@ -7,8 +7,9 @@ admin_password: null
 
 # can also be specified as the 'BASE_URL' environment variable
 #
-# make sure to have a trailing slash. this must be set for emailed links to work
-# properly. if you are setting DISABLE_EMAIL, you can set this setting to
+# this is the base url of the judging app, e.g. 'https://judging.example.com/'.
+# make sure to have a trailing slash. this must be set for emailed links to
+# work properly. if you are setting DISABLE_EMAIL, you can set this setting to
 # '_unused_' (or anything else).
 base_url: null
 
