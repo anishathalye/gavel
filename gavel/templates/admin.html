@@ -143,23 +143,30 @@
     <h2>Add Projects</h2>
   </div>
   <div class="info">
-    <p>name, location, description (CSV format)</p>
+    <p>Add name, location, description (CSV format)</p>
     <textarea name="data" form="item_form"></textarea>
-    <form action="/admin/item" method="post" id="item_form">
+    <form action="/admin/item" method="post" id="item_form" enctype="multipart/form-data">
+      <div class="upload-container">
+        <span class="field">Or upload a file here:</span>
+        <input type="file" name="file" accept=".csv,.xls,.xlsx">
+      </div>
       <input type="submit" name="action" value="Submit" class="button-full positive">
       <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
     </form>
   </div>
 </div>
-
 <div class="item">
   <div class="banner">
     <h2>Add Judges</h2>
   </div>
   <div class="info">
-    <p>name, email, description (CSV format)</p>
+    <p>Add name, email, description (CSV format)</p>
     <textarea name="data" form="annotator_form"></textarea>
-    <form action="/admin/annotator" method="post" id="annotator_form">
+    <form action="/admin/annotator" method="post" id="annotator_form" enctype="multipart/form-data">
+      <div class="upload-container">
+        <span class="field">Or upload a file here:</span>
+        <input type="file" name="file" accept=".csv,.xls,.xlsx">
+      </div>
       <input type="submit" name="action" value="Submit" class="button-full positive">
       <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
     </form>

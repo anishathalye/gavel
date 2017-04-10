@@ -21,3 +21,4 @@ six==1.10.0
 SQLAlchemy==1.1.6
 webassets==0.12.1
 Werkzeug==0.12.1
+xlrd==1.0.0
