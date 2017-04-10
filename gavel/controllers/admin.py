@@ -10,6 +10,10 @@ from flask import (
     url_for,
 )
 import urllib.parse
+import csv
+import xlrd
+
+ALLOWED_EXTENSIONS = set(['csv', 'xlsx', 'xls'])
 
 @app.route('/admin/')
 @utils.requires_auth
@@ -50,12 +54,12 @@ def admin():
 def item():
     action = request.form['action']
     if action == 'Submit':
-        csv = request.form['data']
-        data = utils.data_from_csv_string(csv)
-        for row in data:
-            _item = Item(*row)
-            db.session.add(_item)
-        db.session.commit()
+        data = parse_upload_form()
+        if data:
+            for row in data:
+                _item = Item(*row)
+                db.session.add(_item)
+            db.session.commit()
     elif action == 'Prioritize' or action == 'Cancel':
         item_id = request.form['item_id']
         target_state = action == 'Prioritize'
@@ -75,6 +79,29 @@ def item():
         except IntegrityError as e:
             return render_template('error.html', message=str(e))
     return redirect(url_for('admin'))
+
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+
+def parse_upload_form():
+    f = request.files['file']
+    data = []
+    if f and allowed_file(f.filename):
+        extension = str(f.filename.rsplit('.', 1)[1].lower())
+        if extension == "xlsx" or extension == "xls":
+            workbook = xlrd.open_workbook(file_contents=f.read())
+            worksheet = workbook.sheet_by_index(0)
+            data = list(utils.cast_row(worksheet.row_values(rx, 0, 3)) for rx in range(worksheet.nrows) if worksheet.row_len(rx) == 3)
+        elif extension == "csv":
+            data = utils.data_from_csv_string(f.read().decode("utf-8"))
+    else:
+        csv = request.form['data']
+        data = utils.data_from_csv_string(csv)
+    return data
+
 
 @app.route('/admin/item_patch', methods=['POST'])
 @utils.requires_auth
@@ -96,18 +123,18 @@ def item_patch():
 def annotator():
     action = request.form['action']
     if action == 'Submit':
-        csv = request.form['data']
-        data = utils.data_from_csv_string(csv)
+        data = parse_upload_form()
         added = []
-        for row in data:
-            annotator = Annotator(*row)
-            added.append(annotator)
-            db.session.add(annotator)
-        db.session.commit()
-        try:
-            email_invite_links(added)
-        except Exception as e:
-            return render_template('error.html', message=str(e))
+        if data:
+            for row in data:
+                annotator = Annotator(*row)
+                added.append(annotator)
+                db.session.add(annotator)
+            db.session.commit()
+            try:
+                email_invite_links(added)
+            except Exception as e:
+                return render_template('error.html', message=str(e))
     elif action == 'Email':
         annotator_id = request.form['annotator_id']
         try:
