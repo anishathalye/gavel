@@ -180,9 +180,13 @@ def annotator_detail(annotator_id):
         return render_template(
             'admin_annotator.html',
             annotator=annotator,
+            login_link=annotator_link(annotator),
             seen=seen,
             skipped=skipped
         )
+
+def annotator_link(annotator):
+        return urllib.parse.urljoin(settings.BASE_URL, url_for('login', secret=annotator.secret))
 
 def email_invite_links(annotators):
     if settings.DISABLE_EMAIL or annotators is None:
@@ -192,7 +196,7 @@ def email_invite_links(annotators):
 
     emails = []
     for annotator in annotators:
-        link = urllib.parse.urljoin(settings.BASE_URL, url_for('login', secret=annotator.secret))
+        link = annotator_link(annotator)
         raw_body = settings.EMAIL_BODY.format(name=annotator.name, link=link)
         body = '\n\n'.join(utils.get_paragraphs(raw_body))
         emails.append((annotator.email, settings.EMAIL_SUBJECT, body))
