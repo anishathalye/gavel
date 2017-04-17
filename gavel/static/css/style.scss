@@ -282,6 +282,15 @@ input[type=submit].neutral {
   background-color: $prioritized-color;
 }
 
+.upload-container {
+    margin-top: 0.25rem;
+    margin-bottom: 0.5rem;
+}
+
+.field {
+    padding-right: 1rem;
+}
+
 #footer {
   margin-top: 2rem;
   border-top: 1px solid $light-grey;
