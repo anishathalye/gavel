@@ -1,7 +1,7 @@
 import gavel.settings as settings
 import gavel.crowd_bt as crowd_bt
 import gavel.constants as constants
-from flask import Markup, Response, request
+from flask import Markup, Response, request, render_template
 import markdown
 import requests
 from functools import wraps
@@ -92,6 +92,12 @@ def send_emails(emails):
 
 def render_markdown(content):
     return Markup(markdown.markdown(content))
+
+def user_error(message):
+    return render_template('error.html', message=message), 400
+
+def server_error(message):
+    return render_template('error.html', message=message), 500
 
 def send_telemetry(identifier, data):
     if not settings.SEND_STATS:

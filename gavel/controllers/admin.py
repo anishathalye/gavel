@@ -55,6 +55,10 @@ def item():
     if action == 'Submit':
         data = parse_upload_form()
         if data:
+            # validate data
+            for index, row in enumerate(data):
+                if len(row) != 3:
+                    return utils.user_error('Bad data: row %d has %d elements (expecting 3)' % (index + 1, len(row)))
             for row in data:
                 _item = Item(*row)
                 db.session.add(_item)
@@ -76,7 +80,7 @@ def item():
             Item.query.filter_by(id=item_id).delete()
             db.session.commit()
         except IntegrityError as e:
-            return render_template('error.html', message=str(e))
+            return utils.server_error(str(e))
     return redirect(url_for('admin'))
 
 
@@ -107,7 +111,7 @@ def parse_upload_form():
 def item_patch():
     item = Item.by_id(request.form['item_id'])
     if not item:
-        return render_template('error.html', message='Item not found.')
+        return utils.user_error('Item %s not found ' % request.form['item_id'])
     if 'location' in request.form:
         item.location = request.form['location']
     if 'name' in request.form:
@@ -125,6 +129,10 @@ def annotator():
         data = parse_upload_form()
         added = []
         if data:
+            # validate data
+            for index, row in enumerate(data):
+                if len(row) != 3:
+                    return utils.user_error('Bad data: row %d has %d elements (expecting 3)' % (index + 1, len(row)))
             for row in data:
                 annotator = Annotator(*row)
                 added.append(annotator)
@@ -133,13 +141,13 @@ def annotator():
             try:
                 email_invite_links(added)
             except Exception as e:
-                return render_template('error.html', message=str(e))
+                return utils.server_error(str(e))
     elif action == 'Email':
         annotator_id = request.form['annotator_id']
         try:
             email_invite_links(Annotator.by_id(annotator_id))
         except Exception as e:
-            return render_template('error.html', message=str(e))
+            return utils.server_error(str(e))
     elif action == 'Disable' or action == 'Enable':
         annotator_id = request.form['annotator_id']
         target_state = action == 'Enable'
@@ -152,7 +160,7 @@ def annotator():
             Annotator.query.filter_by(id=annotator_id).delete()
             db.session.commit()
         except IntegrityError as e:
-            return render_template('error.html', message=str(e))
+            return utils.server_error(str(e))
     return redirect(url_for('admin'))
 
 @app.route('/admin/setting', methods=['POST'])
@@ -171,7 +179,7 @@ def setting():
 def item_detail(item_id):
     item = Item.by_id(item_id)
     if not item:
-        return render_template('error.html', message='Item not found.')
+        return utils.user_error('Item %s not found ' % item_id)
     else:
         assigned = Annotator.query.filter(Annotator.next == item).all()
         viewed_ids = {i.id for i in item.viewed}
@@ -193,7 +201,7 @@ def item_detail(item_id):
 def annotator_detail(annotator_id):
     annotator = Annotator.by_id(annotator_id)
     if not annotator:
-        return render_template('error.html', message='Annotator not found.')
+        return utils.user_error('Annotator %s not found ' % annotator_id)
     else:
         seen = Item.query.filter(Item.viewed.contains(annotator)).all()
         ignored_ids = {i.id for i in annotator.ignore}
