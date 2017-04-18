@@ -52,6 +52,14 @@ p {
   white-space: pre-wrap;
 }
 
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  margin: 0;
+}
+
 input,
 textarea {
   font-family: $body-font;
