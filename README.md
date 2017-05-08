@@ -69,9 +69,14 @@ gavel` (unless you're using a different database name). Before you use the app,
 you need to initialize the database by running `python initialize.py`. **Note
 that Gavel does not preserve database schema compatibility between versions.**
 
+In order to send emails, you'll need to install Redis.
+
 When testing, you can run the app with `python runserver.py`. In production,
 you should use something like [Gunicorn][gunicorn] to serve this. You can run
 the app with `gunicorn -b :<PORT> -w <number of workers> gavel:app`.
+
+For sending emails, you'll also need to start a celery worker with `celery -A
+gavel:celery worker`.
 
 ## Configuration
 
