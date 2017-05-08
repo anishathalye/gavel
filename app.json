@@ -1,7 +1,18 @@
 {
     "addons": [
-        "heroku-postgresql:hobby-dev"
+        "heroku-postgresql:hobby-dev",
+        "heroku-redis:hobby-dev"
     ],
+    "formation": {
+        "web": {
+            "quantity": 1,
+            "size": "free"
+        },
+        "worker": {
+            "quantity": 1,
+            "size": "free"
+        }
+    },
     "description": "An awesome judging system for hackathons",
     "env": {
         "ADMIN_PASSWORD": "change-this-before-deploying",

@@ -23,6 +23,11 @@ scss = Bundle(
 )
 assets.register('scss_all', scss)
 
+from celery import Celery
+app.config['CELERY_BROKER_URL'] = settings.BROKER_URI
+celery = Celery(app.name, broker=app.config['CELERY_BROKER_URL'])
+celery.conf.update(app.config)
+
 from gavel.models import db
 db.app = app
 db.init_app(app)

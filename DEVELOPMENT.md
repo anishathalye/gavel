@@ -69,6 +69,13 @@ Now, on your local machine, you should be able to navigate to
 `http://localhost:5000/admin` and login with the username "admin" with the
 password "admin".
 
+If you'd like to enable sending emails, you'll also need to run a celery worker
+with:
+
+```bash
+celery -A gavel:celery worker
+```
+
 **While developing, you should keep `vagrant rsync-auto` running on the host
 machine so that whenever you change any files, they're automatically synced
 over to the VM.** When the app running in the VM detects changed files, it'll
