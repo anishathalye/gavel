@@ -1,3 +1,4 @@
+from gavel import celery
 import gavel.settings as settings
 import gavel.crowd_bt as crowd_bt
 import gavel.constants as constants
@@ -50,6 +51,7 @@ def get_paragraphs(message):
     paragraphs = [i.replace('\n', ' ') for i in paragraphs if i]
     return paragraphs
 
+@celery.task
 def send_emails(emails):
     '''
     Send a batch of emails.
