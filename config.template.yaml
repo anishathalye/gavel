@@ -46,6 +46,10 @@ secret_key: null
 # defaults to 'postgresql://localhost/gavel'
 db_uri: null
 
+# can also be specified as the 'REDIS_URL' or 'BROKER_URI' environment variable
+# defaults to 'redis://localhost:6379/0'
+broker_uri: null
+
 # can also be specified as the 'PORT' environment variable
 # defaults to '5000'
 port: null

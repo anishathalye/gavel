@@ -19,7 +19,8 @@ Vagrant.configure(2) do |config|
 
     apt-get install -y \
       postgresql-9.4 postgresql-server-dev-9.4 \
-      python3-dev python3-pip
+      redis-server \
+      python3-dev python3-pip 
 
     pip3 install --upgrade pip
     pip3 install virtualenv

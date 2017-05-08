@@ -235,4 +235,4 @@ def email_invite_links(annotators):
         body = '\n\n'.join(utils.get_paragraphs(raw_body))
         emails.append((annotator.email, settings.EMAIL_SUBJECT, body))
 
-    utils.send_emails(emails)
+    utils.send_emails.delay(emails)
