@@ -25,7 +25,7 @@ events that have used Gavel in the past.
 
 **If you use Gavel for your event, please add yourself to the list!** (Anyone
 can edit it.) Adding yourself to the list helps keep me motivated to continue
-working on the software.
+working on the software :)
 
 ## Design
 
@@ -88,6 +88,12 @@ variables. There's more detailed documentation in `config.template.yaml`.
 
 If you don't want to use the config file and use only environment variables,
 set the environment variable `IGNORE_CONFIG_FILE=true`.
+
+## Troubleshooting
+
+See the [troubleshooting
+guide](https://github.com/anishathalye/gavel/wiki/Troubleshooting) in the Gavel
+wiki.
 
 ## Use
 

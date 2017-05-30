@@ -125,6 +125,9 @@ email_auth_mode: null
 # https://www.google.com/settings/security/lesssecureapps. if at any point,
 # your account gets locked, visiting this link may help:
 # http://www.google.com/accounts/DisplayUnlockCaptcha.
+#
+# see the troubleshooting guide for more help:
+# https://github.com/anishathalye/gavel/wiki/Troubleshooting
 email_host: null
 
 # can also be specified as the 'EMAIL_PORT' environment variable
