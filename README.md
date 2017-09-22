@@ -2,8 +2,8 @@
 
 **Gavel** is a project expo judging system.
 
-It was originally built for HackMIT and first used at HackMIT 2015. It's been
-used at a number of other events since then.
+Gavel was originally built for HackMIT and first used at HackMIT 2015. It has
+been used by [dozens][users] of other events since then.
 
 [![Join the chat at https://gitter.im/anishathalye/gavel](https://badges.gitter.im/anishathalye/gavel.svg)](https://gitter.im/anishathalye/gavel?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
@@ -20,8 +20,7 @@ See the demo video
 
 ## Users
 
-See [here](https://github.com/anishathalye/gavel/wiki/Users) for a list of
-events that have used Gavel in the past.
+See [here][users] for a list of events that have used Gavel in the past.
 
 **If you use Gavel for your event, please add yourself to the list!** (Anyone
 can edit it.) Adding yourself to the list helps keep me motivated to continue
@@ -173,3 +172,4 @@ Copyright (c) 2015-2017 Anish Athalye. Released under AGPLv3. See
 [development]: DEVELOPMENT.md
 [email]: mailto:me@anishathalye.com
 [gunicorn]: http://gunicorn.org/
+[users]: https://github.com/anishathalye/gavel/wiki/Users
