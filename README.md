@@ -5,6 +5,10 @@
 Gavel was originally built for HackMIT and first used at HackMIT 2015. It has
 been used by [dozens][users] of other events since then.
 
+**If you use Gavel for your event, please add yourself to [this list][users]!
+It only takes a minute, and knowing that Gavel is helping real events helps
+keep us going <3**
+
 [![Join the chat at https://gitter.im/anishathalye/gavel](https://badges.gitter.im/anishathalye/gavel.svg)](https://gitter.im/anishathalye/gavel?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 ## Demo
@@ -22,8 +26,11 @@ See the demo video
 
 See [here][users] for a list of events that have used Gavel in the past.
 
-**If you use Gavel for your event, please add yourself to the list!** (Anyone
-can edit it.) Adding yourself to the list helps keep me motivated to continue
+**If you use Gavel for your event, please add yourself to the list! It only
+takes a minute, and knowing that Gavel is helping real events helps keep us
+going <3**
+
+and adding yourself to the list helps keep me motivated to continue
 working on the software :)
 
 ## Design
