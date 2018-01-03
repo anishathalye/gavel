@@ -218,6 +218,19 @@ hr {
   background-color: $vote-color;
 }
 
+
+.card {
+  display: block;
+  cursor: pointer;
+  border: 1px solid $dark;
+  padding: 1rem;
+  margin: 1rem;
+}
+
+.card:hover {
+  text-decoration: none;
+}
+
 input[type=submit] {
   color: $light;
   background-color: $dark;
@@ -306,4 +319,9 @@ input[type=submit].neutral {
     font-size: 0.75rem;
     text-align: center;
   }
+}
+
+#subcategoryfooter {
+  padding: 1rem;
+  text-align: center;
 }

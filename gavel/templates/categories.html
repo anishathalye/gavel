@@ -1,0 +1,22 @@
+{% extends "layout.html" %}
+{% block title %}Start{% endblock %}
+{% block content %}
+<div class="item">
+  <div class="banner-tight">
+    <h1>Categories</h1>
+  </div>
+</div>
+
+<div class="item">
+  <div class="info">
+    <p>Pick the category you want to judge for.</p>
+
+    {% for category in categories %}
+      <a href="{{ url_for('judge', category_id=category.id) }}" class="card">
+        <h2>{{ category.name | safe }}</h2>
+        <p>{{ category.description | safe }}</p>
+      </a>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

@@ -28,51 +28,51 @@
         <td><a href="{{ login_link }}">{{ login_link }}</a></td>
       </tr>
       <tr>
-        <th>Next</th>
-        {% if annotator.next %}
-        <td><a href="{{ url_for('item_detail', item_id=annotator.next.id) }}" class="colored">{{ annotator.next.name | safe }} [{{ annotator.next_id }}]</a></td>
-        {% else %}
-        <td>None</td>
-        {% endif %}
-      </tr>
-      <tr>
-        <th>Previous</th>
-        {% if annotator.prev %}
-        <td><a href="{{ url_for('item_detail', item_id=annotator.prev.id) }}" class="colored">{{ annotator.prev.name | safe }} [{{ annotator.prev_id }}]</a></td>
-        {% else %}
-        <td>None</td>
-        {% endif %}
-      </tr>
-      <tr>
-        <th>Updated</th>
-        <td>{{ annotator.updated | utcdatetime_local }}</td>
-      </tr>
-      <tr>
-        <th>Alpha</th>
-        <td>{{ annotator.alpha | round(4) }}</td>
-      </tr>
-      <tr>
-        <th>Beta</th>
-        <td>{{ annotator.beta | round(4) }}</td>
-      </tr>
-      <tr>
-        <th>Seen</th>
+        <th>Categories</th>
         <td>
-          <ul>
-            {% for item in seen %}
-            <li><a href="{{ url_for('item_detail', item_id=item.id) }}" class="colored">{{ item.name | safe }} [{{ item.id }}]</a></li>
-            {% endfor %}
-          </ul>
-        </td>
-      </tr>
-      <tr>
-        <th>Skipped</th>
-        <td>
-          <ul>
-            {% for item in skipped %}
-            <li><a href="{{ url_for('item_detail', item_id=item.id) }}" class="colored">{{ item.name | safe }} [{{ item.id }}]</a></li>
-            {% endfor %}
-          </ul>
+          <table>
+            <thead>
+              <tr>
+                <th data-sort-method="number">Id</th>
+                <th data-sort-method="caseInsensitiveSort">Name</th>
+                <th class="no-sort">Delete</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for category in annotator.categories %}
+                <tr>
+                  <td><a href="{{ url_for('category_detail', category_id=category.category_id) }}" class="colored">{{ category.category_id }}</a></td>
+                  <td>
+                    {{ category.category.name | safe }}
+                  </td>
+                  <td class="compact">
+                    <form action="/admin/annotator_patch" method="post">
+                      <input type="submit" name="action" value="Delete Category" class="neutral">
+                      <input type="hidden" name="annotator_id" value="{{ annotator.id }}">
+                      <input type="hidden" name="annotator_category_id" value="{{ category.id }}">
+                      <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+                    </form>
+                  </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+
+
+          <form action="/admin/annotator_patch" method="post">
+            <select name="category_id">
+              {% for category in categories %}
+                <option value="{{ category.id }}">
+                  {{ category.id }}.
+                  {{ category.name }}
+                </option>
+              {% endfor %}
+            </select>
+
+            <input type="submit" name="action" value="Add Category" class="neutral">
+            <input type="hidden" name="annotator_id" value="{{ annotator.id }}">
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+          </form>
         </td>
       </tr>
     </table>

@@ -3,7 +3,7 @@
 {% block content %}
 <div class="item">
   <div class="banner-tight">
-    <h1>Start</h1>
+    <h1>{{ category.name }}: Start</h1>
   </div>
   {% with item=item %}
   {% include "_item.html" %}
@@ -15,9 +15,12 @@
     <form action="/begin" method="post">
       <input type="submit" name="action" value="Skip" id="vote-skip" class="button-full">
       <input type="submit" name="action" value="Done" id="vote-done" class="button-full button-gap">
+      <input type="hidden" name="category_id" value="{{ category.id }}">
       <input type="hidden" name="item_id" value="{{ item.id }}">
       <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
     </form>
   </div>
+
+  {% include "_subcategoryfooter.html" %}
 </div>
 {% endblock %}

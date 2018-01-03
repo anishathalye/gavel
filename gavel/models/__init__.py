@@ -9,10 +9,11 @@ class SerializableAlchemy(SQLAlchemy):
         return super(SerializableAlchemy, self).apply_driver_hacks(app, info, options)
 db = SerializableAlchemy()
 
-from gavel.models.annotator import Annotator, ignore_table
-from gavel.models.item import Item, view_table
+from gavel.models.annotator import Annotator, ignore_table, AnnotatorCategory
+from gavel.models.item import Item, view_table, ItemCategory
 from gavel.models.decision import Decision
 from gavel.models.setting import Setting
+from gavel.models.category import Category
 
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.sql.expression import desc
