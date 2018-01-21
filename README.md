@@ -66,7 +66,7 @@ The latest stable version is the `master` branch (and it's signed and tagged).
 Development happens in the `develop` branch.
 
 The web application is written in **Python 3** using Flask. It also uses NumPy
-and SciPy for math stuff. Doing a `pip install -r requirements.txt` should
+and SciPy for math stuff. Doing a `pip --no-cache-dir install -r requirements.txt` should
 install all the dependencies.
 
 The application uses Postgres for the database, so you need to have that on
