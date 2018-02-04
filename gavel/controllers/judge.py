@@ -39,7 +39,7 @@ def requires_active_annotator(redirect_to):
     return decorator
 
 
-@app.route('/')
+@app.route(settings.BASE_PATH)
 def index():
     annotator = get_current_annotator()
     if annotator is None:
@@ -71,7 +71,7 @@ def index():
         else:
             return render_template('vote.html', prev=annotator.prev, next=annotator.next)
 
-@app.route('/vote', methods=['POST'])
+@app.route(settings.BASE_PATH + 'vote', methods=['POST'])
 @requires_open(redirect_to='index')
 @requires_active_annotator(redirect_to='index')
 def vote():
@@ -96,7 +96,7 @@ def vote():
         db.session.commit()
     return redirect(url_for('index'))
 
-@app.route('/begin', methods=['POST'])
+@app.route(settings.BASE_PATH + 'begin', methods=['POST'])
 @requires_open(redirect_to='index')
 @requires_active_annotator(redirect_to='index')
 def begin():
@@ -112,12 +112,12 @@ def begin():
         db.session.commit()
     return redirect(url_for('index'))
 
-@app.route('/logout')
+@app.route(settings.BASE_PATH + 'logout')
 def logout():
     session.pop(ANNOTATOR_ID, None)
     return redirect(url_for('index'))
 
-@app.route('/login/<secret>/')
+@app.route(settings.BASE_PATH + 'login/<secret>/')
 def login(secret):
     annotator = Annotator.by_secret(secret)
     if annotator is None:
@@ -127,7 +127,7 @@ def login(secret):
         session[ANNOTATOR_ID] = annotator.id
     return redirect(url_for('index'))
 
-@app.route('/welcome/')
+@app.route(settings.BASE_PATH + 'welcome/')
 @requires_open(redirect_to='index')
 @requires_active_annotator(redirect_to='index')
 def welcome():
@@ -136,7 +136,7 @@ def welcome():
         content=utils.render_markdown(settings.WELCOME_MESSAGE)
     )
 
-@app.route('/welcome/done', methods=['POST'])
+@app.route(settings.BASE_PATH + 'welcome/done', methods=['POST'])
 @requires_open(redirect_to='index')
 @requires_active_annotator(redirect_to='index')
 def welcome_done():

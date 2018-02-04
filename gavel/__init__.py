@@ -4,9 +4,9 @@
 # details.
 
 from flask import Flask
-app = Flask(__name__)
-
 import gavel.settings as settings
+app = Flask(__name__, static_url_path=settings.BASE_PATH + 'static')
+
 app.config['SQLALCHEMY_DATABASE_URI'] = settings.DB_URI
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = settings.SECRET_KEY

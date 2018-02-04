@@ -1,6 +1,7 @@
 import gavel.constants as constants
 import os
 import yaml
+import urllib.parse
 
 BASE_DIR = os.path.dirname(__file__)
 CONFIG_FILE = os.path.join(BASE_DIR, '..', 'config.yaml')
@@ -55,7 +56,8 @@ c = Config(CONFIG_FILE)
 
 # note: this should be kept in sync with 'config.template.yaml' and
 # 'config.vagrant.yaml'
-BASE_URL =            c.get('base_url',        'BASE_URL')
+BASE_URL =            c.get('base_url',        'BASE_URL',                 default='/')
+BASE_PATH =           urllib.parse.urlsplit(BASE_URL).path
 ADMIN_PASSWORD =      c.get('admin_password',  'ADMIN_PASSWORD')
 DB_URI =              c.get('db_uri',          ['DATABASE_URL', 'DB_URI'], default='postgresql://localhost/gavel')
 BROKER_URI =          c.get('broker_uri',      ['REDIS_URL', 'BROKER_URI'], default='redis://localhost:6379/0')

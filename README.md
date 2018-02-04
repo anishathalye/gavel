@@ -95,6 +95,31 @@ variables. There's more detailed documentation in `config.template.yaml`.
 If you don't want to use the config file and use only environment variables,
 set the environment variable `IGNORE_CONFIG_FILE=true`.
 
+It is possible to host Gavel and a website (i.e. an event's website)
+on the same domain and port (no subdomain needed). Set BASE_URL in config.yaml
+and also configure the event's webserver to act as a proxy. Example:
+
+/etc/nginx/sites-available/default
+
+```
+server {
+    listen 80;
+
+    server_name mydomain.com www.mydomain.com;
+
+    location /judging {
+        proxy_pass http://127.0.0.1:5000/judging;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_cache_bypass $http_upgrade;
+    }
+}
+```
+
+Using a webserver as a proxy also allows for Gavel to be secured with HTTPS.
+
 ## Troubleshooting
 
 See the [troubleshooting

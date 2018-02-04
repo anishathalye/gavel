@@ -14,7 +14,7 @@ import xlrd
 
 ALLOWED_EXTENSIONS = set(['csv', 'xlsx', 'xls'])
 
-@app.route('/admin/')
+@app.route(settings.BASE_PATH + 'admin/')
 @utils.requires_auth
 def admin():
     annotators = Annotator.query.order_by(Annotator.id).all()
@@ -48,7 +48,7 @@ def admin():
         setting_closed=setting_closed,
     )
 
-@app.route('/admin/item', methods=['POST'])
+@app.route(settings.BASE_PATH + 'admin/item', methods=['POST'])
 @utils.requires_auth
 def item():
     action = request.form['action']
@@ -106,7 +106,7 @@ def parse_upload_form():
     return data
 
 
-@app.route('/admin/item_patch', methods=['POST'])
+@app.route(settings.BASE_PATH + 'admin/item_patch', methods=['POST'])
 @utils.requires_auth
 def item_patch():
     item = Item.by_id(request.form['item_id'])
@@ -121,7 +121,7 @@ def item_patch():
     db.session.commit()
     return redirect(url_for('item_detail', item_id=item.id))
 
-@app.route('/admin/annotator', methods=['POST'])
+@app.route(settings.BASE_PATH + 'admin/annotator', methods=['POST'])
 @utils.requires_auth
 def annotator():
     action = request.form['action']
@@ -163,7 +163,7 @@ def annotator():
             return utils.server_error(str(e))
     return redirect(url_for('admin'))
 
-@app.route('/admin/setting', methods=['POST'])
+@app.route(settings.BASE_PATH + 'admin/setting', methods=['POST'])
 @utils.requires_auth
 def setting():
     key = request.form['key']
@@ -174,7 +174,7 @@ def setting():
         db.session.commit()
     return redirect(url_for('admin'))
 
-@app.route('/admin/item/<item_id>/')
+@app.route(settings.BASE_PATH + 'admin/item/<item_id>/')
 @utils.requires_auth
 def item_detail(item_id):
     item = Item.by_id(item_id)
@@ -196,7 +196,7 @@ def item_detail(item_id):
             skipped=skipped
         )
 
-@app.route('/admin/annotator/<annotator_id>/')
+@app.route(settings.BASE_PATH + 'admin/annotator/<annotator_id>/')
 @utils.requires_auth
 def annotator_detail(annotator_id):
     annotator = Annotator.by_id(annotator_id)
