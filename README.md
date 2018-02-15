@@ -105,7 +105,7 @@ and also configure the event's webserver to act as a proxy. Example:
 server {
     listen 80;
 
-    server_name mydomain.com www.mydomain.com;
+    server_name example.com www.example.com;
 
     location /judging {
         proxy_pass http://127.0.0.1:5000/judging;

@@ -7,9 +7,9 @@ admin_password: null
 
 # can also be specified as the 'BASE_URL' environment variable
 #
-# this is the base url of the judging app, e.g. 'https://judging.event.com/'
+# this is the base url of the judging app, e.g. 'https://judging.example.com/'
 # you can use this to host gavel on the same website for the event
-# (requires proxy, see readme). e.g. 'https://event.com/judging/' 
+# (requires proxy, see readme). e.g. 'https://example.com/judging/' 
 # defaults to '/'
 # make sure to have a trailing slash!
 base_url: null
