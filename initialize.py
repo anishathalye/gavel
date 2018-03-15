@@ -1,4 +1,4 @@
-# Copyright (c) 2015-2017 Anish Athalye (me@anishathalye.com)
+# Copyright (c) 2015-2018 Anish Athalye (me@anishathalye.com)
 #
 # This software is released under AGPLv3. See the included LICENSE.txt for
 # details.
