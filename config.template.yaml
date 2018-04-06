@@ -42,6 +42,17 @@ secret_key: null
 # Optional Settings #
 #####################
 
+# can also be specified as the 'USE_SENDGRID' environment variable
+# defaults to 'False'
+#
+# this enables sending emails via sendgrid. if you enable this, you should also
+# set SENDGRID_API_KEY.
+use_sendgrid: null
+
+# can also be specified as the 'SENDGRID_API_KEY' environment variable
+# defaults to 'None'
+sendgrid_api_key: null
+
 # can also be specified as the 'DATABASE_URL' or 'DB_URI' environment variable
 # defaults to 'postgresql://localhost/gavel'
 db_uri: null
