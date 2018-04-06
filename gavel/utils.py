@@ -15,6 +15,8 @@ import smtplib
 import email
 import email.mime.multipart
 import email.mime.text
+import json
+sendgrid_url = "https://api.sendgrid.com/v3/mail/send"
 
 def gen_secret(length):
     return base64.b32encode(os.urandom(length))[:length].decode('utf8').lower()
@@ -91,6 +93,36 @@ def send_emails(emails):
     server.quit()
     if exceptions:
         raise Exception('Error sending some emails: %s' % exceptions)
+
+def send_sendgrid_emails(emails):
+    exceptions = []
+    for e in emails:
+        to_address, subject, body = e
+        to_adddress = to_address[1:]
+        response = sendgrid_send_email(to_address, subject, body)
+        if not (response.status_code == requests.codes.ok or response.status_code == requests.codes.accepted):
+            all_errors = [error_obj["message"] for error_obj in response.json()["errors"]]
+            error_msg = to_address + ". Error: " + str(all_errors)
+            exceptions.append(error_msg)
+    if exceptions:
+        raise Exception('Error sending some emails to: %s' % exceptions)
+
+def sendgrid_send_email(to_address, subject, body):
+    new_dict = {}
+    new_dict["personalizations"] = []
+    new_dict["personalizations"].append({"to": [{"email": to_address}], "subject": subject})
+    new_dict["from"] = {}
+    new_dict["from"]["email"] = settings.EMAIL_FROM
+    new_dict["subject"] = subject
+    new_dict["content"] = []
+    new_dict["content"].append({"type": "text/plain", "value": body})
+    headers = {
+        'authorization': "Bearer " + settings.SENDGRID_API_KEY,
+        'content-type': "application/json",
+        }
+
+    response = requests.request("POST", sendgrid_url, data=json.dumps(new_dict), headers=headers)
+    return response
 
 def render_markdown(content):
     return Markup(markdown.markdown(content))

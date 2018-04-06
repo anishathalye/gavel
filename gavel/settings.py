@@ -79,3 +79,5 @@ EMAIL_CC =      _list(c.get('email_cc',        'EMAIL_CC',                 defau
 EMAIL_SUBJECT =       c.get('email_subject',                               default=constants.DEFAULT_EMAIL_SUBJECT)
 EMAIL_BODY =          c.get('email_body',                                  default=constants.DEFAULT_EMAIL_BODY)
 SEND_STATS =    _bool(c.get('send_stats',      'SEND_STATS',               default=True))
+USE_SENDGRID =   bool(c.get('use_sendgrid',    'USE_SENDGRID',             default=False))
+SENDGRID_API_KEY =   (c.get('sendgrid_api_key','SENDGRID_API_KEY',         default=None))

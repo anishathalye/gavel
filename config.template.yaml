@@ -42,6 +42,12 @@ secret_key: null
 # Optional Settings #
 #####################
 
+# can also configure Gavel to use SendGrid to send emails
+# Set use_sendgrid to be true. Default value is false
+# also, add in your API key. Default value for that is None.
+use_sendgrid: null
+sendgrid_api_key: null
+
 # can also be specified as the 'DATABASE_URL' or 'DB_URI' environment variable
 # defaults to 'postgresql://localhost/gavel'
 db_uri: null
