@@ -90,7 +90,7 @@ def allowed_file(filename):
 
 
 def parse_upload_form():
-    f = request.files['file']
+    f = request.files.get('file')
     data = []
     if f and allowed_file(f.filename):
         extension = str(f.filename.rsplit('.', 1)[1].lower())
