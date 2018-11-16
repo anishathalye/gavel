@@ -25,6 +25,10 @@ looking at a single submission, and then for every submission after that,
 you'll decide whether it's better or worse than the one you looked at
 **immediately beforehand**.
 
+If at any point, you can't find a particular submission, you can click the
+'Skip' button and you will be assigned a new project. **Please don't skip
+unless absolutely necessary.**
+
 Gavel makes it really simple for you to submit votes, but please think hard
 before you vote. **Once you make a decision, you can't take it back**.
 '''.strip()
