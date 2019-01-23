@@ -1,9 +1,13 @@
 $branding-orange: #ffbc29;
 $branding-turquoise: #4ecdc4;
-$branding-red: #fc5454;
+$branding-red: #FF6666;
 $branding-yellow: #ffe86b;
 $branding-green: #c9d41b;
-$branding-dark: #0b3b4b;
+$branding-dark: #363946;
+$branding-blue: #1EACFF;
+$branding-purple: #5F4BB6;
+$branding-background: #E5E5E5;
+$branding-grey: #B7B7B7;
 
 $wait-color: $branding-yellow;
 $error-color: $branding-red;
@@ -21,8 +25,8 @@ $neutral-color: $branding-yellow;
 
 $text-color: #000000;
 $link-color: mix($branding-turquoise, black, 50%);
-$light: #fffefa;
+$light: #FFFFFF;
 $light-grey: #e8e8e8;
 $dark: $branding-dark;
-$heading-font: "Montserrat", "Helvetica Neue", Helvetica, Arial, sans-serif;
-$body-font: "Lato", "Helvetica Neue", Helvetica, Arial, sans-serif;
+$heading-font: "Rubik", sans-serif;
+$body-font: "Rubik", sans-serif;

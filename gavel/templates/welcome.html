@@ -2,19 +2,34 @@
 {% block title %}Welcome{% endblock %}
 {% block content %}
 <div class="item">
-  <div class="banner">
-    <h1>Welcome</h1>
-  </div>
   <div class="info">
-    {{ content }}
+    <div class="large-header">
+      <h1 class="page-title">Welcome to Gavel.</h1>
+    </div>
+    <div class="welcome-body">
+      <p>
+        Gavel is an expo judging platform that continuously compares each project you visit against the last project you visited.
+        Easy, right? By looking at your comparison patterns as well as those of the other judges,
+        Gavel will determine relative rankings for all of the participating projects.
+      </p>
+
+      <p>
+        Gavel is just a tool. It does not take into consideration any specific judging criteria or the possible weighting of
+        such criteria in the evaluation of projects.
+      </p>
+
+      <p>
+        Please consult your event's judging coordinator or equivalent staff member if you are unclear on how to use Gavel
+        or have any questions regarding judging criteria set by the event staff.
+      </p>
+    </div>
   </div>
 </div>
 
 <div class="item">
-  <div class="info">
-    <form action="/welcome/done" method="post">
-      <input type="submit" name="action" value="Done" class="button-full button-gap positive">
-      <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+  <div class="info bottom-button">
+    <form action="/welcome/instructions" method="get">
+      <button type="submit" class="button-full"> Continue </button>
     </form>
   </div>
 </div>

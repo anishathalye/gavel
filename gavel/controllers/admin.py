@@ -9,7 +9,10 @@ from flask import (
     request,
     url_for,
 )
-import urllib.parse
+try:
+    import urllib
+except ImportError:
+    import urllib3
 import xlrd
 
 ALLOWED_EXTENSIONS = set(['csv', 'xlsx', 'xls'])
