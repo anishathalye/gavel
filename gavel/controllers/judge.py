@@ -132,8 +132,7 @@ def login(secret):
 @requires_active_annotator(redirect_to='index')
 def welcome():
     return render_template(
-        'welcome.html',
-        content=utils.render_markdown(settings.WELCOME_MESSAGE)
+        'welcome.html'
     )
 
 @app.route('/welcome/done', methods=['POST'])
@@ -145,6 +144,14 @@ def welcome_done():
         annotator.read_welcome = True
     db.session.commit()
     return redirect(url_for('index'))
+
+@app.route('/welcome/instructions/')
+@requires_open(redirect_to='index')
+@requires_active_annotator(redirect_to='index')
+def welcome_instructions():
+    return render_template(
+        'instructions.html'
+    )
 
 def get_current_annotator():
     return Annotator.by_id(session.get(ANNOTATOR_ID, None))

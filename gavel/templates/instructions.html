@@ -1,0 +1,47 @@
+{% extends "layout.html" %}
+{% block title %}Instructions{% endblock %}
+{% block content %}
+  <script>
+    function onCheckboxChange() {
+      let button = document.getElementById('continueButton');
+      let checkbox = document.getElementById('continueCheckbox');
+      let text = document.getElementById('continueText');
+      if(checkbox.checked) {
+        button.style.backgroundColor = '#1EACFF';
+        text.classList.add("fillBlue");
+        button.type = 'submit';
+      } else {
+        button.style.backgroundColor = '#B7B7B7';
+        text.classList.remove("fillBlue");
+        button.type = 'button';
+      }
+    }
+  </script>
+<div class="item">
+  <div class="info">
+    <div class="large-header">
+      <h1 class="page-title">Here's how to use Gavel.</h1>
+    </div>
+    <div class="welcome-body">
+      <dl class="instructions">
+        <dt>
+          <p>asd</p>
+        </dt>
+      </dl>
+    </div>
+  </div>
+</div>
+<div class="item">
+  <div class="info bottom-button">
+    <div class="continueCheckboxContainer">
+      <input type="checkbox" id="continueCheckbox" onclick="onCheckboxChange()">
+      <label class="continueText" id="continueText" for="continueCheckbox"></label>
+    </div>
+    <form action="/welcome/done" method="post" id="continueForm">
+        {#    Type is changed to submit when above is checked          #}
+      <button type="button" name="action" class="continue-button" id="continueButton"> Continue </button>
+      <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+    </form>
+  </div>
+</div>
+{% endblock %}
