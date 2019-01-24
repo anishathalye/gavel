@@ -25,9 +25,33 @@
     <div class="welcome-body">
       <dl class="instructions">
         <dt>
-          <p>asd</p>
+          <p>Your first visit will require no action except to move on to the next project.</p>
+        </dt>
+        <dt>
+          <p>
+            With each subsequent visit, you will be presented with another project to evaluate with respect to the previous project.
+            Select the card with the better* project and click 'Continue' to move onto the next project.
+          </p>
+        </dt>
+        <dt>
+          <p>
+            If the project you are evaluating is inappropriate or suspicious as deemed by the judging criteria or rules of the event*,
+            flag the project before moving on. Event staff will be alerted to manually review this project.
+          </p>
+        </dt>
+        <dt>
+          <p>
+            If the project you are being asked to evaluate is a no show or currently occupied by another judge,
+            please select the corresponding option before moving on.
+          </p>
         </dt>
       </dl>
+    </div>
+    <div>
+      <p class="instructionsAsterisk">
+        * Consult your event’s judging coordinator for criteria that makes one team “better” than another as well as what
+        the event considers inappropriate, suspicious, cheating, or grounds for potential disqualification.
+      </p>
     </div>
   </div>
 </div>
@@ -35,11 +59,14 @@
   <div class="info bottom-button">
     <div class="continueCheckboxContainer">
       <input type="checkbox" id="continueCheckbox" onclick="onCheckboxChange()">
-      <label class="continueText" id="continueText" for="continueCheckbox"></label>
+      <label class="continueLabel" id="continueText" for="continueCheckbox"></label>
+      <p class="continueText">
+        Before you continue, please acknowledge that you have read and understand the above instructions.
+      </p>
     </div>
     <form action="/welcome/done" method="post" id="continueForm">
         {#    Type is changed to submit when above is checked          #}
-      <button type="button" name="action" class="continue-button" id="continueButton"> Continue </button>
+      <button type="button" value="Done" name="action" class="continue-button" id="continueButton"> Continue </button>
       <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
     </form>
   </div>

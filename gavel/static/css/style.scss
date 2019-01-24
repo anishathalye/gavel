@@ -356,7 +356,15 @@ dl.instructions dt {
   counter-increment: my-counter;
   position: relative;
   margin-bottom: 0;
-  padding-bottom: 2.5em;
+  padding-bottom: 1.5em;
+}
+
+dl.instructions dt:last-child {
+  content: counter(my-counter);
+  counter-increment: my-counter;
+  position: relative;
+  margin-bottom: 0;
+  padding-bottom: 0;
 }
 
 
@@ -364,8 +372,10 @@ dl.instructions dt:before {
   left: 0;
   border: 4px solid $branding-purple;
   transform: matrix(0,1,-1,0,0,0);
-  position: absolute;
+  position: relative;
   top: 0;
+  width: 60px;
+  height: 0px;
 }
 
 dl.instructions dt:first-child:before {
@@ -378,6 +388,8 @@ dl.instructions dt:last-child:before {
 
 dl.instructions dt p {
   position: relative;
+  margin-bottom: 0;
+  padding-bottom: 0;
 }
 
 .continue-button {
@@ -396,7 +408,13 @@ dl.instructions dt p {
   -webkit-border-radius: 4px;
   -moz-border-radius: 4px;
   border-radius: 4px;
-  margin-top: 53px;
+  margin-top: 16px;
+}
+
+.continueCheckboxContainer {
+  display: inline-flex;
+  align-items: center;
+
 }
 
 .continueCheckboxContainer input[type="checkbox"]{
@@ -411,7 +429,6 @@ dl.instructions dt p {
   content: "";
   width: 32px;
   height: 32px;
-
   background: #FFFFFF;
   border: 1px solid #1EACFF;
   box-sizing: border-box;
@@ -431,6 +448,7 @@ dl.instructions dt p {
 
 .continueCheckboxContainer label {
   position: relative;
+  top: -16px;
 }
 
 .continueCheckboxContainer label::before,
@@ -459,12 +477,72 @@ dl.instructions dt p {
   outline: rgb(59, 153, 252) auto 5px;
 }
 
-.continueText:before {
+.continueLabel::before {
 }
 
 .continueText {
+  position: relative;
+  margin-bottom: 0;
+  padding-bottom: 0;
+  margin-left: 48px;
+  font-size: 12px;
+  margin-top: 0;
 }
 
 .fillBlue::before {
   background-color: $branding-blue!important;
+}
+
+.instructionsAsterisk {
+  position: relative;
+  font-family: Rubik;
+  font-style: italic;
+  font-weight: normal;
+  line-height: normal;
+  font-size: 12px;
+  margin-bottom: 59px;
+  color: #5F4BB6;
+}
+
+.voteItemTeam {
+  font-family: Rubik;
+  font-style: normal;
+  font-weight: normal;
+  line-height: normal;
+  font-size: 12px;
+  text-transform: uppercase;
+  padding: 0;
+  margin: 0;
+  color: #B7B7B7;
+}
+
+.voteItemTeamContent {
+  font-family: Rubik;
+  font-style: normal;
+  font-weight: normal;
+  line-height: normal;
+  font-size: 18px;
+}
+
+.voteItemTop {
+  margin-bottom: 12px;
+}
+
+.voteItemTopTitles {
+  height: 15px;
+}
+
+.voteItemTeamDescription {
+  font-family: Rubik;
+  font-style: normal;
+  font-weight: normal;
+  line-height: normal;
+  font-size: 14px;
+}
+.left {
+  float: left;
+}
+
+.right {
+  float: right;
 }
