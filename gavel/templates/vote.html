@@ -2,21 +2,22 @@
 {% block title %}Vote{% endblock %}
 {% block content %}
 <div class="item">
-  <div class="banner-tight" id="previous-header">
-    <h1>Previous</h1>
-  </div>
-  <div id="previous-body">
+
+<p class="voteItemTeam" style="color: black; padding-bottom: 8px;">
+  LAST PROJECT YOU VISITED
+</p>
+  <div id="item projectItem">
     {% with item=prev %}
     {% include "_item.html" %}
     {% endwith %}
   </div>
 </div>
 
+  <p class="voteItemTeam" style="color: black; padding-bottom: 8px;">
+    CURRENT PROJECT
+  </p>
 <div class="item">
-  <div class="banner-tight" id="current-header">
-    <h1>Current</h1>
-  </div>
-  <div id="current-body">
+  <div id="item projectItem">
     {% with item=next %}
     {% include "_item.html" %}
     {% endwith %}

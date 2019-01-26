@@ -184,6 +184,11 @@ hr {
   padding-right: 1.5rem;
 }
 
+.projectInfo {
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
 .compact {
   padding: 0 0;
 }
@@ -438,12 +443,9 @@ dl.instructions dt p {
 .continueCheckboxContainer label::after {
   content: "";
   display: inline-block;
-  height: 8px;
-  width: 16px;
-  border-left: 3px solid;
-  border-bottom: 3px solid;
-  transform: rotate(-50deg);
-  border-color: white;
+  height: 32px;
+  width: 32px;
+  background: url('/static/img/checkmark.svg') no-repeat;
 }
 
 .continueCheckboxContainer label {
@@ -487,6 +489,11 @@ dl.instructions dt p {
   margin-left: 48px;
   font-size: 12px;
   margin-top: 0;
+}
+
+.fillBlue::after {
+  height: 32px;
+  width: 32px;
 }
 
 .fillBlue::before {
@@ -545,4 +552,97 @@ dl.instructions dt p {
 
 .right {
   float: right;
+}
+
+.projectItem {
+  border: 1px solid $branding-grey;
+  box-sizing: border-box;
+  border-radius: 4px;
+
+}
+
+.projectScreenTitle {
+  font-family: Rubik;
+  font-style: normal;
+  font-weight: normal;
+  line-height: normal;
+  font-size: 18px;
+  color: $branding-purple;
+  padding-top: 24px;
+  padding-bottom: 16px;
+}
+
+.projectInfoInner {
+  padding: 8px;
+}
+
+.bottomPanel {
+  position: fixed;
+  bottom: 0;
+  height: 80px;
+  width: 100%;
+  box-shadow: 0px -2px 8px #B7B7B7;
+}
+
+.bottomPanel a{
+  float: left;
+  display: block;
+  text-align: center;
+}
+
+.flagButton {
+  margin-top: 1rem!important;
+  margin-left: 1rem!important;
+  background: $branding-red;
+  height: 48px!important;
+  width: 60px!important;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+  padding: 0;
+  border: 0;
+  background: url('/static/img/flag_button.svg') center center no-repeat;
+}
+
+.skipButton {
+  margin-top: 1rem;
+  margin-left: 1rem;
+  background: $branding-dark;
+  height: 48px!important;
+  width: 60px!important;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+  border: 0;
+  padding: 0;
+  background: url('/static/img/skip_button.svg') center center no-repeat;
+}
+
+.doneButton {
+  float: right!important;
+  margin-top: 1rem;
+  margin-left: 1rem;
+  margin-right: 1rem;
+  background: $branding-blue;
+  height: 48px!important;
+  width: calc(100% - 60px - 60px - 60px - 12px);
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+  overflow: hidden;
+  -webkit-box-shadow: none!important;
+  -moz-box-shadow: none!important;
+  box-shadow: none!important;
+  border: 0;
+}
+
+.doneButtonText {
+  font-family: Rubik;
+  font-style: normal;
+  font-weight: normal;
+  line-height: normal;
+  font-size: 18px;
+  text-align: center;
+  letter-spacing: 0.02em;
+  color: white;
 }
