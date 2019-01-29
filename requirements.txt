@@ -13,7 +13,7 @@ humanize==0.5.1
 idna==2.8
 itsdangerous==1.1.0
 Jinja2==2.10
-kombu==4.2.2
+kombu==4.2.2.post1
 Markdown==3.0.1
 MarkupSafe==1.1.0
 numpy==1.15.4
