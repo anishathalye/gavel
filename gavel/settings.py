@@ -1,6 +1,8 @@
 import gavel.constants as constants
 import os
 import yaml
+import urllib.request
+import urllib.error
 
 BASE_DIR = os.path.dirname(__file__)
 CONFIG_FILE = os.path.join(BASE_DIR, '..', 'config.yaml')
@@ -9,8 +11,17 @@ class Config(object):
 
     def __init__(self, config_file):
         if not _bool(os.environ.get('IGNORE_CONFIG_FILE', False)):
-            with open(config_file) as f:
-                self._config = yaml.safe_load(f)
+            try:
+                if _bool(os.environ.get('REMOTE_CONFIG_FILE', False)):
+                    config_file = os.environ.get('REMOTE_CONFIG_FILE_LOCATION', config_file)
+                    with urllib.request.urlopen(config_file) as furl:
+                        self._config = yaml.safe_load(furl)
+                else:
+                    with open(config_file) as f:
+                        self._config = yaml.safe_load(f)
+            # EnvironmentError is parent of IOError, OSError, and WindowsError (where applicable)
+            except EnvironmentError:
+                self._config = {}
         else:
             self._config = {}
 
