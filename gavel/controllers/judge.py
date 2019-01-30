@@ -85,9 +85,11 @@ def vote():
                 if request.form['action'] == 'Previous':
                     perform_vote(annotator, next_won=False)
                     decision = Decision(annotator, winner=annotator.prev, loser=annotator.next)
+                    print("Triggered Previous")
                 elif request.form['action'] == 'Current':
                     perform_vote(annotator, next_won=True)
                     decision = Decision(annotator, winner=annotator.next, loser=annotator.prev)
+                    print("Triggered Current")
                 db.session.add(decision)
             annotator.next.viewed.append(annotator) # counted as viewed even if deactivated
             annotator.prev = annotator.next

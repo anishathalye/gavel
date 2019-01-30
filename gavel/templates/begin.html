@@ -3,14 +3,14 @@
 {% block content %}
   <div class="item">
     <div class="projectInfo">
-    <h2 class="projectScreenTitle">Visit the following project to get started.</h2>
-    <p class="voteItemTeam" style="color: black; padding-bottom: 8px;">CURRENT PROJECT</p>
+      <h2 class="projectScreenTitle">Visit the following project to get started.</h2>
+      <p class="voteItemTeam" style="color: black; padding-bottom: 8px;">CURRENT PROJECT</p>
       <div class="item projectItem">
         {% with item=item %}
           {% include "_item.html" %}
         {% endwith %}
       </div>
-{#      <form action="/begin" method="post">
+      {#      <form action="/begin" method="post">
         <input type="submit" name="action" value="Skip" id="vote-skip" class="button-full">
         <input type="submit" name="action" value="Done" id="vote-done" class="button-full button-gap">
         <input type="hidden" name="item_id" value="{{ item.id }}">
@@ -19,12 +19,12 @@
     </div>
   </div>
   <div class="bottomPanel">
-  <form action="/begin" method="post">
-    <button class="flagButton"></button>
-    <button class="skipButton" type="submit" name="action" value="Skip"></button>
-    <button class="doneButton doneButtonText" type="submit" name="action" value="Done">Done With Visit</button>
-    <input type="hidden" name="item_id" value="{{ item.id }}">
-    <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
-  </form>
+    <form action="/begin" method="post">
+      <button class="flagButton"></button>
+      <button class="skipButton" type="submit" name="action" value="Skip"></button>
+      <button class="doneButton doneButtonText" type="submit" name="action" value="Done">Done With Visit</button>
+      <input type="hidden" name="item_id" value="{{ item.id }}">
+      <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+    </form>
   </div>
 {% endblock %}
