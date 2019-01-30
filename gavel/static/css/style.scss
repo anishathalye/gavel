@@ -646,3 +646,110 @@ dl.instructions dt p {
   letter-spacing: 0.02em;
   color: white;
 }
+
+
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 100;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background: rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(6px);
+  -webkit-animation-name: fadeIn;
+  -moz-animation-name: fadeIn;
+  -o-animation-name: fadeIn;
+  animation-name: fadeIn;
+  -webkit-animation-duration: 0.2s;
+  -moz-animation-duration: 0.2s;
+  -o-animation-duration: 0.2s;
+  animation-duration: 0.2s;
+}
+
+.modal-content {
+  position: fixed;
+  bottom: 0;
+  background: white;
+  box-shadow: 0px -4px 10px #B7B7B7;
+  width: 100%;
+  overflow: visible!important;
+}
+
+.modal-close {
+  background-color: white;
+  float: left;
+  bottom: 0;
+  position: relative;
+  width: 50%;
+  height: 63px;
+  text-align: center;
+  border:1px solid $branding-grey;
+  border-bottom: 0;
+  border-left: 0;
+  margin-top: 63px;
+}
+
+.modal-next {
+  background-color: white;
+  float: right;
+  bottom: 0;
+  position: fixed;
+  left: 50%;
+  width: 50%;
+  height: 63px;
+  text-align: center;
+  border: 1px solid $branding-grey;
+  border-bottom:0;
+  border-right: 0;
+  border-left: 0.5px;
+}
+
+.modal-button-text {
+  height: 15px;
+  font-family: Rubik;
+  font-style: normal;
+  font-weight: normal;
+  line-height: normal;
+  font-size: 12px;
+  text-align: center;
+  text-transform: uppercase;
+  padding: 0;
+  color: #000F9B;
+  margin-top: 24px;
+  display: block;
+}
+
+.modal-next-button-button {
+  width: 100%;
+  height: 100%;
+}
+
+.modal-content-projects-container {
+  margin-right: 16px;
+  margin-left: 16px;
+  margin-bottom: 16px;
+}
+
+/* Add Animation */
+@-webkit-keyframes slideIn {
+  from {bottom: -300px; opacity: 0}
+  to {bottom: 0; opacity: 1}
+}
+
+@keyframes slideIn {
+  from {bottom: -300px; opacity: 0}
+  to {bottom: 0; opacity: 1}
+}
+
+@-webkit-keyframes fadeIn {
+  from {opacity: 0}
+  to {opacity: 1}
+}
+
+@keyframes fadeIn {
+  from {opacity: 0}
+  to {opacity: 1}
+}

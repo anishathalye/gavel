@@ -1,43 +1,116 @@
 {% extends "layout.html" %}
 {% block title %}Vote{% endblock %}
 {% block content %}
-<div class="item">
+  <script>
+    function toggleModal() {
+      let modal = document.getElementById('doneModal');
+      let button = document.getElementById('doneButton');
+      let close = document.getElementById('modalCloseButton');
+      modal.style.display = modal.style.display === "block" ? "none" : "block";
+      {#button.onClick = function() {
+        modal.style.display = "block";
+      };
+      close.onclick = function() {
+        modal.style.display = "none";
+      };
+      window.onclick = function(event) {
+        if(event.target===modal) {
+          modal.style.display="none";
+        }
+      }#}
+    }
 
-<p class="voteItemTeam" style="color: black; padding-bottom: 8px;">
-  LAST PROJECT YOU VISITED
-</p>
-  <div id="item projectItem">
-    {% with item=prev %}
-    {% include "_item.html" %}
-    {% endwith %}
-  </div>
-</div>
+    function submitForm() {
+      let data = {
+        action: this.document.getElementById("modalNextButton").value ? this.document.getElementById("modalNextButton").value : null,
+        prev_id: "{{ prev.id }}",
+        next_id: "{{ next.id }}",
+        _csrf_token: "{{ csrf_token() }}"
+      };
+      if (!data.action) {
+        console.log("Triggered Null");
+        return null;
+      } else {
+        let xhr = new XMLHttpRequest();
+        xhr.open("POST", "/vote", true);
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.send(JSON.stringify(data));
+        event.preventDefault();
+      }
+    }
+    function activatePrevious() {
+      let prev = document.getElementById('previousProject');
+      let next = document.getElementById('nextProject');
 
-  <p class="voteItemTeam" style="color: black; padding-bottom: 8px;">
-    CURRENT PROJECT
-  </p>
-<div class="item">
-  <div id="item projectItem">
-    {% with item=next %}
-    {% include "_item.html" %}
-    {% endwith %}
-  </div>
-</div>
+      prev.classList =
+    }
+  </script>
+  <div class="item">
+    <div class="projectInfo">
+      <h2 class="projectScreenTitle">Evaluate the following project.</h2>
+      <p class="voteItemTeam" style="color: black; padding-bottom: 8px;">LAST PROJECT YOU VISITED</p>
+      <div class="item projectItem">
+        {% with item=prev %}
+          {% include "_item.html" %}
+        {% endwith %}
+      </div>
 
-<div class="item">
-  <div class="banner" id="vote-header">
-    <h1>Vote</h1>
+      <p class="voteItemTeam" style="color: black; padding-bottom: 8px; padding-top: 24px;">CURRENT PROJECT</p>
+      <div class="item">
+        <div class="item projectItem">
+          {% with item=next %}
+            {% include "_item.html" %}
+          {% endwith %}
+        </div>
+      </div>
+    </div>
   </div>
-  <div class="info">
-    <form action="/vote" method="post">
-      <p class="center">Which one is better?</p>
-      <input type="submit" name="action" value="Previous" id="vote-previous" class="button-left">
-      <input type="submit" name="action" value="Current" id="vote-current" class="button-right">
-      <input type="submit" name="action" value="Skip" id="vote-skip" class="button-full button-gap">
-      <input type="hidden" name="prev_id" value="{{ prev.id }}">
-      <input type="hidden" name="next_id" value="{{ next.id }}">
-      <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
-    </form>
+  {#  <div class="item">
+    <div class="banner" id="vote-header">
+      <h1>Vote</h1>
+    </div>
+    <div class="info">
+      <form action="/vote" method="post">
+        <p class="center">Which one is better?</p>
+        <input type="submit" name="action" value="Previous" id="vote-previous" class="button-left">
+        <input type="submit" name="action" value="Current" id="vote-current" class="button-right">
+        <input type="submit" name="action" value="Skip" id="vote-skip" class="button-full button-gap">
+        <input type="hidden" name="prev_id" value="{{ prev.id }}">
+        <input type="hidden" name="next_id" value="{{ next.id }}">
+        <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+      </form>
+    </div>
+  </div>#}
+  <div class="bottomPanel">
+    <button class="flagButton"></button>
+    <button class="skipButton" type="submit" name="action" value="Skip"></button>
+    <button class="doneButton doneButtonText" type="button" id="doneButton" onclick="toggleModal()">Done With Visit
+    </button>
   </div>
-</div>
+  <div class="modal" id="doneModal">
+    <div class="modal-content">
+      <div class="modal-content-projects-container">
+        <h2 class="projectScreenTitle" style="margin-bottom: 16px; padding-bottom: 0;">Select the better project to continue.</h2>
+        <p class="voteItemTeam" style="color: black; padding-bottom: 8px; padding-top: 0; margin-top: 0;">PREVIOUS PROJECT</p>
+        <div class="item projectItem" id="previousProject">
+          {% with item=prev %}
+            {% include "_item.html" %}
+          {% endwith %}
+        </div>
+        <p class="voteItemTeam" style="color: black; padding-bottom: 8px; padding-top: 16px;">CURRENT PROJECT</p>
+        <div class="item projectItem" id="nextProject">
+          {% with item=next %}
+            {% include "_item.html" %}
+          {% endwith %}
+        </div>
+      </div>
+      <div class="modal-close">
+        <span class="modal-button-text" id="modalCloseButton" onclick="toggleModal()">CLOSE</span>
+      </div>
+      <div class="modal-next">
+        <button id="modalNextButton" class="modal-next-button-button" type="button" value="" onclick="submitForm()"
+                style="background: 0; border: 0;"><a class="modal-button-text" id="modalNextButton" style="margin: 0;">NEXT PROJECT</a></button>
+      </div>
+    </div>
+  </div>
 {% endblock %}
