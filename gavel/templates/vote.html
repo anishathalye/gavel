@@ -35,25 +35,31 @@
         xhr.open("POST", "/vote", true);
         xhr.setRequestHeader('Content-Type', 'application/json');
         xhr.send(JSON.stringify(data));
-        event.preventDefault();
       }
     }
     function activatePrevious() {
       let prev = document.getElementById('previousProject');
       let next = document.getElementById('nextProject');
       let button = document.getElementById('modalNextButton');
+      let bottomText = document.getElementById('bottomText');
+      let topText = document.getElementById('topText');
       next.classList = ['item projectItem'];
       prev.classList = ['item projectItem enabledProjectItem'];
-      button.value = 'Previous'
-
+      button.value = 'Previous';
+      bottomText.classList = ['selectedText selectedNotSelected'];
+      topText.classList = ['selectedText selectedSelected']
     }
     function activateNext() {
       let prev = document.getElementById('previousProject');
       let next = document.getElementById('nextProject');
       let button = document.getElementById('modalNextButton');
+      let bottomText = document.getElementById('bottomText');
+      let topText = document.getElementById('topText');
       next.classList = ['item projectItem enabledProjectItem'];
       prev.classList = ['item projectItem'];
-      button.value = 'Next'
+      button.value = 'Next';
+      topText.classList = ['selectedText selectedNotSelected'];
+      bottomText.classList = ['selectedText selectedSelected'];
     }
   </script>
   <div class="item">
@@ -103,16 +109,18 @@
       <div class="modal-content-projects-container">
         <h2 class="projectScreenTitle" style="margin-bottom: 16px; padding-bottom: 0;">Select the better project to continue.</h2>
         <p class="voteItemTeam" style="color: black; padding-bottom: 8px; padding-top: 0; margin-top: 0;">PREVIOUS PROJECT</p>
-        <div class="item projectItem" id="previousProject" onclick="activatePrevious()">
+        <div class="item projectItem" style="padding-bottom:0" id="previousProject" onclick="activatePrevious()">
           {% with item=prev %}
             {% include "_strippeditem.html" %}
           {% endwith %}
+          <p class="selectedText" id="topText"></p>
         </div>
         <p class="voteItemTeam" style="color: black; padding-bottom: 8px; padding-top: 16px;">CURRENT PROJECT</p>
-        <div class="item projectItem" id="nextProject" onclick="activateNext()">
+        <div class="item projectItem" style="padding-bottom:0" id="nextProject" onclick="activateNext()">
           {% with item=next %}
             {% include "_strippeditem.html" %}
           {% endwith %}
+          <p class="selectedText" id="bottomText"></p>
         </div>
       </div>
       <div class="modal-close">
