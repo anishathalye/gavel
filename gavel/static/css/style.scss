@@ -741,6 +741,40 @@ dl.instructions dt p {
   margin-bottom: 16px;
 }
 
+.selectedText {
+  margin:0;
+  padding-top: 4px;
+  padding-bottom: 12px;
+  bottom: 0;
+  visibility: visible;
+  display: block;
+  text-transform: capitalize;
+  color: #000F9B;
+  font-family: Rubik;
+  font-style: normal;
+  font-weight: normal;
+  line-height: 15px;
+  font-size: 12px;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.selectedText:after {
+  content:"TAP CARD TO SELECT";
+}
+
+.selectedNotSelected:after {
+  content:'TAP CARD TO SELECT'!important;
+  color: $branding-purple;
+  font-weight: normal;
+}
+
+.selectedSelected:after {
+  content:'SELECTED'!important;
+  color: $branding-blue;
+  font-weight: bold;
+}
+
 /* Add Animation */
 @-webkit-keyframes slideIn {
   from {bottom: -300px; opacity: 0}
