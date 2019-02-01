@@ -3,7 +3,20 @@
 {% block content %}
 <div class="item">
   <div class="info">
-    <p>{{ message }}</p>
+    <div class="large-header">
+      <h1 class="page-title">Uh oh.</h1>
+    </div>
+    <div class="welcome-body">
+      {{ message }}
+    </div>
+  </div>
+</div>
+
+<div class="item" style="padding-bottom: 24px; padding-top: 70px;">
+  <div class="info bottom-button">
+    <form>
+      <button type="button" class="button-full" onclick="history.back()"> Go Back </button>
+    </form>
   </div>
 </div>
 {% endblock %}
