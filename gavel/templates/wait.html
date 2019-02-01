@@ -2,11 +2,14 @@
 {% block title %}Wait{% endblock %}
 {% block content %}
 <div class="item">
-  <div class="banner" id="wait-header">
-    <h1>Wait</h1>
-  </div>
   <div class="info">
-    {{ content }}
+    <div class="large-header">
+      <h1 class="page-title">Awesome job!</h1>
+    </div>
+    <div class="welcome-body">
+      {{ content }}
+    </div>
+    <h2 class="projectScreenTitle" style="padding-top: 16px;">You may exit this app now.</h2>
   </div>
 </div>
 {% endblock %}
