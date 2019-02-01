@@ -48,7 +48,7 @@ instructions before continuing.
 '''.strip()
 
 DEFAULT_CLOSED_MESSAGE = '''
-The judging system is currently closed. Reload the page to try again.
+Gavel judging is currently closed. If judging is still happening in person, try refreshing the page.
 '''.strip()
 
 DEFAULT_DISABLED_MESSAGE = '''
@@ -60,7 +60,5 @@ You are currently logged out. Open your magic link to get started.
 '''.strip()
 
 DEFAULT_WAIT_MESSAGE = '''
-Wait for a little bit and reload the page to try again.
-
-If you've looked at all the projects already, then you're done.
+Wow, you've visited all the projects presented in this epo. Thank you so much for your effort. From this point, follow any post-expo instructions event staff have provided for judges.
 '''.strip()
