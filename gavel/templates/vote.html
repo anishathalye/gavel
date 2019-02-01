@@ -43,11 +43,15 @@
       let button = document.getElementById('modalNextButton');
       let bottomText = document.getElementById('bottomText');
       let topText = document.getElementById('topText');
+      let buttonText = document.getElementById('modalNextText');
       next.classList = ['item projectItem'];
       prev.classList = ['item projectItem enabledProjectItem'];
       button.value = 'Previous';
+      button.type='submit';
+      button.classList = ['modal-next-button-button active-button'];
+      buttonText.classList = ['modal-button-text modal-button-text-active'];
+      topText.classList = ['selectedText selectedSelected'];
       bottomText.classList = ['selectedText selectedNotSelected'];
-      topText.classList = ['selectedText selectedSelected']
     }
     function activateNext() {
       let prev = document.getElementById('previousProject');
@@ -55,9 +59,13 @@
       let button = document.getElementById('modalNextButton');
       let bottomText = document.getElementById('bottomText');
       let topText = document.getElementById('topText');
+      let buttonText = document.getElementById('modalNextText');
       next.classList = ['item projectItem enabledProjectItem'];
       prev.classList = ['item projectItem'];
-      button.value = 'Next';
+      button.value = 'Current';
+      button.type='submit';
+      button.classList = ['modal-next-button-button active-button'];
+      buttonText.classList = ['modal-button-text modal-button-text-active'];
       topText.classList = ['selectedText selectedNotSelected'];
       bottomText.classList = ['selectedText selectedSelected'];
     }
@@ -100,7 +108,12 @@
   </div>#}
   <div class="bottomPanel">
     <button class="flagButton"></button>
-    <button class="skipButton" type="submit" name="action" value="Skip"></button>
+    <form class="submit-form-skip" action="/vote" method="post">
+      <button class="skipButton" type="submit" name="action" value="Skip"></button>
+      <input type="hidden" name="prev_id" value="{{ prev.id }}">
+      <input type="hidden" name="next_id" value="{{ next.id }}">
+      <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+    </form>
     <button class="doneButton doneButtonText" type="button" id="doneButton" onclick="toggleModal()">Done With Visit
     </button>
   </div>
@@ -127,8 +140,13 @@
         <span class="modal-button-text" id="modalCloseButton" onclick="toggleModal()">CLOSE</span>
       </div>
       <div class="modal-next">
-        <button id="modalNextButton" class="modal-next-button-button" type="button" value="" onclick="submitForm()"
-                style="background: 0; border: 0;"><a class="modal-button-text" id="modalNextButton" style="margin: 0;">NEXT PROJECT</a></button>
+        <form action="/vote" method="post" class="submit-form">
+          <button id="modalNextButton" class="modal-next-button-button" name="action" type="button" value=""
+                  style="background: 0; border: 0;"><a class="modal-button-text" id="modalNextText" style="margin: 0;">NEXT PROJECT</a></button>
+          <input type="hidden" name="prev_id" value="{{ prev.id }}">
+          <input type="hidden" name="next_id" value="{{ next.id }}">
+          <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+        </form>
       </div>
     </div>
   </div>
