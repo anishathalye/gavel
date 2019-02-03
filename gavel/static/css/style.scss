@@ -704,7 +704,7 @@ dl.instructions dt p {
   border:1px solid $branding-grey;
   border-bottom: 0;
   border-left: 0;
-  margin-top: 63px;
+
 }
 
 .modal-next {
@@ -724,6 +724,10 @@ dl.instructions dt p {
 
 .active-button {
   background: rgba(0, 161, 255, 0.1)!important;
+}
+
+.skip-active {
+  background: rgba(95, 75, 182, 0.1) !important;
 }
 
 .modal-button-text {
@@ -749,6 +753,11 @@ dl.instructions dt p {
 
 .modal-button-text-active {
   color: $branding-blue!important;
+  font-weight: bold;
+}
+
+.modal-skip-text-active {
+  color: #5F4BB6!important;
   font-weight: bold;
 }
 
@@ -830,4 +839,65 @@ dl.instructions dt p {
 .welcome-body p {
   margin-bottom: 0;
   margin-top: 8px;
+}
+
+.purpleBold {
+  font-weight: 500;
+  color: $branding-purple!important;
+}
+
+.skipTitlePurple {
+  font-weight: bold;
+  color: $branding-purple!important;
+}
+
+.skipTitle {
+  padding-top: 16px;
+  font-family: Rubik;
+font-style: normal;
+font-weight: normal;
+line-height: normal;
+font-size: 18px;
+
+color: #000000;
+}
+
+.skipRadio {
+  height: 32px;
+  max-height: 32px;
+  width: 32px;
+  max-width: 32px;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  border-radius: 50%;
+  border: 1px solid #5F4BB6;
+}
+
+.skipActive {
+  border: 8px solid #5F4BB6!important;
+  -webkit-border-radius: 50% !important;
+  -moz-border-radius: 50%!important;
+  border-radius: 50%!important;
+}
+
+.skipText {
+  font-family: Rubik;
+  font-style: normal;
+  font-weight: normal;
+  line-height: normal;
+  font-size: 14px;
+
+  color: #000000;
+
+}
+
+
+tr {
+  border: 0;
+}
+td {
+  border: 0;
+}
+table {
+  border: 0;
 }
