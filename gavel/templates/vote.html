@@ -4,39 +4,14 @@
   <script>
     function toggleModal() {
       let modal = document.getElementById('doneModal');
-      let button = document.getElementById('doneButton');
-      let close = document.getElementById('modalCloseButton');
       modal.style.display = modal.style.display === "block" ? "none" : "block";
-      {#button.onClick = function() {
-        modal.style.display = "block";
-      };
-      close.onclick = function() {
-        modal.style.display = "none";
-      };
-      window.onclick = function(event) {
-        if(event.target===modal) {
-          modal.style.display="none";
-        }
-      }#}
     }
 
-    function submitForm() {
-      let data = {
-        action: document.getElementById("modalNextButton").value ? document.getElementById("modalNextButton").value : null,
-        prev_id: "{{ prev.id }}",
-        next_id: "{{ next.id }}",
-        _csrf_token: "{{ csrf_token() }}"
-      };
-      if (!data.action) {
-        console.log("Triggered Null");
-        return null;
-      } else {
-        let xhr = new XMLHttpRequest();
-        xhr.open("POST", "/vote", true);
-        xhr.setRequestHeader('Content-Type', 'application/json');
-        xhr.send(JSON.stringify(data));
-      }
+    function toggleSkip() {
+      let modal = document.getElementById('skipModal');
+      modal.style.display = modal.style.display === "block" ? "none" : "block";
     }
+
     function activatePrevious() {
       let prev = document.getElementById('previousProject');
       let next = document.getElementById('nextProject');
@@ -69,21 +44,44 @@
       topText.classList = ['selectedText selectedNotSelected'];
       bottomText.classList = ['selectedText selectedSelected'];
     }
+
+    function topSkip() {
+      let top = document.getElementById('skipRadioTop');
+      let bottom = document.getElementById('skipRadioBottom');
+      let button = document.getElementById('modalSkipButton');
+      let buttonText = document.getElementById('modalSkipText');
+      buttonText.classList = ['modal-button-text modal-skip-text-active'];
+      button.type = 'submit';
+      button.classList = ['modal-next-button-button skip-active'];
+      top.classList = ['skipRadio skipActive'];
+      bottom.classList = ['skipRadio'];
+    }
+    function bottomSkip() {
+      let top = document.getElementById('skipRadioTop');
+      let bottom = document.getElementById('skipRadioBottom');
+      let button = document.getElementById('modalSkipButton');
+      let buttonText = document.getElementById('modalSkipText');
+      buttonText.classList = ['modal-button-text modal-skip-text-active'];
+      button.type = 'submit';
+      button.classList = ['modal-next-button-button skip-active'];
+      bottom.classList = ['skipRadio skipActive'];
+      top.classList = ['skipRadio'];
+    }
   </script>
-  <div class="item">
+  <div class="item" style="padding-bottom: 80px;">
     <div class="projectInfo">
       <h2 class="projectScreenTitle">Evaluate the following project.</h2>
-      <p class="voteItemTeam" style="color: black; padding-bottom: 8px;">LAST PROJECT YOU VISITED</p>
-      <div class="item projectItem">
-        {% with item=prev %}
+      <p class="voteItemTeam" style="color: black; padding-bottom: 8px;">CURRENT VISITED</p>
+      <div class="item projectItem" style="box-shadow: none; border: 1px solid #000F9B;">
+        {% with item=next %}
           {% include "_item.html" %}
         {% endwith %}
       </div>
 
-      <p class="voteItemTeam" style="color: black; padding-bottom: 8px; padding-top: 24px;">CURRENT PROJECT</p>
+      <p class="voteItemTeam" style="color: black; padding-bottom: 8px; padding-top: 24px;">LAST PROJECT YOU PROJECT</p>
       <div class="item">
-        <div class="item projectItem">
-          {% with item=next %}
+        <div class="item projectItem" style="box-shadow: none;">
+          {% with item=prev %}
             {% include "_item.html" %}
           {% endwith %}
         </div>
@@ -108,36 +106,68 @@
   </div>#}
   <div class="bottomPanel">
     <button class="flagButton"></button>
-    <form class="submit-form-skip" action="/vote" method="post">
-      <button class="skipButton" type="submit" name="action" value="Skip"></button>
-      <input type="hidden" name="prev_id" value="{{ prev.id }}">
-      <input type="hidden" name="next_id" value="{{ next.id }}">
-      <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
-    </form>
-    <button class="doneButton doneButtonText" type="button" id="doneButton" onclick="toggleModal()">Done With Visit
-    </button>
+    <button class="skipButton" type="button" id="skipButton" onclick="toggleSkip()"></button>
+    <button class="doneButton doneButtonText" type="button" id="doneButton" onclick="toggleModal()">Done With Visit</button>
   </div>
+
+  <div class="modal" id="skipModal">
+    <div class="modal-content">
+      <div class="modal-content-projects-container">
+        <h2 class="skipTitle" style="padding-bottom: 0; margin-bottom: 16px;">I need to skip the <span class="skipTitlePurple">current project</span> because:</h2>
+        <table style="width: 100%">
+          <tr>
+            <td>
+              <div class="skipRadio" id="skipRadioTop" onclick="topSkip()"></div>
+            </td>
+            <td class="skipText">They are not present for judging</td>
+          </tr>
+          <tr style="height: 16px;"></tr>
+          <tr>
+            <td>
+              <div class="skipRadio" id="skipRadioBottom" onclick="bottomSkip()"></div>
+            </td>
+            <td class="skipText">They are currently occupied with presenting to another judge.</td>
+          </tr>
+        </table>
+      </div>
+
+      <div class="modal-close">
+        <span class="modal-button-text" id="skipCloseButton" style="height: 100%; margin-top: 0; padding-top: 24px;" onclick="toggleSkip()">CLOSE</span>
+      </div>
+
+      <div class="modal-next">
+        <form action="/vote" method="post" class="submit-form">
+          <button id="modalSkipButton" class="modal-next-button-button" name="action" type="button" value="Skip"
+                  style="background: 0; border: 0;"><a class="modal-button-text" id="modalSkipText" style="margin: 0;">CONFIRM SKIP</a></button>
+          <input type="hidden" name="prev_id" value="{{ prev.id }}">
+          <input type="hidden" name="next_id" value="{{ next.id }}">
+          <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+        </form>
+      </div>
+    </div>
+  </div>
+
   <div class="modal" id="doneModal">
     <div class="modal-content">
       <div class="modal-content-projects-container">
         <h2 class="projectScreenTitle" style="margin-bottom: 16px; padding-bottom: 0;">Select the better project to continue.</h2>
-        <p class="voteItemTeam" style="color: black; padding-bottom: 8px; padding-top: 0; margin-top: 0;">PREVIOUS PROJECT</p>
-        <div class="item projectItem" style="padding-bottom:0" id="previousProject" onclick="activatePrevious()">
-          {% with item=prev %}
-            {% include "_strippeditem.html" %}
-          {% endwith %}
-          <p class="selectedText" id="topText"></p>
-        </div>
-        <p class="voteItemTeam" style="color: black; padding-bottom: 8px; padding-top: 16px;">CURRENT PROJECT</p>
+        <p class="voteItemTeam purpleBold" style="color: black; padding-bottom: 8px; padding-top: 0;">CURRENT PROJECT</p>
         <div class="item projectItem" style="padding-bottom:0" id="nextProject" onclick="activateNext()">
           {% with item=next %}
             {% include "_strippeditem.html" %}
           {% endwith %}
           <p class="selectedText" id="bottomText"></p>
         </div>
+        <p class="voteItemTeam" style="color: black; padding-bottom: 8px; padding-top: 16px; margin-top: 0;">PREVIOUS PROJECT</p>
+        <div class="item projectItem" style="padding-bottom:0" id="previousProject" onclick="activatePrevious()">
+          {% with item=prev %}
+            {% include "_strippeditem.html" %}
+          {% endwith %}
+          <p class="selectedText" id="topText"></p>
+        </div>
       </div>
       <div class="modal-close">
-        <span class="modal-button-text" id="modalCloseButton" onclick="toggleModal()">CLOSE</span>
+        <span class="modal-button-text" id="modalCloseButton" style="height: 100%; margin-top: 0; padding-top: 24px;" onclick="toggleModal()">CLOSE</span>
       </div>
       <div class="modal-next">
         <form action="/vote" method="post" class="submit-form">
@@ -150,4 +180,5 @@
       </div>
     </div>
   </div>
+
 {% endblock %}

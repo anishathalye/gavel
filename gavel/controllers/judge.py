@@ -79,6 +79,8 @@ def vote():
     if annotator.prev.id == int(request.form['prev_id']) and annotator.next.id == int(request.form['next_id']):
         if request.form['action'] == 'Skip':
             annotator.ignore.append(annotator.next)
+        elif request.form['action'] == "SkipNotHere":
+            annotator.ignore.append(annotator.next)
         else:
             # ignore things that were deactivated in the middle of judging
             if annotator.prev.active and annotator.next.active:
@@ -90,6 +92,8 @@ def vote():
                     perform_vote(annotator, next_won=True)
                     decision = Decision(annotator, winner=annotator.next, loser=annotator.prev)
                     print("Triggered Current")
+                else:
+                    return
                 db.session.add(decision)
             annotator.next.viewed.append(annotator) # counted as viewed even if deactivated
             annotator.prev = annotator.next
