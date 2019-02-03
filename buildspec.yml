@@ -1,0 +1,16 @@
+version: 0.2
+
+env:
+  variables:
+    DATABASE_URL: "postgres://gaveluser:GavelSandbox@gavel-sandbox.cny8nr0rv9ic.us-east-1.rds.amazonaws.com/gavel"
+
+phases:
+  install:
+    commands:
+      - python -m pip install -r requirements.txt
+  pre_build:
+    commands:
+      - python initialize.py
+  build:
+    commands:
+      - python runserver.py
