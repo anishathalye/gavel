@@ -80,6 +80,7 @@ def vote():
         if request.form['action'] == 'Skip':
             annotator.ignore.append(annotator.next)
         elif request.form['action'] == "SkipNotHere":
+            # TODO: Flag team if above passed
             annotator.ignore.append(annotator.next)
         else:
             # ignore things that were deactivated in the middle of judging
