@@ -9,6 +9,7 @@ from flask import (
     request,
     url_for,
 )
+
 try:
     import urllib
 except ImportError:
@@ -16,6 +17,7 @@ except ImportError:
 import xlrd
 
 ALLOWED_EXTENSIONS = set(['csv', 'xlsx', 'xls'])
+
 
 @app.route('/admin/')
 @utils.requires_auth
@@ -50,6 +52,7 @@ def admin():
         votes=len(decisions),
         setting_closed=setting_closed,
     )
+
 
 @app.route('/admin/item', methods=['POST'])
 @utils.requires_auth
@@ -100,7 +103,8 @@ def parse_upload_form():
         if extension == "xlsx" or extension == "xls":
             workbook = xlrd.open_workbook(file_contents=f.read())
             worksheet = workbook.sheet_by_index(0)
-            data = list(utils.cast_row(worksheet.row_values(rx, 0, 3)) for rx in range(worksheet.nrows) if worksheet.row_len(rx) == 3)
+            data = list(utils.cast_row(worksheet.row_values(rx, 0, 3)) for rx in range(worksheet.nrows) if
+                        worksheet.row_len(rx) == 3)
         elif extension == "csv":
             data = utils.data_from_csv_string(f.read().decode("utf-8"))
     else:
@@ -123,6 +127,7 @@ def item_patch():
         item.description = request.form['description']
     db.session.commit()
     return redirect(url_for('item_detail', item_id=item.id))
+
 
 @app.route('/admin/annotator', methods=['POST'])
 @utils.requires_auth
@@ -166,6 +171,7 @@ def annotator():
             return utils.server_error(str(e))
     return redirect(url_for('admin'))
 
+
 @app.route('/admin/setting', methods=['POST'])
 @utils.requires_auth
 def setting():
@@ -176,6 +182,7 @@ def setting():
         Setting.set(SETTING_CLOSED, new_value)
         db.session.commit()
     return redirect(url_for('admin'))
+
 
 @app.route('/admin/item/<item_id>/')
 @utils.requires_auth
@@ -198,6 +205,7 @@ def item_detail(item_id):
             assigned=assigned,
             skipped=skipped
         )
+
 
 @app.route('/admin/annotator/<annotator_id>/')
 @utils.requires_auth
@@ -222,8 +230,10 @@ def annotator_detail(annotator_id):
             skipped=skipped
         )
 
+
 def annotator_link(annotator):
-        return urllib.parse.urljoin(settings.BASE_URL, url_for('login', secret=annotator.secret))
+    return urllib.parse.urljoin(settings.BASE_URL, url_for('login', secret=annotator.secret))
+
 
 def email_invite_links(annotators):
     if settings.DISABLE_EMAIL or annotators is None:
