@@ -730,6 +730,10 @@ dl.instructions dt p {
   background: rgba(95, 75, 182, 0.1) !important;
 }
 
+.report-active {
+  background: rgba(255, 102, 102, 0.1) !important;
+}
+
 .modal-button-text {
   height: 15px;
   font-family: Rubik;
@@ -758,6 +762,11 @@ dl.instructions dt p {
 
 .modal-skip-text-active {
   color: #5F4BB6!important;
+  font-weight: bold;
+}
+
+.modal-report-text-active {
+  color: $branding-red!important;
   font-weight: bold;
 }
 
@@ -891,13 +900,16 @@ color: #000000;
 
 }
 
+.reportCheck {
+  height: 32px;
+  max-height: 32px;
+  width: 32px;
+  max-width: 32px;
+  border-radius: 4px;
+  border: 2px solid $branding-red;
+}
 
-tr {
-  border: 0;
+.reportActive {
+  background: $branding-red url('/static/img/reportCheck.svg') no-repeat center center !important;
 }
-td {
-  border: 0;
-}
-table {
-  border: 0;
-}
+
