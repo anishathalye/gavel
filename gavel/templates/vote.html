@@ -51,6 +51,7 @@
     }
 
     function topSkip() {
+      const skip = document.getElementById('modalSkipButton');
       let top = document.getElementById('skipRadioTop');
       let bottom = document.getElementById('skipRadioBottom');
       let button = document.getElementById('modalSkipButton');
@@ -60,8 +61,10 @@
       button.classList = ['modal-next-button-button skip-active'];
       top.classList = ['skipRadio skipActive'];
       bottom.classList = ['skipRadio'];
+      skip.value = 'SkipAbsent';
     }
     function bottomSkip() {
+      const skip = document.getElementById('modalSkipButton');
       let top = document.getElementById('skipRadioTop');
       let bottom = document.getElementById('skipRadioBottom');
       let button = document.getElementById('modalSkipButton');
@@ -71,6 +74,7 @@
       button.classList = ['modal-next-button-button skip-active'];
       bottom.classList = ['skipRadio skipActive'];
       top.classList = ['skipRadio'];
+      skip.value = 'SkipBusy';
     }
     function oneReport() {
       let one = document.getElementById('reportCheckOne');

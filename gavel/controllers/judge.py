@@ -77,11 +77,12 @@ def index():
 def vote():
     annotator = get_current_annotator()
     if annotator.prev.id == int(request.form['prev_id']) and annotator.next.id == int(request.form['next_id']):
-        if request.form['action'] == 'Skip':
+        if request.form['action'] in ['Skip', 'SkipAbsent', 'SkipBusy']:
             annotator.ignore.append(annotator.next)
-        elif request.form['action'] == "SkipNotHere":
-            # TODO: Flag team if above passed
-            annotator.ignore.append(annotator.next)
+
+            if request.form['action'] == 'SkipAbsent':
+                flag = Flag(annotator, annotator.next, 'absent')
+                db.session.add(flag)
         else:
             # ignore things that were deactivated in the middle of judging
             if annotator.prev.active and annotator.next.active:
@@ -114,8 +115,12 @@ def begin():
             annotator.next.viewed.append(annotator)
             annotator.prev = annotator.next
             annotator.update_next(choose_next(annotator))
-        elif request.form['action'] == 'Skip':
+        elif request.form['action'] in ['Skip', 'SkipAbsent', 'SkipBusy']:
             annotator.next = None # will be reset in index
+
+            if request.form['action'] == 'SkipAbsent':
+                flag = Flag(annotator, annotator.next, 'absent')
+                db.session.add(flag)
         db.session.commit()
     return redirect(url_for('index'))
 
