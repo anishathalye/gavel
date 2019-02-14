@@ -116,7 +116,7 @@
       three.classList = ['reportCheck reportActive'];
       button.type = 'submit';
       button.classList = ['modal-next-button-button report-active'];
-      button.value = 'Naughty';
+      button.value = 'Offensive';
     }
   </script>
   <style type="text/css">
@@ -206,7 +206,7 @@ table {
 
       <div class="modal-next">
         <form action="/report" method="post" class="submit-form">
-          <button id="modalReportButton" class="modal-next-button-button" name="action" type="button" value=""
+          <button id="modalReportButton" class="modal-next-button-button" name="reason" type="button" value="Unknown"
                   style="background: 0; border: 0;"><a class="modal-button-text" id="modalReportText" style="margin: 0;">SUBMIT FOR REVIEW</a></button>
           <input type="hidden" name="next_id" value="{{ next.id }}">
           <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">

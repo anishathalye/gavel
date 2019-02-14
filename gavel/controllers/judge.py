@@ -104,6 +104,19 @@ def vote():
         db.session.commit()
     return redirect(url_for('index'))
 
+@app.route('/report', methods=['POST'])
+@requires_open(redirect_to='index')
+@requires_active_annotator(redirect_to='index')
+def report():
+    annotator = get_current_annotator()
+    if annotator.next.id == int(request.form['next_id']):
+        flag = Flag(annotator, annotator.next, request.form['reason'])
+        db.session.add(flag)
+        annotator.ignore.append(annotator.next)
+        annotator.update_next(choose_next(annotator))
+        db.session.commit()
+    return redirect(url_for('index'))
+
 @app.route('/begin', methods=['POST'])
 @requires_open(redirect_to='index')
 @requires_active_annotator(redirect_to='index')
