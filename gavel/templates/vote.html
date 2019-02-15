@@ -76,47 +76,33 @@
       top.classList = ['skipRadio'];
       skip.value = 'SkipBusy';
     }
-    function oneReport() {
-      let one = document.getElementById('reportCheckOne');
-      let two = document.getElementById('reportCheckTwo');
-      let three = document.getElementById('reportCheckThree');
+
+    function setChecks() {
+      let checks = document.forms['checkboxForm'].elements['checkbox[]'];
       let button = document.getElementById('modalReportButton');
       let buttonText = document.getElementById('modalReportText');
       buttonText.classList = ['modal-button-text modal-report-text-active'];
-      one.classList = ['reportCheck reportActive'];
-      two.classList = ['reportCheck'];
-      three.classList = ['reportCheck'];
-      button.type = 'submit';
-      button.classList = ['modal-next-button-button report-active'];
-      button.value = 'NoDemo';
-    }
-    function twoReport() {
-      let one = document.getElementById('reportCheckOne');
-      let two = document.getElementById('reportCheckTwo');
-      let three = document.getElementById('reportCheckThree');
-      let button = document.getElementById('modalReportButton');
-      let buttonText = document.getElementById('modalReportText');
-      buttonText.classList = ['modal-button-text modal-report-text-active'];
-      one.classList = ['reportCheck'];
-      two.classList = ['reportCheck reportActive'];
-      three.classList = ['reportCheck'];
-      button.type = 'submit';
-      button.classList = ['modal-next-button-button report-active'];
-      button.value = 'TooComplex';
-    }
-    function threeReport() {
-      let one = document.getElementById('reportCheckOne');
-      let two = document.getElementById('reportCheckTwo');
-      let three = document.getElementById('reportCheckThree');
-      let button = document.getElementById('modalReportButton');
-      let buttonText = document.getElementById('modalReportText');
-      buttonText.classList = ['modal-button-text modal-report-text-active'];
-      one.classList = ['reportCheck'];
-      two.classList = ['reportCheck'];
-      three.classList = ['reportCheck reportActive'];
-      button.type = 'submit';
-      button.classList = ['modal-next-button-button report-active'];
-      button.value = 'Offensive';
+      let vals = "";
+      let checkedCount = 0;
+      for(let i = 0; i < checks.length; i++) {
+        if (checks[i].checked) {
+          vals += checks[i].value + " ";
+          checks[i].classList = ['reportCheck reportActive'];
+          checkedCount++;
+        } else {
+          checks[i].classList = ['reportCheck'];
+        }
+      }
+
+      if(checkedCount === 0) {
+        button.classList = ['modal-next-button-button'];
+        button.type = 'button';
+      } else {
+        button.classList = ['modal-next-button-button report-active'];
+        button.type = 'submit';
+      }
+
+      button.value = vals.trim();
     }
   </script>
   <style type="text/css">
@@ -176,28 +162,30 @@ table {
     <div class="modal-content">
       <div class="modal-content-projects-container">
         <h2 class="skipTitle" style="padding-bottom: 0; margin-bottom: 16px;">The <span class="skipTitlePurple">current project</span> needs to be reviewed for the following reasons:</h2>
+        <form id="checkboxForm">
         <table style="width: 100%" class="borderless" rules="none">
           <tr>
             <td>
-              <div class="reportCheck" id="reportCheckOne" onclick="oneReport()"></div>
+              <input type="checkbox" class="reportCheck" id="reportCheckOne" value="one" name="checkbox[]" onclick="setChecks()"/>
             </td>
             <td class="skipText">The team cannot demo their project or provide evidence of the work described.</td>
           </tr>
           <tr style="height: 16px;"></tr>
           <tr>
             <td>
-              <div class="reportCheck" id="reportCheckTwo" onclick="twoReport()"></div>
+              <input type="checkbox" class="reportCheck" id="reportCheckTwo" value="two" name="checkbox[]" onclick="setChecks()"/>
             </td>
             <td class="skipText">The project appears too complex to have been created within the prescribed timeframe of the hackathon.</td>
           </tr>
           <tr style="height: 16px;"></tr>
           <tr>
             <td>
-              <div class="reportCheck" id="reportCheckThree" onclick="threeReport()"></div>
+              <input type="checkbox" class="reportCheck" id="reportCheckThree" value="three" name="checkbox[]" onclick="setChecks()"/>
             </td>
             <td class="skipText">The project is or has offensive, harrassing, or inappropriate content and/or breaks the Code of Conduct and Ethics.</td>
           </tr>
         </table>
+        </form>
       </div>
 
       <div class="modal-close">
