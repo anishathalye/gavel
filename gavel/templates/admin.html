@@ -13,6 +13,43 @@
   </div>
   <div class="info">
     <p><strong>Votes: </strong>{{ votes }}</p>
+    <span><strong>Reports: </strong>{{ flag_count }}</span>
+  </div>
+</div>
+
+<div class="item">
+  <div class="banner">
+    <h2>Reports</h2>
+  </div>
+  <div class="info">
+    <table id="reports">
+      <thead>
+      <tr>
+        <th data-sort-method="number">Id</th>
+        <th data-sort-method="number">Judge ID</th>
+        <th data-sort-method="number">Project ID</th>
+        <th data-sort-method="caseInsensitiveSort">Reason</th>
+        <th class="sort-default" data-sort-method="caseInsensitiveSort" data-sort-order="desc">Status</th>
+      </tr>
+      </thead>
+      <tbody>
+      {% for flag in flags %}
+        <tr class="{{ 'open' if not flag.resolved else 'resolved' }}">
+          <td>{{ flag.id | safe }}</td>
+          <td>{{ flag.annotator_id | safe }}</td>
+          <td>{{ flag.project_id | safe }}</td>
+          <td>{{ flag.reason | safe }}</td>
+          <td class="compact" data-sort="{{ not flag.resolved }}">
+            <form action="/admin/report" method="post">
+              <input type="submit" name="action" value="{{ 'resolve' if not flag.resolved else 'open' }}" class="{{ 'positive' if not flag.resolved else 'negative' }}">
+              <input type="hidden" name="flag_id" value="{{ flag.id }}">
+              <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+            </form>
+          </td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
   </div>
 </div>
 
@@ -33,7 +70,6 @@
           <th data-sort-method="number">Votes</th>
           <th data-sort-method="number">Seen</th>
           <th data-sort-method="number" data-sort-order="desc">Skipped</th>
-          <th data-sort-method="caseInsensitiveSort">Flagged</th>
           <th data-sort-method="caseInsensitiveSort" data-sort-order="desc">Prioritize</th>
           <th data-sort-method="caseInsensitiveSort">Active</th>
           <th class="no-sort">Delete</th>
@@ -51,11 +87,6 @@
           <td>{{ item_counts.get(item.id, 0) }}</td>
           <td>{{ item.viewed | length }}</td>
           <td>{{ skipped.get(item.id, 0) }}</td>
-          <td>
-            {% for flag in item.flags %}
-            J{{ flag.annotator_id }}: {{ flag.reason }}<br />
-            {% endfor %}
-          </td>
           <td class="compact" data-sort="{{ item.prioritized }}">
             <form action="/admin/item" method="post">
               <input type="submit" name="action" value="{{ 'Prioritize' if not item.prioritized else 'Cancel' }}" class="{{ 'positive' if not item.prioritized else 'negative' }}">
@@ -216,6 +247,7 @@
 var tables = [
   document.getElementById('items'),
   document.getElementById('annotators'),
+  document.getElementById('reports'),
 ];
 for (var i = 0; i < tables.length; i++) {
   new Tablesort(tables[i]);

@@ -119,14 +119,14 @@ table {
   <div class="item" style="padding-bottom: 80px;">
     <div class="projectInfo">
       <h2 class="projectScreenTitle">Evaluate the following project.</h2>
-      <p class="voteItemTeam" style="color: black; padding-bottom: 8px;">CURRENT VISITED</p>
+      <p class="voteItemTeam" style="color: black; padding-bottom: 8px;">CURRENT PROJECT</p>
       <div class="item projectItem" style="box-shadow: none; border: 1px solid #000F9B;">
         {% with item=next %}
           {% include "_item.html" %}
         {% endwith %}
       </div>
 
-      <p class="voteItemTeam" style="color: black; padding-bottom: 8px; padding-top: 24px;">LAST PROJECT YOU PROJECT</p>
+      <p class="voteItemTeam" style="color: black; padding-bottom: 8px; padding-top: 24px;">LAST PROJECT YOU VISITED</p>
       <div class="item">
         <div class="item projectItem" style="box-shadow: none;">
           {% with item=prev %}

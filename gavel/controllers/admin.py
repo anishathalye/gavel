@@ -24,6 +24,7 @@ ALLOWED_EXTENSIONS = set(['csv', 'xlsx', 'xls'])
 def admin():
     annotators = Annotator.query.order_by(Annotator.id).all()
     items = Item.query.order_by(Item.id).all()
+    flags = Flag.query.order_by(Flag.id).all()
     decisions = Decision.query.all()
     counts = {}
     item_counts = {}
@@ -51,6 +52,8 @@ def admin():
         items=items,
         votes=len(decisions),
         setting_closed=setting_closed,
+        flags=flags,
+        flag_count=len(flags)
     )
 
 
@@ -89,6 +92,22 @@ def item():
             return utils.server_error(str(e))
     return redirect(url_for('admin'))
 
+
+@app.route('/admin/report', methods=['POST'])
+@utils.requires_auth
+def flag():
+    action = request.form['action']
+    if action == 'resolve':
+        flag_id = request.form['flag_id']
+        target_state = action == 'resolve'
+        Flag.by_id(flag_id).resolved = target_state
+        db.session.commit()
+    elif action == 'open':
+        flag_id = request.form['flag_id']
+        target_state = 1 == 2
+        Flag.by_id(flag_id).resolved = target_state
+        db.session.commit()
+    return redirect(url_for('admin'))
 
 def allowed_file(filename):
     return '.' in filename and \
