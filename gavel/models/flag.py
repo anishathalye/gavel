@@ -1,3 +1,5 @@
+from sqlalchemy.orm.exc import NoResultFound
+
 from gavel.models import db
 from datetime import datetime
 
@@ -15,3 +17,13 @@ class Flag(db.Model):
         self.annotator = annotator
         self.project = project
         self.reason = reason
+
+    @classmethod
+    def by_id(cls, uid):
+        if uid is None:
+            return None
+        try:
+            flag = cls.query.with_for_update().get(uid)
+        except NoResultFound:
+            flag = None
+        return flag

@@ -81,7 +81,7 @@ def vote():
             annotator.ignore.append(annotator.next)
 
             if request.form['action'] == 'SkipAbsent':
-                flag = Flag(annotator, annotator.next, 'absent')
+                flag = Flag(annotator, annotator.next, 'Absent')
                 db.session.add(flag)
         else:
             # ignore things that were deactivated in the middle of judging
@@ -109,11 +109,17 @@ def vote():
 @requires_active_annotator(redirect_to='index')
 def report():
     annotator = get_current_annotator()
+    reason = request.form['reason']
+    if reason in ['Unknown', '']:
+        return
     if annotator.next.id == int(request.form['next_id']):
-        flag = Flag(annotator, annotator.next, request.form['reason'])
+        flag = Flag(annotator, annotator.next, reason)
         db.session.add(flag)
         annotator.ignore.append(annotator.next)
-        annotator.update_next(choose_next(annotator))
+        if annotator.prev:
+            annotator.update_next(choose_next(annotator))
+        else:
+            annotator.next = None
         db.session.commit()
     return redirect(url_for('index'))
 
@@ -132,7 +138,7 @@ def begin():
             annotator.next = None # will be reset in index
 
             if request.form['action'] == 'SkipAbsent':
-                flag = Flag(annotator, annotator.next, 'absent')
+                flag = Flag(annotator, annotator.next, 'Absent')
                 db.session.add(flag)
         db.session.commit()
     return redirect(url_for('index'))
