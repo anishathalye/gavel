@@ -1,0 +1,55 @@
+version: '3.4'
+
+x-gavel-base: &gavel_base
+  image: gavel
+  build: .
+  restart: always
+  volumes:
+    - type: bind
+      source: ./config.yaml
+      target: /app/config.yaml
+  networks:
+    - gavel-net
+
+x-gavel-env: &gavel_env
+  REDIS_URL: redis://redis/0
+  DATABASE_URL: postgresql://gavel:${DB_PASSWORD:?must set the DB_PASSWORD environment variable}@db/gavel
+
+services:
+  gavel:
+    <<: *gavel_base
+    environment:
+      <<: *gavel_env
+    ports:
+      - 80:80
+    depends_on:
+      - db
+      - redis
+
+  celery-worker:
+    <<: *gavel_base
+    environment:
+      <<: *gavel_env      
+    depends_on:
+      - gavel
+    command: celery -A gavel:celery worker
+
+  db:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: gavel
+      POSTGRES_PASSWORD: ${DB_PASSWORD:?must set the DB_PASSWORD environment variable}
+    volumes:
+      - ./db:/var/lib/postgresql/data
+    networks:
+      - gavel-net
+
+  redis:
+    image: redis
+    restart: always
+    networks:
+      - gavel-net
+  
+networks:
+  gavel-net:

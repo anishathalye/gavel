@@ -1,4 +1,5 @@
 config.yaml
+.env
 *.pyc
 env/
 .vagrant/
