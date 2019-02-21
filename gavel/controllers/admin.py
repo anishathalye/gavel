@@ -48,10 +48,6 @@ def admin():
         setting_closed=setting_closed,
     )
 
-@app.route('/admin')
-def admin_redirect():
-    return redirect(url_for('admin'))
-
 @app.route('/admin/item', methods=['POST'])
 @utils.requires_auth
 def item():
