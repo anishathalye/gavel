@@ -3,3 +3,4 @@ config.yaml
 *.pyc
 env/
 .vagrant/
+pg-data/
