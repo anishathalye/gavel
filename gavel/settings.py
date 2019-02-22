@@ -10,7 +10,7 @@ class Config(object):
     def __init__(self, config_file):
         if not _bool(os.environ.get('IGNORE_CONFIG_FILE', False)):
             with open(config_file) as f:
-                self._config = yaml.safe_load(f)
+                self._config = yaml.safe_load(f) or {}
         else:
             self._config = {}
 
