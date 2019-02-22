@@ -84,6 +84,20 @@ the app with `gunicorn -b :<PORT> -w <number of workers> gavel:app`.
 For sending emails, you'll also need to start a celery worker with `celery -A
 gavel:celery worker`.
 
+### Docker
+
+Gavel can also be deployed using Docker. `docker build -t .` will build a working
+container from the included `Dockerfile`. 
+
+A sample `docker-compose.yml` configuration is also included. To use it, you must
+first create a `config.yaml` file and set all the required settings 
+(see [Configuration](#Configuration) below). You must not set the `PORT`, 
+`DATABASE_URL` and `REDIS_URL` variables since they are managed by the compose stack.
+
+The final step is to generate a random password for your database user: 
+`echo "DB_PASSWORD=$(date | md5sum)" >> .env`. You can then run the app using 
+`docker-compose up --build`.
+
 ## Configuration
 
 Before starting the app, copy `config.template.yaml` to `config.yaml` and set
