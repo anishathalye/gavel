@@ -1,0 +1,47 @@
+{% extends "layout.html" %}
+{% block title %}Admin{% endblock %}
+{% block content %}
+  <div class="admin-container">
+    <div class="banner-branded">Gavel Admin Dashboard</div>
+    <div class="admin-data-bar">
+      <div class="admin-data">
+        <span>JUDGING SESSION STATUS</span>
+        <div class="admin-toggle">
+          <div class="flipswitch">
+            <form action="/admin/setting" method="post">
+              <input type="submit" class="flipswitch-cb" id="fs">
+              <input type="hidden" name="action" value="{{ 'Open' if setting_closed else 'Close' }}">
+              <input type="hidden" name="key" value="closed">
+              <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+            </form>
+            <label class="flipswitch-label" for="fs">
+              <div class="flipswitch-inner"></div>
+              <div class="flipswitch-switch"></div>
+            </label>
+          </div>
+        </div>
+      </div>
+      <div class="admin-data">
+        <span>TOTAL VOTE COUNT</span>
+        <div class="admin-data-text">{{ votes }}</div>
+      </div>
+      <div class="admin-data">
+        <span>TOTAL ACTIVE PROJECTS</span>
+        <div class="admin-data-text">{{ item_count }}</div>
+      </div>
+      <div class="admin-data">
+        <span>AVG. SIGMA<sup>2</sup></span>
+      </div>
+    </div>
+
+
+  </div>
+{% endblock %}
+{% block end %}
+  <script>
+    let checkbox = document.getElementById('fs');
+    let c = "{{ setting_closed }}";
+    c === "True" ? checkbox.checked = false : checkbox.checked = true;
+  </script>
+
+{% endblock %}

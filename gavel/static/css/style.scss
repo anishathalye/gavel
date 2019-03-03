@@ -205,6 +205,17 @@ hr {
   background-color: $dark;
 }
 
+.banner-branded {
+  font-family: Rubik;
+font-style: normal;
+font-weight: normal;
+line-height: normal;
+font-size: 32px;
+  text-align: left;
+  margin-bottom: 24px;
+  color: $branding-purple;
+}
+
 .banner-tight {
   @extend .banner;
   margin-bottom: 0;
@@ -913,3 +924,132 @@ color: #000000;
   background: $branding-red url('/static/img/reportCheck.svg') no-repeat center center !important;
 }
 
+.admin-container {
+  margin: 36px;
+}
+
+.admin-container span {
+  font-family: Rubik;
+font-style: normal;
+font-weight: 500;
+line-height: normal;
+font-size: 14px;
+text-transform: uppercase;
+
+color: #000000;
+margin-right: 48px;
+}
+
+.admin-toggle {
+  width: 120px;
+height: 40px;
+  margin-top: 0;
+
+background: #000F9B;
+border-radius: 4px;
+}
+
+.admin-data {
+  display: inline-block;
+}
+
+.admin-toggle {
+  display: block;
+  position: fixed;
+  margin-top: 10px;
+}
+
+.admin-data-text {
+  vertical-align: center;
+  font-family: Rubik;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+  font-size: 36px;
+  text-transform: uppercase;
+  color: #000F9B;
+  display: block;
+  position: fixed;
+
+}
+
+.flipswitch {
+  position: relative;
+  width: 120px;
+  -webkit-user-select:none;
+  -moz-user-select:none;
+  -ms-user-select: none;
+}
+.flipswitch input[type=checkbox] {
+  display: none;
+}
+.flipswitch-label {
+  display: block;
+  overflow: hidden;
+  cursor: pointer;
+  border: 2px solid #999999;
+  border-radius: 4px;
+}
+.flipswitch-inner {
+  width: 200%;
+  margin-left: -100%;
+  -webkit-transition: margin 0.2s ease-in 0s;
+  -moz-transition: margin 0.2s ease-in 0s;
+  -ms-transition: margin 0.2s ease-in 0s;
+  -o-transition: margin 0.2s ease-in 0s;
+  transition: margin 0.2s ease-in 0s;
+}
+.flipswitch-inner:before, .flipswitch-inner:after {
+  float: left;
+  width: 50%;
+  height: 40px;
+  padding: 0;
+  line-height: 40px;
+  font-size: 14px;
+  color: white;
+  font-family: Trebuchet, Arial, sans-serif;
+  font-weight: bold;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+.flipswitch-inner:before {
+  content: "OPEN";
+  padding-left: 15px;
+  background-color: #000F9B;
+  color: #FFFFFF;
+}
+.flipswitch-inner:after {
+  content: "CLOSED";
+  padding-right: 6px;
+  background-color: #B7B7B7;
+  color: #FFFFFF;
+  text-align: right;
+}
+.flipswitch-switch {
+  width: 50px;
+  margin: 2px;
+  background: #FFFFFF;
+  border: 2px solid #999999;
+  border-radius: 4px;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 66px;
+  -webkit-transition: all 0.2s ease-in 0s;
+  -moz-transition: all 0.2s ease-in 0s;
+  -ms-transition: all 0.2s ease-in 0s;
+  -o-transition: all 0.2s ease-in 0s;
+  transition: all 0.2s ease-in 0s;
+}
+.flipswitch-cb:checked + .flipswitch-label .flipswitch-inner {
+  margin-left: 0;
+}
+.flipswitch-cb:checked + .flipswitch-label .flipswitch-switch {
+  right: 0;
+}
+
+.flipswitch-cb {
+  display: flex;
+  height: 0;
+}
