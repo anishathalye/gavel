@@ -44,10 +44,11 @@ def admin():
     # settings
     setting_closed = Setting.value_of(SETTING_CLOSED) == SETTING_TRUE
     return render_template(
-        'admin.html',
+        'admin_ti.html',
         annotators=annotators,
         counts=counts,
         item_counts=item_counts,
+        item_count=len(items),
         skipped=skipped,
         items=items,
         votes=len(decisions),
