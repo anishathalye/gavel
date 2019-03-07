@@ -89,21 +89,11 @@ strong {
   font-weight: bold;
 }
 
-table,
-tr,
-td,
-th {
-  border: 0.1rem solid black;
-}
-
 table {
   border-collapse: collapse;
   width: 100%;
 }
 
-td {
-  padding: 0 0.25rem;
-}
 
 th {
   background: $light-grey;
@@ -112,6 +102,8 @@ th {
 }
 
 th.sort-header {
+  max-height: 48px;
+  height: 48px;
   cursor: pointer;
   &::selection {
     background:transparent;
@@ -123,20 +115,24 @@ table th.sort-header::after {
   visibility: hidden;
   font-family: "Source Code Pro", "Courier New", monospace;
   opacity: 0.5;
+  height: 0;
 }
 
 table th.sort-header:hover::after {
   visibility: visible;
+  height: 0;
 }
 
 table th.sort-up::after {
   content: " (+)";
   visibility: visible;
+  height: 0;
 }
 
 table th.sort-down::after {
   content: " (-)";
   visibility: visible;
+  height: 0;
 }
 
 textarea,
@@ -862,7 +858,7 @@ dl.instructions dt p {
 }
 
 .purpleBold {
-  font-weight: 500;
+  font-weight: 500!important;
   color: $branding-purple!important;
 }
 
@@ -924,6 +920,11 @@ color: #000000;
   background: $branding-red url('/static/img/reportCheck.svg') no-repeat center center !important;
 }
 
+.redBold {
+  color: $branding-red!important;
+  font-weight: 500!important;
+}
+
 .admin-container {
   margin: 36px;
 }
@@ -941,22 +942,23 @@ margin-right: 48px;
 }
 
 .admin-toggle {
-  width: 120px;
-height: 40px;
-  margin-top: 0;
-
-background: #000F9B;
-border-radius: 4px;
+  color: transparent;
+  background-color: transparent;;;
 }
 
 .admin-data {
   display: inline-block;
 }
 
+.admin-data-bar {
+  padding-bottom: 82px;
+}
+
 .admin-toggle {
   display: block;
   position: fixed;
   margin-top: 10px;
+  cursor: pointer;
 }
 
 .admin-data-text {
@@ -1052,4 +1054,223 @@ border-radius: 4px;
 .flipswitch-cb {
   display: flex;
   height: 0;
+}
+
+.admin-table {
+  display: none;
+}
+
+
+.admin-table>table {
+  border: 0;
+}
+
+.admin-table>table>thead {
+  background: #E5E5E5;
+  border: 1px solid #B7B7B7;
+  box-sizing: border-box;
+  height: 48px!important;
+  max-height: 48px!important;
+  border-radius: 4px 4px 0px 0px!important;
+}
+
+.admin-table>table>thead>tr {
+  border: 0;
+
+  max-height: 48px!important;
+  padding: 0!important;
+  border-radius: 4px 4px 0px 0px!important;
+}
+
+.admin-table>table>thead>tr>th {
+  border: 0;
+  text-align: left;
+  font-family: Rubik;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+  font-size: 14px;
+  text-transform: uppercase;
+
+  color: #000000;
+}
+
+.admin-table>table>tbody {
+  background: white;
+  border: 1px solid #B7B7B7;
+  box-sizing: border-box;
+}
+
+.admin-table>table>tbody>tr {
+  border: 0;
+  height: 48px;
+  max-height: 48px;
+}
+
+.admin-table>table>tbody>tr>td {
+  border: 0;
+  font-family: Rubik;
+  font-style: normal;
+  font-weight: normal;
+  line-height: normal;
+  font-size: 14px;
+}
+
+.admin-check {
+  margin: 16px!important;
+  height: 16px;
+  max-height: 16px;
+  width: 16px;
+  max-width: 16px;
+  min-width: 16px;
+  display: block;
+  background-color: white;
+  border: 1px solid #363946;
+  box-sizing: border-box;
+  border-radius: 3px;
+}
+
+
+.admin-check-active {
+  border: 0!important;
+  background: $branding-blue url("/static/img/admin_checkmark.svg") no-repeat center center;
+}
+
+.admin-head-check {
+  width: 48px;
+  max-width: 48px!important;
+  height: 48px;
+  max-height: 48px;
+}
+
+.admin-head-id {
+  width: 54px;
+  max-width: 54px;
+}
+
+.admin-head-judge {
+  width: 200px;
+  max-width: 200px;
+}
+
+.admin-head-email {
+  width: 307px;
+  max-width: 307px;
+}
+
+.admin-head-standard {
+  width: 102px;
+  max-width: 102px;
+}
+
+.admin-head-double {
+  width: 200px;
+  max-width: 200px;
+}
+
+.admin-options {
+  margin-bottom: 16px;
+}
+
+.admin-switcher {
+  position: relative;
+  display: block;
+  background: #000F9B;
+box-shadow: 0px 2px 10px #B7B7B7;
+border-radius: 3px;
+width: 188px;
+height: 40px;
+  cursor: pointer;
+
+}
+
+.admin-switcher span{
+  font-family: Rubik;
+font-style: normal;
+font-weight: normal;
+line-height: normal;
+font-size: 18px;
+text-align: center;
+  text-transform: none;
+color: #FFFFFF;
+  margin-right: 0;
+  padding-right: 12px;
+  padding-left: 12px;
+  position: relative;
+  top: 9px!important;
+}
+.admin-drop-single-chevron {
+  display: inline;
+  background: url("/static/img/single_chevron.svg") center center no-repeat;
+  color: white;
+  width: 13px;
+  max-width: 13px;
+  height: 7px;
+  max-height: 7px;
+  float: right;
+  margin-right: 12px;
+  vertical-align: center;
+}
+.admin-switcher a {
+  position: absolute;
+  top: 17px;
+  display: inline;
+  height: 100%;
+
+}
+
+.admin-switcher-modal {
+  margin-top: -24px;
+  position: relative;
+  display: none;
+  z-index: 100;
+  width: 188px;
+  max-width: 188px;
+  background: #FFFFFF;
+  box-shadow: 0px 4px 4px #B7B7B7;
+  border-radius: 4px;
+  text-align: center;
+}
+
+.admin-switcher-modal-text {
+font-family: Rubik;
+font-style: normal;
+font-weight: normal;
+line-height: normal;
+font-size: 18px;
+text-align: center;
+
+color: #000000;
+}
+
+
+.full {
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+}
+
+.full :hover {
+  background: lightgrey;
+}
+
+.admin-head-project {
+  width: 204px;
+  max-width: 204px;
+}
+
+.admin-judging-active {
+  height: 40px;
+  max-height: 40px;
+  width: 120px;
+  max-width: 120px;
+  background: transparent url("/static/img/judging_toggle_active.svg");
+}
+
+.admin-judging-inactive {
+  height: 40px;
+  max-height: 40px;
+  width: 120px;
+  max-width: 120px;
+  background: transparent url("/static/img/judging_toggle_inactive.svg");
 }
