@@ -7,18 +7,11 @@
       <div class="admin-data">
         <span>JUDGING SESSION STATUS</span>
         <div class="admin-toggle">
-          <div class="flipswitch">
-            <form action="/admin/setting" method="post">
-              <input type="submit" class="flipswitch-cb" id="fs">
+            <form id="admin-judge-setting-form" action="/admin/setting" method="post"  class="{{ 'admin-judging-active' if not setting_closed else 'admin-judging-inactive'}}" onclick="document.getElementById('admin-judge-setting-form').submit()">
               <input type="hidden" name="action" value="{{ 'Open' if setting_closed else 'Close' }}">
               <input type="hidden" name="key" value="closed">
               <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
             </form>
-            <label class="flipswitch-label" for="fs">
-              <div class="flipswitch-inner"></div>
-              <div class="flipswitch-switch"></div>
-            </label>
-          </div>
         </div>
       </div>
       <div class="admin-data">
@@ -33,15 +26,233 @@
         <span>AVG. SIGMA<sup>2</sup></span>
       </div>
     </div>
-
+    <div class="admin-options">
+      <div class="admin-switcher" id="switcher" onclick="toggleSelector()">
+        <span id="admin-switcher-content">Manage Reports</span>
+        <a class="admin-drop-single-chevron center"></a>
+        <div class="admin-switcher-modal" id="selector">
+          <div class="full" onclick="showTab('reports')"><h3 class="admin-switcher-modal-text redBold">View Reports</h3>
+          </div>
+          <div class="full" onclick="showTab('projects')"><h3 class="admin-switcher-modal-text purpleBold">Manage
+            Projects</h3></div>
+          <div class="full" onclick="showTab('judges')"><h3 class="admin-switcher-modal-text">Manage Judges</h3></div>
+        </div>
+      </div>
+    </div>
+    <div class="admin-tabs">
+      <div id="admin-reports" class="admin-table">
+        <table id="reports">
+          <thead>
+          <tr>
+            <th class="admin-head-check no-sort"><span class="admin-check" id="check-all-reports"></span></th>
+            <th class="admin-head-id" data-sort-method="number">Id</th>
+            <th class="admin-head-judge" data-sort-method="caseInsensitiveSort">Judge Name</th>
+            <th data-sort-method="caseInsensitiveSort">Project Name</th>
+            <th data-sort-method="caseInsensitiveSort">Project Location</th>
+            <th data-sort-method="caseInsensitiveSort">Reason</th>
+            <th class="sort-default" data-sort-method="caseInsensitiveSort" data-sort-order="desc">Status</th>
+          </tr>
+          </thead>
+          <tbody>
+          {% for flag in flags %}
+            <tr class="{{ 'open' if not flag.resolved else 'resolved' }}">
+              <td><span class="admin-check"></span></td>
+              <td>{{ flag.id | safe }}</td>
+              <td>{{ flag.annotator.name | safe }}</td>
+              <td>{{ flag.project.name | safe }}</td>
+              <td>{{ flag.project.location | safe }}</td>
+              <td>{{ flag.reason | safe }}</td>
+              <td class="compact" data-sort="{{ not flag.resolved }}">
+                <form action="/admin/report" method="post">
+                  <input type="submit" name="action" value="{{ 'resolve' if not flag.resolved else 'open' }}"
+                         class="{{ 'positive' if not flag.resolved else 'negative' }}">
+                  <input type="hidden" name="flag_id" value="{{ flag.id }}">
+                  <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+                </form>
+              </td>
+            </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      <div id="admin-projects" class="admin-table">
+        <table id="projects">
+          <thead>
+            <tr>
+              <th class="no-sort admin-head-check"><span class="admin-check" id="check-all-projects"></span></th>
+              <th data-sort-method="number" class="admin-head-id">Id</th>
+              <th data-sort-method="caseInsensitiveSort" class="admin-head-project">Project Name</th>
+              <th data-sort-method="caseInsensitiveSort" class="admin-head-standard">Location</th>
+              <th data-sort-method="caseInsensitiveSort" class="admin-head-double">Description</th>
+              <th class="sort-default admin-head-standard" data-sort-method="number" data-sort-order="desc">Mu</th>
+              <th data-sort-method="number" class="admin-head-standard">Sigma<sup>2</sup></th>
+              <th data-sort-method="number" class="admin-head-standard">Votes</th>
+              <th data-sort-method="number" class="admin-head-standard">Seen</th>
+              <th data-sort-method="number" data-sort-order="desc" class="admin-head-standard">Skipped</th>
+              <th data-sort-method="caseInsensitiveSort" data-sort-order="desc" class="admin-head-standard">Prioritize
+              </th>
+              <th data-sort-method="caseInsensitiveSort" class="admin-head-standard">Active</th>
+              <th class="no-sort admin-head-standard">Delete</th>
+            </tr>
+          </thead>
+          <tbody>
+          {% for item in items %}
+            <tr class="{{ 'disabled' if not item.active else 'prioritized' if item.prioritized else ''}}">
+              <td><span class="admin-check"></span></td>
+              <td><a href="{{ url_for('item_detail', item_id=item.id) }}" class="colored">{{ item.id }}</a></td>
+              <td>{{ item.name | safe }}</td>
+              <td>{{ item.location | safe }}</td>
+              <td class="preserve-formatting">{{ item.description | safe }}</td>
+              <td>{{ item.mu | round(4) }}</td>
+              <td>{{ item.sigma_sq | round(4) }}</td>
+              <td>{{ item_counts.get(item.id, 0) }}</td>
+              <td>{{ item.viewed | length }}</td>
+              <td>{{ skipped.get(item.id, 0) }}</td>
+              <td class="compact" data-sort="{{ item.prioritized }}">
+                <form action="/admin/item" method="post">
+                  <input type="submit" name="action" value="{{ 'Prioritize' if not item.prioritized else 'Cancel' }}"
+                         class="{{ 'positive' if not item.prioritized else 'negative' }}">
+                  <input type="hidden" name="item_id" value="{{ item.id }}">
+                  <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+                </form>
+              </td>
+              <td class="compact" data-sort="{{ item.active }}">
+                <form action="/admin/item" method="post">
+                  <input type="submit" name="action" value="{{ 'Disable' if item.active else 'Enable' }}"
+                         class="{{ 'negative' if item.active else 'positive' }}">
+                  <input type="hidden" name="item_id" value="{{ item.id }}">
+                  <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+                </form>
+              </td>
+              <td class="compact">
+                <form action="/admin/item" method="post">
+                  <input type="submit" name="action" value="Delete" class="negative">
+                  <input type="hidden" name="item_id" value="{{ item.id }}">
+                  <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+                </form>
+              </td>
+            </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      <div id="admin-judges" class="admin-table">
+        <table id="judges">
+          <thead>
+            <tr>
+              <th class="no-sort admin-head-check"><span class="admin-check" id="check-all-judges"></span></th>
+              <th class="sort-default" data-sort-method="number">Id</th>
+              <th data-sort-method="caseInsensitiveSort">Name</th>
+              <th data-sort-method="caseInsensitiveSort">Email</th>
+              <th data-sort-method="caseInsensitiveSort">Description</th>
+              <th data-sort-method="number">Votes</th>
+              <th data-sort-method="number">Next (Id)</th>
+              <th data-sort-method="number">Previous (Id)</th>
+              <th data-sort-method="number" data-sort-order="desc">Updated</th>
+              <th class="no-sort">Email</th>
+              <th data-sort-method="caseInsensitiveSort">Active</th>
+              <th class="no-sort">Delete</th>
+            </tr>
+          </thead>
+          <tbody>
+        {% for annotator in annotators %}
+        <tr class="{{ 'disabled' if not annotator.active else '' }}">
+        <td><span class="admin-check"></span></td>
+          <td><a href="{{ url_for('annotator_detail', annotator_id=annotator.id) }}" class="colored">{{ annotator.id }}</a></td>
+          <td>{{ annotator.name | safe }}</td>
+          <td>{{ annotator.email | safe }}</td>
+          <td>{{ annotator.description | safe }}</td>
+          <td>{{ counts.get(annotator.id, 0) }}</td>
+          <td data-sort="{{ annotator.next_id or -1 }}">{{ annotator.next_id }}</td>
+          <td data-sort="{{ annotator.prev_id or -1 }}">{{ annotator.prev_id }}</td>
+          <td data-sort="{{ annotator.updated | utcdatetime_epoch }}">{{ annotator.updated | utcdatetime_local }}</td>
+          <td class="compact">
+            <form action="/admin/annotator" method="post">
+              <input type="submit" name="action" value="Email" class="neutral">
+              <input type="hidden" name="annotator_id" value="{{ annotator.id }}">
+              <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+            </form>
+          </td>
+          <td class="compact" data-sort="{{ annotator.active }}">
+            <form action="/admin/annotator" method="post">
+              <input type="submit" name="action" value="{{ 'Disable' if annotator.active else 'Enable' }}" class="{{ 'negative' if annotator.active else 'positive' }}">
+              <input type="hidden" name="annotator_id" value="{{ annotator.id }}">
+              <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+            </form>
+          </td>
+          <td class="compact">
+            <form action="/admin/annotator" method="post">
+              <input type="submit" name="action" value="Delete" class="negative">
+              <input type="hidden" name="annotator_id" value="{{ annotator.id }}">
+              <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+        </table>
+      </div>
+    </div>
 
   </div>
 {% endblock %}
 {% block end %}
+  <script src="{{ url_for('static', filename='js/vendor/tablesort.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/vendor/tablesort.number.js') }}"></script>
   <script>
-    let checkbox = document.getElementById('fs');
-    let c = "{{ setting_closed }}";
-    c === "True" ? checkbox.checked = false : checkbox.checked = true;
+    {#    let checkbox = document.getElementById('fs');
+        let c = "{{ setting_closed }}";
+        c === "True" ? checkbox.checked = false : checkbox.checked = true;#}
+
+    var tables = [
+      document.getElementById('projects'),
+      document.getElementById('reports'),
+    ];
+    for (var i = 0; i < tables.length; i++) {
+      new Tablesort(tables[i]);
+    }
+  </script>
+  <script>
+    showTab(localStorage.getItem("currentTab"));
+
+    function toggleSelector() {
+      const selectorModal = document.getElementById("selector");
+      selectorModal.style.display = selectorModal.style.display === "block" ? "none" : "block";
+    }
+
+    function showTab(e) {
+      const judges = document.getElementById("admin-judges");
+      const projects = document.getElementById("admin-projects");
+      const reports = document.getElementById("admin-reports");
+      const content = document.getElementById("admin-switcher-content");
+      judges.style.display = "none";
+      projects.style.display = "none";
+      reports.style.display = "none";
+      content.innerText = "none";
+      localStorage.setItem("currentTab", e);
+      switch (localStorage.getItem("currentTab")) {
+        case "judges":
+          judges.style.display = "block";
+          content.innerText = "Manage Judges";
+          break;
+        case "projects":
+          projects.style.display = "block";
+          content.innerText = "Manage Projects";
+          break;
+        case "reports":
+          reports.style.display = "block";
+          content.innerText = "Manage Reports";
+          break;
+        default:
+          reports.style.display = "block";
+          content.innerText = "Manage Reports";
+          break;
+      }
+    }
+
+    window.addEventListener("DOMContentLoaded", function () {
+      showTab(localStorage.getItem("currentTab")||"admin-reports");
+    });
   </script>
 
 {% endblock %}
