@@ -237,6 +237,17 @@
             </form>
           </td>
         </tr>
+      <tr>
+        <td>Queue Shutdown</td>
+        <td>{{ 'Queued' if setting_stop_queue else 'Not Queued' }}</td>
+        <td class="compact">
+          <form action="/admin/queueshutdown" method="post">
+            <input type="submit" name="action" value="{{ 'queue' if not setting_stop_queue else 'dequeue' }}" class="{{ 'positive' if not setting_stop_queue else 'negative' }}">
+            <input type="hidden" name="key" value="queue">
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+          </form>
+        </td>
+      </tr>
       </tbody>
     </table>
   </div>

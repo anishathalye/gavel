@@ -1,3 +1,5 @@
+from celery.utils.serialization import jsonify
+
 from gavel import app
 from gavel.models import *
 from gavel.constants import *
@@ -8,7 +10,7 @@ from flask import (
     render_template,
     request,
     url_for,
-)
+    json)
 
 try:
     import urllib
@@ -43,6 +45,7 @@ def admin():
                 skipped[i.id] = skipped.get(i.id, 0) + 1
     # settings
     setting_closed = Setting.value_of(SETTING_CLOSED) == SETTING_TRUE
+    setting_stop_queue = Setting.value_of(SETTING_STOP_QUEUE) == SETTING_TRUE
     return render_template(
         'admin.html',
         annotators=annotators,
@@ -53,6 +56,7 @@ def admin():
         items=items,
         votes=len(decisions),
         setting_closed=setting_closed,
+        setting_stop_queue=setting_stop_queue,
         flags=flags,
         flag_count=len(flags)
     )
@@ -130,6 +134,27 @@ def item():
         except IntegrityError as e:
             return utils.server_error(str(e))
     return redirect(url_for('admin'))
+
+
+@app.route('/admin/queueshutdown', methods=['POST'])
+@utils.requires_auth
+def queue_shutdown():
+    action = request.form['action']
+    print(action," *** action")
+    annotators = Annotator.query.order_by(Annotator.id).all()
+    if action == 'queue':
+        for an in annotators:
+            an.stop_next = True
+        Setting.set(SETTING_STOP_QUEUE, True)
+        db.session.commit()
+    elif action == 'dequeue':
+        for an in annotators:
+            an.stop_next = False
+        Setting.set(SETTING_STOP_QUEUE, False)
+        db.session.commit()
+
+    return redirect(url_for('admin'))
+
 
 
 @app.route('/admin/report', methods=['POST'])
@@ -288,6 +313,54 @@ def annotator_detail(annotator_id):
             skipped=skipped
         )
 
+@app.route('/admin/live')
+@utils.requires_auth
+def admin_live():
+    annotators = Annotator.query.order_by(Annotator.id).all()
+    items = Item.query.order_by(Item.id).all()
+    flags = Flag.query.order_by(Flag.id).all()
+    decisions = Decision.query.all()
+    counts = {}
+    item_counts = {}
+    for d in decisions:
+        a = d.annotator_id
+        w = d.winner_id
+        l = d.loser_id
+        counts[a] = counts.get(a, 0) + 1
+        item_counts[w] = item_counts.get(w, 0) + 1
+        item_counts[l] = item_counts.get(l, 0) + 1
+    viewed = {i.id: {a.id for a in i.viewed} for i in items}
+    skipped = {}
+    for a in annotators:
+        for i in a.ignore:
+            if a.id not in viewed[i.id]:
+                skipped[i.id] = skipped.get(i.id, 0) + 1
+    # settings
+    setting_closed = Setting.value_of(SETTING_CLOSED) == SETTING_TRUE
+
+    ret = {"annotators": [an.to_dict() for an in annotators], "counts": counts,
+           "item_count": len(items), "skipped": [sk.to_dict() for sk in skipped],
+           "items": [it.to_dict() for it in items], "votes": len(decisions),
+           "setting_closed": setting_closed, "flags": [fl.to_dict() for fl in flags],
+           "flag_count": len(flags)}
+
+    response = app.response_class(
+        response=json.dumps(ret),
+        status=200,
+        mimetype='application/json'
+    )
+    return response
+
+    # annotators = annotators,
+    # counts = counts,
+    # item_counts = item_counts,
+    # item_count = len(items),
+    # skipped = skipped,
+    # items = items,
+    # votes = len(decisions),
+    # setting_closed = setting_closed,
+    # flags = flags,
+    # flag_count = len(flags)
 
 def annotator_link(annotator):
     return urllib.parse.urljoin(settings.BASE_URL, url_for('login', secret=annotator.secret))

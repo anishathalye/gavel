@@ -53,10 +53,15 @@ def index():
                 'closed.html',
                 content=utils.render_markdown(settings.CLOSED_MESSAGE)
             )
-        if not annotator.active:
+        if not annotator.active and not annotator.stop_next:
             return render_template(
                 'disabled.html',
                 content=utils.render_markdown(settings.DISABLED_MESSAGE)
+            )
+        if not annotator.active and annotator.stop_next:
+            return render_template(
+                'closed.html',
+                content=utils.render_markdown(settings.CLOSED_MESSAGE)
             )
         if not annotator.read_welcome:
             return redirect(url_for('welcome'))
@@ -89,17 +94,17 @@ def vote():
                 if request.form['action'] == 'Previous':
                     perform_vote(annotator, next_won=False)
                     decision = Decision(annotator, winner=annotator.prev, loser=annotator.next)
-                    print("Triggered Previous")
                 elif request.form['action'] == 'Current':
                     perform_vote(annotator, next_won=True)
                     decision = Decision(annotator, winner=annotator.next, loser=annotator.prev)
-                    print("Triggered Current")
                 else:
                     return
                 db.session.add(decision)
             annotator.next.viewed.append(annotator) # counted as viewed even if deactivated
             annotator.prev = annotator.next
             annotator.ignore.append(annotator.prev)
+        if annotator.stop_next:
+            annotator.active = False
         annotator.update_next(choose_next(annotator))
         db.session.commit()
     return redirect(url_for('index'))
@@ -140,6 +145,8 @@ def begin():
             if request.form['action'] == 'SkipAbsent':
                 flag = Flag(annotator, annotator.next, 'Absent')
                 db.session.add(flag)
+        if annotator.stop_next:
+            annotator.active = False
         db.session.commit()
     return redirect(url_for('index'))
 
