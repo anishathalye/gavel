@@ -2,12 +2,15 @@ from gavel.models import db
 import gavel.crowd_bt as crowd_bt
 from sqlalchemy.orm.exc import NoResultFound
 
-view_table = db.Table('view',
-    db.Column('item_id', db.Integer, db.ForeignKey('item.id')),
-    db.Column('annotator_id', db.Integer, db.ForeignKey('annotator.id'))
-)
+from gavel.models._basemodel import BaseModel
 
-class Item(db.Model):
+view_table = db.Table('view',
+                      db.Column('item_id', db.Integer, db.ForeignKey('item.id')),
+                      db.Column('annotator_id', db.Integer, db.ForeignKey('annotator.id'))
+                      )
+
+
+class Item(BaseModel):
     id = db.Column(db.Integer, primary_key=True, nullable=False)
     name = db.Column(db.Text, nullable=False)
     location = db.Column(db.Text, nullable=False)
@@ -20,12 +23,18 @@ class Item(db.Model):
     mu = db.Column(db.Float)
     sigma_sq = db.Column(db.Float)
 
+    _default_fields = ["name", "location", "description", "active", "seen", "prioritized", "mu", "sigma_sq"]
+
     def __init__(self, name, location, description):
         self.name = name
         self.location = location
         self.description = description
         self.mu = crowd_bt.MU_PRIOR
         self.sigma_sq = crowd_bt.SIGMA_SQ_PRIOR
+
+    @property
+    def seen(self):
+        return len(self.viewed)
 
     @classmethod
     def by_id(cls, uid):

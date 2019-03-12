@@ -4,6 +4,7 @@ TELEMETRY_URL = 'https://telemetry.anish.io/api/v1/submit'
 # Setting
 # keys
 SETTING_CLOSED = 'closed' # boolean
+SETTING_STOP_QUEUE = 'queued' # boolean
 # values
 SETTING_TRUE = 'true'
 SETTING_FALSE = 'false'
@@ -60,5 +61,5 @@ You are currently logged out. Open your magic link to get started.
 '''.strip()
 
 DEFAULT_WAIT_MESSAGE = '''
-Wow, you've visited all the projects presented in this epo. Thank you so much for your effort. From this point, follow any post-expo instructions event staff have provided for judges.
+Wow, you've visited all the projects presented in this expo. Thank you so much for your effort. From this point, follow any post-expo instructions event staff have provided for judges.
 '''.strip()
