@@ -61,6 +61,7 @@ def admin():
         flag_count=len(flags)
     )
 
+
 @app.route('/beta')
 @utils.requires_auth
 def admin_beta():
@@ -140,7 +141,7 @@ def item():
 @utils.requires_auth
 def queue_shutdown():
     action = request.form['action']
-    print(action," *** action")
+    print(action, " *** action")
     annotators = Annotator.query.order_by(Annotator.id).all()
     if action == 'queue':
         for an in annotators:
@@ -154,7 +155,6 @@ def queue_shutdown():
         db.session.commit()
 
     return redirect(url_for('admin'))
-
 
 
 @app.route('/admin/report', methods=['POST'])
@@ -172,6 +172,7 @@ def flag():
         Flag.by_id(flag_id).resolved = target_state
         db.session.commit()
     return redirect(url_for('admin'))
+
 
 def allowed_file(filename):
     return '.' in filename and \
@@ -313,6 +314,7 @@ def annotator_detail(annotator_id):
             skipped=skipped
         )
 
+
 @app.route('/admin/live')
 @utils.requires_auth
 def admin_live():
@@ -338,11 +340,62 @@ def admin_live():
     # settings
     setting_closed = Setting.value_of(SETTING_CLOSED) == SETTING_TRUE
 
-    ret = {"annotators": [an.to_dict() for an in annotators], "counts": counts,
-           "item_count": len(items), "skipped": [sk.to_dict() for sk in skipped],
-           "items": [it.to_dict() for it in items], "votes": len(decisions),
-           "setting_closed": setting_closed, "flags": [fl.to_dict() for fl in flags],
-           "flag_count": len(flags)}
+    annotators_padded = []
+    max_annotator_id = 0
+    for an in annotators:
+        annotators_padded.insert(int(an.id), an)
+        max_annotator_id = an.id if an.id > max_annotator_id else max_annotator_id
+
+    annotators_padded_final = []
+    for i in range(max_annotator_id):
+        annotators_padded_final.append(None)
+    for an in annotators:
+        try:
+            annotators_padded_final.insert(int(an.id), an)
+        except:
+            annotators_padded_final.append(None)
+
+    items_padded = []
+    max_item_id = 0
+    for it in items:
+        items_padded.insert(int(it.id), it)
+        max_item_id = it.id if it.id > max_item_id else max_item_id
+
+    items_padded_final = []
+    for i in range(max_item_id):
+        items_padded_final.append(None)
+    for it in items:
+        try:
+            items_padded_final.insert(int(it.id), it)
+        except:
+            items_padded_final.append(None)
+
+    max_flag_id = 0
+    flags_padded = []
+    for fl in flags:
+        flags_padded.insert(int(fl.id), fl)
+        max_flag_id = fl.id if fl.id > max_flag_id else max_flag_id
+
+    flags_padded_final = []
+    # TODO: Use index object to track current index in flags_padded
+    for i in range(max_flag_id):
+        flags_padded_final.append(None)
+    for fl in flags:
+        try:
+            flags_padded_final.insert(int(fl.id), fl)
+        except:
+            flags_padded_final.append(None)
+
+    ret = {"annotators": [an.to_dict() if an else {'null': 'null'} for an in annotators_padded_final],
+           "counts": counts,
+           "item_count": len(items),
+           "skipped": [sk for sk in skipped],
+           "items": [it.to_dict() if it else {'null': 'null'} for it in items_padded_final],
+           "votes": len(decisions),
+           "setting_closed": setting_closed,
+           "flags": [fl.to_dict() if fl else {'null': 'null'} for fl in flags_padded_final],
+           "flag_count": len(flags)
+           }
 
     response = app.response_class(
         response=json.dumps(ret),
@@ -361,6 +414,7 @@ def admin_live():
     # setting_closed = setting_closed,
     # flags = flags,
     # flag_count = len(flags)
+
 
 def annotator_link(annotator):
     return urllib.parse.urljoin(settings.BASE_URL, url_for('login', secret=annotator.secret))

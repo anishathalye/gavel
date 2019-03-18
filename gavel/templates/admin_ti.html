@@ -53,25 +53,8 @@
             <th class="sort-default" data-sort-method="caseInsensitiveSort" data-sort-order="desc">Status</th>
           </tr>
           </thead>
-          <tbody>
-          {% for flag in flags %}
-            <tr class="{{ 'open' if not flag.resolved else 'resolved' }}">
-              <td><span class="admin-check"></span></td>
-              <td>{{ flag.id | safe }}</td>
-              <td>{{ flag.annotator.name | safe }}</td>
-              <td>{{ flag.project.name | safe }}</td>
-              <td>{{ flag.project.location | safe }}</td>
-              <td>{{ flag.reason | safe }}</td>
-              <td class="compact" data-sort="{{ not flag.resolved }}">
-                <form action="/admin/report" method="post">
-                  <input type="submit" name="action" value="{{ 'resolve' if not flag.resolved else 'open' }}"
-                         class="{{ 'positive' if not flag.resolved else 'negative' }}">
-                  <input type="hidden" name="flag_id" value="{{ flag.id }}">
-                  <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
-                </form>
-              </td>
-            </tr>
-          {% endfor %}
+          <tbody id = "reports-body">
+
           </tbody>
         </table>
       </div>
@@ -95,7 +78,7 @@
               <th class="no-sort admin-head-standard">Delete</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody id="items-body">
           {% for item in items %}
             <tr class="{{ 'disabled' if not item.active else 'prioritized' if item.prioritized else ''}}">
               <td><span class="admin-check"></span></td>
@@ -199,6 +182,15 @@
 {% block end %}
   <script src="{{ url_for('static', filename='js/vendor/tablesort.min.js') }}"></script>
   <script src="{{ url_for('static', filename='js/vendor/tablesort.number.js') }}"></script>
+  <script src="{{ url_for('static', filename="js/admin_live.js") }}"></script>
+<script src="{{ url_for('static', filename="js/jquery-3.3.1.min.js") }}"></script>
+  <script>
+  let initial_response = refresh("{{ csrf_token() }}");
+    window.setInterval(function(){
+      let response = refresh("{{ csrf_token() }}");
+      console.log(response);
+    }, 5000);
+  </script>
   <script>
     {#    let checkbox = document.getElementById('fs');
         let c = "{{ setting_closed }}";

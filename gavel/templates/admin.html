@@ -254,7 +254,9 @@
 </div>
 {% endblock %}
 {% block end %}
+<script src="{{ url_for('static', filename="js/admin_live.js") }}"></script>
 <script src="{{ url_for('static', filename='js/vendor/tablesort.min.js') }}"></script>
+<script src="{{ url_for('static', filename="js/jquery-3.3.1.min.js") }}"></script>
 <script src="{{ url_for('static', filename='js/vendor/tablesort.number.js') }}"></script>
 <script>
 var tables = [
