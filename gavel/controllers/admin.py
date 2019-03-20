@@ -356,6 +356,7 @@ def admin_live():
             annotators_padded_final.append(None)
 
     items_padded = []
+    viewed_built = []
     max_item_id = 0
     for it in items:
         items_padded.insert(int(it.id), it)
@@ -367,8 +368,10 @@ def admin_live():
     for it in items:
         try:
             items_padded_final.insert(int(it.id), it)
+            viewed_built.insert(int(it.id), len(it.viewed))
         except:
             items_padded_final.append(None)
+            viewed_built.append(None)
 
     max_flag_id = 0
     flags_padded = []
@@ -386,11 +389,14 @@ def admin_live():
         except:
             flags_padded_final.append(None)
 
+    # TODO: Build "viewed" object
     ret = {"annotators": [an.to_dict() if an else {'null': 'null'} for an in annotators_padded_final],
            "counts": counts,
+           "item_counts": item_counts,
            "item_count": len(items),
            "skipped": [sk for sk in skipped],
            "items": [it.to_dict() if it else {'null': 'null'} for it in items_padded_final],
+           "viewed": viewed_built,
            "votes": len(decisions),
            "setting_closed": setting_closed,
            "flags": [fl.to_dict() if fl else {'null': 'null'} for fl in flags_padded_final],

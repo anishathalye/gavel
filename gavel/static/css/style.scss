@@ -1274,3 +1274,21 @@ color: #000000;
   max-width: 120px;
   background: transparent url("/static/img/judging_toggle_inactive.svg");
 }
+
+.live-table>table, td, th {
+    border: 1px solid black;
+    border-collapse: collapsed;
+    padding: 2px 5px;
+}
+.live-table>thead th {
+    background-repeat: no-repeat;
+    background-position: right center;
+}
+.live-table>thead th.up {
+    padding-right: 20px;
+    background-image: url(data:image/gif;base64,R0lGODlhFQAEAIAAACMtMP///yH5BAEAAAEALAAAAAAVAAQAAAINjI8Bya2wnINUMopZAQA7);
+}
+.live-table>thead th.down {
+    padding-right: 20px;
+    background-image: url(data:image/gif;base64,R0lGODlhFQAEAIAAACMtMP///yH5BAEAAAEALAAAAAAVAAQAAAINjB+gC+jP2ptn0WskLQA7);
+}
