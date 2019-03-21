@@ -2,8 +2,8 @@
 
 * {
   -webkit-box-sizing: border-box;
-     -moz-box-sizing: border-box;
-          box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
   -webkit-font-smoothing: antialiased;
 }
 
@@ -49,10 +49,10 @@ h1.page-title {
   padding-top: 0.5rem;
   padding-bottom: 0.5rem;
   color: $branding-purple;
-  font-weight: normal!important;
+  font-weight: normal !important;
   left: 24px;
-  font-style: normal!important;
-  line-height: normal!important;
+  font-style: normal !important;
+  line-height: normal !important;
   font-size: 32px;
 }
 
@@ -105,8 +105,9 @@ th.sort-header {
   max-height: 48px;
   height: 48px;
   cursor: pointer;
+
   &::selection {
-    background:transparent;
+    background: transparent;
   }
 }
 
@@ -150,7 +151,13 @@ a {
 }
 
 a.colored {
-  color: $link-color;
+  color: $branding-purple;
+  font-family: Rubik;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: normal;
+
 }
 
 a:hover,
@@ -203,10 +210,10 @@ hr {
 
 .banner-branded {
   font-family: Rubik;
-font-style: normal;
-font-weight: normal;
-line-height: normal;
-font-size: 32px;
+  font-style: normal;
+  font-weight: normal;
+  line-height: normal;
+  font-size: 32px;
   text-align: left;
   margin-bottom: 24px;
   color: $branding-purple;
@@ -280,8 +287,8 @@ input[type=submit] {
   background-color: $branding-blue;
   color: $light;
   width: 100%;
-  border-color: transparent!important;
-  font-family: Rubik!important;
+  border-color: transparent !important;
+  font-family: Rubik !important;
   font-style: normal;
   font-weight: normal;
   line-height: normal;
@@ -299,6 +306,7 @@ input[type=submit] {
   width: 100%;
   padding-bottom: 8px;
 }
+
 .item .bottom-button {
   position: sticky;
 }
@@ -346,24 +354,25 @@ input[type=submit].neutral {
 }
 
 .upload-container {
-    margin-top: 0.25rem;
-    margin-bottom: 0.5rem;
+  margin-top: 0.25rem;
+  margin-bottom: 0.5rem;
 }
 
 .field {
-    padding-right: 1rem;
+  padding-right: 1rem;
 }
 
 #footer {
   margin-top: 2rem;
   border-top: 1px solid $light-grey;
+
   p {
     font-size: 0.75rem;
     text-align: center;
   }
 }
 
-.welcome-body{
+.welcome-body {
   right: 24px;
   left: 24px;
 }
@@ -388,7 +397,7 @@ dl.instructions dt:last-child {
 dl.instructions dt:before {
   left: 0;
   border: 4px solid $branding-purple;
-  transform: matrix(0,1,-1,0,0,0);
+  transform: matrix(0, 1, -1, 0, 0, 0);
   position: relative;
   top: 0;
   width: 60px;
@@ -413,8 +422,8 @@ dl.instructions dt p {
   color: $light;
   background-color: $branding-grey;
   width: 100%;
-  border-color: transparent!important;
-  font-family: Rubik!important;
+  border-color: transparent !important;
+  font-family: Rubik !important;
   font-style: normal;
   font-weight: normal;
   line-height: normal;
@@ -434,7 +443,7 @@ dl.instructions dt p {
 
 }
 
-.continueCheckboxContainer input[type="checkbox"]{
+.continueCheckboxContainer input[type="checkbox"] {
   display: none;
   visibility: hidden;
   opacity: 0;
@@ -509,7 +518,7 @@ dl.instructions dt p {
 }
 
 .fillBlue::before {
-  background-color: $branding-blue!important;
+  background-color: $branding-blue !important;
 }
 
 .instructionsAsterisk {
@@ -558,6 +567,7 @@ dl.instructions dt p {
   line-height: normal;
   font-size: 14px;
 }
+
 .left {
   float: left;
 }
@@ -605,18 +615,18 @@ dl.instructions dt p {
   box-shadow: 0px -2px 8px #B7B7B7;
 }
 
-.bottomPanel a{
+.bottomPanel a {
   float: left;
   display: block;
   text-align: center;
 }
 
 .flagButton {
-  margin-top: 1rem!important;
-  margin-left: 1rem!important;
+  margin-top: 1rem !important;
+  margin-left: 1rem !important;
   background: $branding-red;
-  height: 48px!important;
-  width: 60px!important;
+  height: 48px !important;
+  width: 60px !important;
   -webkit-border-radius: 4px;
   -moz-border-radius: 4px;
   border-radius: 4px;
@@ -629,8 +639,8 @@ dl.instructions dt p {
   margin-top: 1rem;
   margin-left: 1rem;
   background: $branding-dark;
-  height: 48px!important;
-  width: 60px!important;
+  height: 48px !important;
+  width: 60px !important;
   -webkit-border-radius: 4px;
   -moz-border-radius: 4px;
   border-radius: 4px;
@@ -640,21 +650,21 @@ dl.instructions dt p {
 }
 
 .doneButton {
-  float: right!important;
+  float: right !important;
   margin-top: 1rem;
   margin-left: 1rem;
   margin-right: 1rem;
-  background: $branding-blue!important;
+  background: $branding-blue !important;
   background-color: $branding-blue;
-  height: 48px!important;
+  height: 48px !important;
   width: calc(100% - 60px - 60px - 60px - 12px);
   -webkit-border-radius: 4px;
   -moz-border-radius: 4px;
   border-radius: 4px;
   overflow: hidden;
-  -webkit-box-shadow: none!important;
-  -moz-box-shadow: none!important;
-  box-shadow: none!important;
+  -webkit-box-shadow: none !important;
+  -moz-box-shadow: none !important;
+  box-shadow: none !important;
   border: 0;
 }
 
@@ -697,7 +707,7 @@ dl.instructions dt p {
   background: white;
   box-shadow: 0px -4px 10px #B7B7B7;
   width: 100%;
-  overflow: visible!important;
+  overflow: visible !important;
 }
 
 .modal-close {
@@ -708,7 +718,7 @@ dl.instructions dt p {
   width: 50%;
   height: 63px;
   text-align: center;
-  border:1px solid $branding-grey;
+  border: 1px solid $branding-grey;
   border-bottom: 0;
   border-left: 0;
 
@@ -724,13 +734,13 @@ dl.instructions dt p {
   height: 63px;
   text-align: center;
   border: 1px solid $branding-grey;
-  border-bottom:0;
+  border-bottom: 0;
   border-right: 0;
   border-left: 0.5px;
 }
 
 .active-button {
-  background: rgba(0, 161, 255, 0.1)!important;
+  background: rgba(0, 161, 255, 0.1) !important;
 }
 
 .skip-active {
@@ -763,18 +773,19 @@ dl.instructions dt p {
 }
 
 .modal-button-text-active {
-  color: $branding-blue!important;
+  color: $branding-blue !important;
   font-weight: bold;
 }
 
 .modal-skip-text-active {
-  color: #5F4BB6!important;
+  color: #5F4BB6 !important;
   font-weight: bold;
 }
 
 .modal-report-text-active {
-  color: $branding-red!important;
-  font-weight: bold;git
+  color: $branding-red !important;
+  font-weight: bold;
+  git
 }
 
 .modal-next-button-button {
@@ -792,13 +803,14 @@ dl.instructions dt p {
   height: 100%;
   width: 100%;
 }
+
 .submit-form-skip {
   height: 100%;
   display: inline;
 }
 
 .selectedText {
-  margin:0;
+  margin: 0;
   padding-top: 4px;
   padding-bottom: 12px;
   bottom: 0;
@@ -816,40 +828,60 @@ dl.instructions dt p {
 }
 
 .selectedText:after {
-  content:"TAP CARD TO SELECT";
+  content: "TAP CARD TO SELECT";
 }
 
 .selectedNotSelected:after {
-  content:'TAP CARD TO SELECT'!important;
+  content: 'TAP CARD TO SELECT' !important;
   color: $branding-purple;
   font-weight: normal;
 }
 
 .selectedSelected:after {
-  content:'SELECTED'!important;
+  content: 'SELECTED' !important;
   color: $branding-blue;
   font-weight: bold;
 }
 
 /* Add Animation */
 @-webkit-keyframes slideIn {
-  from {bottom: -300px; opacity: 0}
-  to {bottom: 0; opacity: 1}
+  from {
+    bottom: -300px;
+    opacity: 0
+  }
+  to {
+    bottom: 0;
+    opacity: 1
+  }
 }
 
 @keyframes slideIn {
-  from {bottom: -300px; opacity: 0}
-  to {bottom: 0; opacity: 1}
+  from {
+    bottom: -300px;
+    opacity: 0
+  }
+  to {
+    bottom: 0;
+    opacity: 1
+  }
 }
 
 @-webkit-keyframes fadeIn {
-  from {opacity: 0}
-  to {opacity: 1}
+  from {
+    opacity: 0
+  }
+  to {
+    opacity: 1
+  }
 }
 
 @keyframes fadeIn {
-  from {opacity: 0}
-  to {opacity: 1}
+  from {
+    opacity: 0
+  }
+  to {
+    opacity: 1
+  }
 }
 
 .welcome-body p {
@@ -858,24 +890,24 @@ dl.instructions dt p {
 }
 
 .purpleBold {
-  font-weight: 500!important;
-  color: $branding-purple!important;
+  font-weight: 500 !important;
+  color: $branding-purple !important;
 }
 
 .skipTitlePurple {
   font-weight: bold;
-  color: $branding-purple!important;
+  color: $branding-purple !important;
 }
 
 .skipTitle {
   padding-top: 16px;
   font-family: Rubik;
-font-style: normal;
-font-weight: normal;
-line-height: normal;
-font-size: 18px;
+  font-style: normal;
+  font-weight: normal;
+  line-height: normal;
+  font-size: 18px;
 
-color: #000000;
+  color: #000000;
 }
 
 .skipRadio {
@@ -890,10 +922,10 @@ color: #000000;
 }
 
 .skipActive {
-  border: 8px solid #5F4BB6!important;
+  border: 8px solid #5F4BB6 !important;
   -webkit-border-radius: 50% !important;
-  -moz-border-radius: 50%!important;
-  border-radius: 50%!important;
+  -moz-border-radius: 50% !important;
+  border-radius: 50% !important;
 }
 
 .skipText {
@@ -921,8 +953,8 @@ color: #000000;
 }
 
 .redBold {
-  color: $branding-red!important;
-  font-weight: 500!important;
+  color: $branding-red !important;
+  font-weight: 500 !important;
 }
 
 .admin-container {
@@ -931,14 +963,14 @@ color: #000000;
 
 .admin-container span {
   font-family: Rubik;
-font-style: normal;
-font-weight: 500;
-line-height: normal;
-font-size: 14px;
-text-transform: uppercase;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+  font-size: 14px;
+  text-transform: uppercase;
 
-color: #000000;
-margin-right: 48px;
+  color: #000000;
+  margin-right: 48px;
 }
 
 .admin-toggle {
@@ -978,13 +1010,15 @@ margin-right: 48px;
 .flipswitch {
   position: relative;
   width: 120px;
-  -webkit-user-select:none;
-  -moz-user-select:none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
   -ms-user-select: none;
 }
+
 .flipswitch input[type=checkbox] {
   display: none;
 }
+
 .flipswitch-label {
   display: block;
   overflow: hidden;
@@ -992,6 +1026,7 @@ margin-right: 48px;
   border: 2px solid #999999;
   border-radius: 4px;
 }
+
 .flipswitch-inner {
   width: 200%;
   margin-left: -100%;
@@ -1001,6 +1036,7 @@ margin-right: 48px;
   -o-transition: margin 0.2s ease-in 0s;
   transition: margin 0.2s ease-in 0s;
 }
+
 .flipswitch-inner:before, .flipswitch-inner:after {
   float: left;
   width: 50%;
@@ -1015,12 +1051,14 @@ margin-right: 48px;
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
 }
+
 .flipswitch-inner:before {
   content: "OPEN";
   padding-left: 15px;
   background-color: #000F9B;
   color: #FFFFFF;
 }
+
 .flipswitch-inner:after {
   content: "CLOSED";
   padding-right: 6px;
@@ -1028,6 +1066,7 @@ margin-right: 48px;
   color: #FFFFFF;
   text-align: right;
 }
+
 .flipswitch-switch {
   width: 50px;
   margin: 2px;
@@ -1044,9 +1083,11 @@ margin-right: 48px;
   -o-transition: all 0.2s ease-in 0s;
   transition: all 0.2s ease-in 0s;
 }
+
 .flipswitch-cb:checked + .flipswitch-label .flipswitch-inner {
   margin-left: 0;
 }
+
 .flipswitch-cb:checked + .flipswitch-label .flipswitch-switch {
   right: 0;
 }
@@ -1061,28 +1102,28 @@ margin-right: 48px;
 }
 
 
-.admin-table>table {
+.admin-table > table {
   border: 0;
 }
 
-.admin-table>table>thead {
+.admin-table > table > thead {
   background: #E5E5E5;
   border: 1px solid #B7B7B7;
   box-sizing: border-box;
-  height: 48px!important;
-  max-height: 48px!important;
-  border-radius: 4px 4px 0px 0px!important;
+  height: 48px !important;
+  max-height: 48px !important;
+  border-radius: 4px 4px 0px 0px !important;
 }
 
-.admin-table>table>thead>tr {
+.admin-table > table > thead > tr {
   border: 0;
 
-  max-height: 48px!important;
-  padding: 0!important;
-  border-radius: 4px 4px 0px 0px!important;
+  max-height: 48px !important;
+  padding: 0 !important;
+  border-radius: 4px 4px 0px 0px !important;
 }
 
-.admin-table>table>thead>tr>th {
+.admin-table > table > thead > tr > th {
   border: 0;
   text-align: left;
   font-family: Rubik;
@@ -1095,19 +1136,19 @@ margin-right: 48px;
   color: #000000;
 }
 
-.admin-table>table>tbody {
+.admin-table > table > tbody {
   background: white;
   border: 1px solid #B7B7B7;
   box-sizing: border-box;
 }
 
-.admin-table>table>tbody>tr {
+.admin-table > table > tbody > tr {
   border: 0;
   height: 48px;
   max-height: 48px;
 }
 
-.admin-table>table>tbody>tr>td {
+.admin-table > table > tbody > tr > td {
   border: 0;
   font-family: Rubik;
   font-style: normal;
@@ -1117,7 +1158,7 @@ margin-right: 48px;
 }
 
 .admin-check {
-  margin: 16px!important;
+  margin: 16px !important;
   height: 16px;
   max-height: 16px;
   width: 16px;
@@ -1132,13 +1173,13 @@ margin-right: 48px;
 
 
 .admin-check-active {
-  border: 0!important;
+  border: 0 !important;
   background: $branding-blue url("/static/img/admin_checkmark.svg") no-repeat center center;
 }
 
 .admin-head-check {
   width: 48px;
-  max-width: 48px!important;
+  max-width: 48px !important;
   height: 48px;
   max-height: 48px;
 }
@@ -1176,29 +1217,30 @@ margin-right: 48px;
   position: relative;
   display: block;
   background: #000F9B;
-box-shadow: 0px 2px 10px #B7B7B7;
-border-radius: 3px;
-width: 188px;
-height: 40px;
+  box-shadow: 0px 2px 10px #B7B7B7;
+  border-radius: 3px;
+  width: 188px;
+  height: 40px;
   cursor: pointer;
 
 }
 
-.admin-switcher span{
+.admin-switcher span {
   font-family: Rubik;
-font-style: normal;
-font-weight: normal;
-line-height: normal;
-font-size: 18px;
-text-align: center;
+  font-style: normal;
+  font-weight: normal;
+  line-height: normal;
+  font-size: 18px;
+  text-align: center;
   text-transform: none;
-color: #FFFFFF;
+  color: #FFFFFF;
   margin-right: 0;
   padding-right: 12px;
   padding-left: 12px;
   position: relative;
-  top: 9px!important;
+  top: 9px !important;
 }
+
 .admin-drop-single-chevron {
   display: inline;
   background: url("/static/img/single_chevron.svg") center center no-repeat;
@@ -1211,6 +1253,7 @@ color: #FFFFFF;
   margin-right: 12px;
   vertical-align: center;
 }
+
 .admin-switcher a {
   position: absolute;
   top: 17px;
@@ -1233,14 +1276,14 @@ color: #FFFFFF;
 }
 
 .admin-switcher-modal-text {
-font-family: Rubik;
-font-style: normal;
-font-weight: normal;
-line-height: normal;
-font-size: 18px;
-text-align: center;
+  font-family: Rubik;
+  font-style: normal;
+  font-weight: normal;
+  line-height: normal;
+  font-size: 18px;
+  text-align: center;
 
-color: #000000;
+  color: #000000;
 }
 
 
@@ -1275,20 +1318,20 @@ color: #000000;
   background: transparent url("/static/img/judging_toggle_inactive.svg");
 }
 
-.live-table>table, td, th {
-    border: 1px solid black;
-    border-collapse: collapsed;
-    padding: 2px 5px;
+thead th.up>.tablesorter-header-inner>a{
+  margin-left: 8px;
+  display: inline-block;
+  width: 12px;
+  height: 13px;
+  color: $branding-purple;
+  background: url("/static/img/sorting-arrow.svg") no-repeat left center;
 }
-.live-table>thead th {
-    background-repeat: no-repeat;
-    background-position: right center;
-}
-.live-table>thead th.up {
-    padding-right: 20px;
-    background-image: url(data:image/gif;base64,R0lGODlhFQAEAIAAACMtMP///yH5BAEAAAEALAAAAAAVAAQAAAINjI8Bya2wnINUMopZAQA7);
-}
-.live-table>thead th.down {
-    padding-right: 20px;
-    background-image: url(data:image/gif;base64,R0lGODlhFQAEAIAAACMtMP///yH5BAEAAAEALAAAAAAVAAQAAAINjB+gC+jP2ptn0WskLQA7);
+
+thead th.down>.tablesorter-header-inner>a{
+  margin-left: 8px;
+  display: inline-block;
+  width: 12px;
+  height: 13px;
+  color: $branding-purple;
+  background: url("/static/img/sorting-arrow-down.svg") no-repeat left center;
 }
