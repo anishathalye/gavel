@@ -33,10 +33,9 @@
         <span id="admin-switcher-content">Manage Reports</span>
         <a class="admin-drop-single-chevron center"></a>
         <div class="admin-switcher-modal" id="selector">
-          <div class="full" onclick="showTab('reports')"><h3 class="admin-switcher-modal-text redBold">View Reports</h3>
+          <div class="full" onclick="showTab('reports')"><h3 class="admin-switcher-modal-text">Manage Reports</h3>
           </div>
-          <div class="full" onclick="showTab('projects')"><h3 class="admin-switcher-modal-text purpleBold">Manage
-            Projects</h3></div>
+          <div class="full" onclick="showTab('projects')"><h3 class="admin-switcher-modal-text">Manage Projects</h3></div>
           <div class="full" onclick="showTab('judges')"><h3 class="admin-switcher-modal-text">Manage Judges</h3></div>
         </div>
       </div>
@@ -47,12 +46,12 @@
           <thead>
           <tr>
             <th class="admin-head-check no-sort"><span class="admin-check" id="check-all-reports"></span></th>
-            <th class="admin-head-id" data-sort-method="number">Id</th>
-            <th class="admin-head-judge" data-sort-method="caseInsensitiveSort">Judge Name</th>
-            <th data-sort-method="caseInsensitiveSort">Project Name</th>
-            <th data-sort-method="caseInsensitiveSort">Project Location</th>
-            <th data-sort-method="caseInsensitiveSort">Reason</th>
-            <th class="sort-default" data-sort-method="caseInsensitiveSort" data-sort-order="desc">Status</th>
+            <th class="admin-head-id">Id<a></a></th>
+            <th class="admin-head-judge">Judge Name<a></a></th>
+            <th>Project Name<a></a></th>
+            <th>Project Location<a></a></th>
+            <th>Reason<a></a></th>
+            <th class="no-sort">Status<a></a></th>
           </tr>
           </thead>
           <tbody id="reports-body">
@@ -65,19 +64,18 @@
           <thead>
           <tr>
             <th class="no-sort admin-head-check"><span class="admin-check" id="check-all-projects"></span></th>
-            <th data-sort-method="number" class="admin-head-id">Id</th>
-            <th data-sort-method="caseInsensitiveSort" class="admin-head-project">Project Name</th>
-            <th data-sort-method="caseInsensitiveSort" class="admin-head-standard">Location</th>
-            <th data-sort-method="caseInsensitiveSort" class="admin-head-double">Description</th>
-            <th class="sort-default admin-head-standard" data-sort-method="number" data-sort-order="desc">Mu</th>
-            <th data-sort-method="number" class="admin-head-standard">Sigma<sup>2</sup></th>
-            <th data-sort-method="number" class="admin-head-standard">Votes</th>
-            <th data-sort-method="number" class="admin-head-standard">Seen</th>
-            <th data-sort-method="number" data-sort-order="desc" class="admin-head-standard">Skipped</th>
-            <th data-sort-method="caseInsensitiveSort" data-sort-order="desc" class="admin-head-standard">Prioritize
-            </th>
-            <th data-sort-method="caseInsensitiveSort" class="admin-head-standard">Active</th>
-            <th class="no-sort admin-head-standard">Delete</th>
+            <th class="admin-head-id">Id<a></a></th>
+            <th class="admin-head-project">Project Name<a></a></th>
+            <th class="admin-head-standard">Location<a></a></th>
+            <th class="admin-head-double">Description<a></a></th>
+            <th class="sort-default admin-head-standard">Mu<a></a></th>
+            <th class="admin-head-standard">Sigma<sup>2</sup><a></a></th>
+            <th class="admin-head-standard">Votes<a></a></th>
+            <th class="admin-head-standard">Seen<a></a></th>
+            <th class="admin-head-standard">Skipped<a></a></th>
+            <th class="admin-head-standard no-sort">Prioritize<a></a></th>
+            <th class="admin-head-standard no-sort">Active<a></a></th>
+            <th class="no-sort admin-head-standard">Delete<a></a></th>
           </tr>
           </thead>
           <tbody id="items-body">
@@ -90,57 +88,21 @@
           <thead>
           <tr>
             <th class="no-sort admin-head-check"><span class="admin-check" id="check-all-judges"></span></th>
-            <th class="sort-default" data-sort-method="number">Id</th>
-            <th data-sort-method="caseInsensitiveSort">Name</th>
-            <th data-sort-method="caseInsensitiveSort">Email</th>
-            <th data-sort-method="caseInsensitiveSort">Description</th>
-            <th data-sort-method="number">Votes</th>
-            <th data-sort-method="number">Next (Id)</th>
-            <th data-sort-method="number">Previous (Id)</th>
-            <th data-sort-method="number" data-sort-order="desc">Updated</th>
-            <th class="no-sort">Email</th>
-            <th data-sort-method="caseInsensitiveSort">Active</th>
-            <th class="no-sort">Delete</th>
+            <th class="sort-default" data-sort-method="number">Id<a></a></th>
+            <th>Name<a></a></th>
+            <th>Email<a></a></th>
+            <th>Description<a></a></th>
+            <th>Votes<a></a></th>
+            <th>Next (Id)<a></a></th>
+            <th>Previous (Id)<a></a></th>
+            <th>Updated<a></a></th>
+            <th class="no-sort">Email<a></a></th>
+            <th class="no-sort">Active<a></a></th>
+            <th class="no-sort">Delete<a></a></th>
           </tr>
           </thead>
-          <tbody>
-          {% for annotator in annotators %}
-            <tr class="{{ 'disabled' if not annotator.active else '' }}">
-              <td><span class="admin-check"></span></td>
-              <td><a href="{{ url_for('annotator_detail', annotator_id=annotator.id) }}"
-                     class="colored">{{ annotator.id }}</a></td>
-              <td>{{ annotator.name | safe }}</td>
-              <td>{{ annotator.email | safe }}</td>
-              <td>{{ annotator.description | safe }}</td>
-              <td>{{ counts.get(annotator.id, 0) }}</td>
-              <td data-sort="{{ annotator.next_id or -1 }}">{{ annotator.next_id }}</td>
-              <td data-sort="{{ annotator.prev_id or -1 }}">{{ annotator.prev_id }}</td>
-              <td
-                data-sort="{{ annotator.updated | utcdatetime_epoch }}">{{ annotator.updated | utcdatetime_local }}</td>
-              <td class="compact">
-                <form action="/admin/annotator" method="post">
-                  <input type="submit" name="action" value="Email" class="neutral">
-                  <input type="hidden" name="annotator_id" value="{{ annotator.id }}">
-                  <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
-                </form>
-              </td>
-              <td class="compact" data-sort="{{ annotator.active }}">
-                <form action="/admin/annotator" method="post">
-                  <input type="submit" name="action" value="{{ 'Disable' if annotator.active else 'Enable' }}"
-                         class="{{ 'negative' if annotator.active else 'positive' }}">
-                  <input type="hidden" name="annotator_id" value="{{ annotator.id }}">
-                  <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
-                </form>
-              </td>
-              <td class="compact">
-                <form action="/admin/annotator" method="post">
-                  <input type="submit" name="action" value="Delete" class="negative">
-                  <input type="hidden" name="annotator_id" value="{{ annotator.id }}">
-                  <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
-                </form>
-              </td>
-            </tr>
-          {% endfor %}
+          <tbody id="judges-body">
+          {#Auto populates with judges#}
           </tbody>
         </table>
       </div>
@@ -159,7 +121,6 @@
     let initial_response = refresh("{{ csrf_token() }}");
     window.setInterval(function () {
       let response = refresh("{{ csrf_token() }}");
-      console.log(response);
     }, 5000);
   </script>
   <script>
@@ -168,15 +129,30 @@
         c === "True" ? checkbox.checked = false : checkbox.checked = true;#}
     $('#judges').tablesorter({
         cssAsc: 'up',
-        cssDesc: 'down'
+        cssDesc: 'down',
+      headers: {
+          '.no-sort' : {
+            sorter: false,
+          }
+      }
     });
     $('#reports').tablesorter({
         cssAsc: 'up',
-        cssDesc: 'down'
+        cssDesc: 'down',
+      headers: {
+          '.no-sort' : {
+            sorter: false,
+          }
+      }
     });
     $('#projects').tablesorter({
         cssAsc: 'up',
-        cssDesc: 'down'
+        cssDesc: 'down',
+      headers: {
+          '.no-sort' : {
+            sorter: false,
+          }
+      }
     });
 
   </script>
