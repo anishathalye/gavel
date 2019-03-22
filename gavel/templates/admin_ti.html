@@ -17,15 +17,20 @@
         </div>
       </div>
       <div class="admin-data">
-        <span>TOTAL VOTE COUNT</span>
-        <div class="admin-data-text">{{ votes }}</div>
+        <span>TOTAL VOTES</span>
+        <div class="admin-data-text" id="total-votes">{{ votes }}</div>
       </div>
       <div class="admin-data">
-        <span>TOTAL ACTIVE PROJECTS</span>
-        <div class="admin-data-text">{{ item_count }}</div>
+        <span>TOTAL PROJECTS</span>
+        <div class="admin-data-text" id="total-active">{{ item_count }}</div>
       </div>
       <div class="admin-data">
-        <span>AVG. SIGMA<sup>2</sup></span>
+        <span>AVG. SIGMA SQUARED</span>
+        <div class="admin-data-text" id="average-sigma"></div>
+      </div>
+      <div class="admin-data">
+        <span>AVG. SEEN</span>
+        <div class="admin-data-text" id="average-seen"></div>
       </div>
     </div>
     <div class="admin-options">
@@ -48,9 +53,9 @@
             <th class="admin-head-check no-sort"><span class="admin-check" id="check-all-reports"></span></th>
             <th class="admin-head-id">Id<a></a></th>
             <th class="admin-head-judge">Judge Name<a></a></th>
-            <th>Project Name<a></a></th>
-            <th>Project Location<a></a></th>
-            <th>Reason<a></a></th>
+            <th class="admin-head-project">Project Name<a></a></th>
+            <th class="admin-head-project">Project Location<a></a></th>
+            <th class="admin-head-standard">Reason<a></a></th>
             <th class="no-sort">Status<a></a></th>
           </tr>
           </thead>
@@ -88,7 +93,7 @@
           <thead>
           <tr>
             <th class="no-sort admin-head-check"><span class="admin-check" id="check-all-judges"></span></th>
-            <th class="sort-default" data-sort-method="number">Id<a></a></th>
+            <th class="sort-default admin-head-id" data-sort-method="number">Id<a></a></th>
             <th>Name<a></a></th>
             <th>Email<a></a></th>
             <th>Description<a></a></th>
