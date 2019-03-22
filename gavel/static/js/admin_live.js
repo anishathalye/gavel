@@ -61,6 +61,13 @@ async function refresh(token) {
             '              <td><a href="/admin/item/'+item.id+'" class="colored">' + item.name + '</a></td>\n' +
             '              <td>' + item.location + '</td>\n' +
             '              <td>' + flag.reason + '</td>\n' +
+            '          <td class="compact">\n' +
+            '            <form action="/admin/item" method="post">\n' +
+            '              <input type="submit" name="action" value="'+(item.active ? 'Disable' : 'Enable')+'" class="'+(item.active? 'negative': 'positive')+'">\n' +
+            '              <input type="hidden" name="item_id" value="'+item.id+'">\n' +
+            '              <input type="hidden" name="_csrf_token" value="'+token+'">\n' +
+            '            </form>\n' +
+            '          </td> \n' +
             '              <td class="compact">\n' +
             '                <form action="/admin/report" method="post">\n' +
             '                  <input type="submit" name="action" value="' + resolved3 + '"\n' +
