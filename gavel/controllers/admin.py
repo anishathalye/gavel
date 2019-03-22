@@ -21,9 +21,9 @@ import xlrd
 ALLOWED_EXTENSIONS = set(['csv', 'xlsx', 'xls'])
 
 
-@app.route('/admin/')
+@app.route('/legacy/')
 @utils.requires_auth
-def admin():
+def admin_legacy():
     annotators = Annotator.query.order_by(Annotator.id).all()
     items = Item.query.order_by(Item.id).all()
     flags = Flag.query.order_by(Flag.id).all()
@@ -62,9 +62,9 @@ def admin():
     )
 
 
-@app.route('/beta')
+@app.route('/admin/')
 @utils.requires_auth
-def admin_beta():
+def admin():
     annotators = Annotator.query.order_by(Annotator.id).all()
     items = Item.query.order_by(Item.id).all()
     flags = Flag.query.order_by(Flag.id).all()
@@ -389,7 +389,21 @@ def admin_live():
         except:
             flags_padded_final.append(None)
 
-    # TODO: Build "viewed" object
+    # Calculate average sigma
+    average_sigma = 0.0
+    holder = 0.0
+    for it in items:
+        holder += it.sigma_sq
+    average_sigma = holder/len(items)
+
+    # Calculate average seen
+    average_seen = 0
+    holder = 0
+    for an in annotators:
+        seen = Item.query.filter(Item.viewed.contains(an)).all()
+        holder += len(seen)
+    average_seen = holder/len(annotators)
+
     ret = {"annotators": [an.to_dict() if an else {'null': 'null'} for an in annotators_padded_final],
            "counts": counts,
            "item_counts": item_counts,
@@ -400,7 +414,9 @@ def admin_live():
            "votes": len(decisions),
            "setting_closed": setting_closed,
            "flags": [fl.to_dict() if fl else {'null': 'null'} for fl in flags_padded_final],
-           "flag_count": len(flags)
+           "flag_count": len(flags),
+           "average_sigma": average_sigma,
+           "average_seen": average_seen
            }
 
     response = app.response_class(

@@ -21,7 +21,23 @@ async function refresh(token) {
     const skipped = data.skipped;
     const votes = data.votes;
     const viewed = data.viewed;
+    const sigma = data.average_sigma;
+    const seen = data.average_seen;
 
+    // Populate vote count
+    let vote_count = document.getElementById("total-votes");
+    vote_count.innerText = votes;
+
+    // Populate total active projects
+    let total_active = document.getElementById("total-active");
+    total_active.innerText = item_count;
+
+    // Populate avg. sigma^2
+    let average_sigma = document.getElementById("average-sigma");
+    average_sigma.innerText = sigma.toFixed(4);
+
+    let average_seen = document.getElementById("average-seen");
+    average_seen.innerText = seen;
 
     // Populate reports
     let reports_table = document.getElementById("reports-body");
