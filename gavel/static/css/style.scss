@@ -613,6 +613,7 @@ dl.instructions dt p {
   height: 80px;
   width: 100%;
   box-shadow: 0px -2px 8px #B7B7B7;
+  background-color: white;
 }
 
 .bottomPanel a {
@@ -988,7 +989,7 @@ dl.instructions dt p {
 
 .admin-toggle {
   display: block;
-  position: fixed;
+  position: relative;
   margin-top: 10px;
   cursor: pointer;
 }
@@ -1003,7 +1004,7 @@ dl.instructions dt p {
   text-transform: uppercase;
   color: #000F9B;
   display: block;
-  position: fixed;
+  position: relative;
 
 }
 
