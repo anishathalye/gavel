@@ -402,7 +402,10 @@ def admin_live():
     for an in annotators:
         seen = Item.query.filter(Item.viewed.contains(an)).all()
         holder += len(seen)
-    average_seen = holder/len(annotators)
+    try:
+        average_seen = holder/len(annotators)
+    except:
+        average_seen = 0
 
     ret = {"annotators": [an.to_dict() if an else {'null': 'null'} for an in annotators_padded_final],
            "counts": counts,

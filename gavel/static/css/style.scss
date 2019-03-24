@@ -984,7 +984,7 @@ dl.instructions dt p {
 }
 
 .admin-data-bar {
-  padding-bottom: 82px;
+  padding-bottom: 36px;
 }
 
 .admin-toggle {
@@ -1100,6 +1100,28 @@ dl.instructions dt p {
 
 .admin-table {
   display: none;
+  border-radius: 4px 4px 0px 0px !important;
+}
+
+.admin-table > table {
+  border-collapse: separate!important;
+  border-spacing: 0!important;
+  border-radius: 4px 4px 0px 0px !important;
+  -moz-border-radius: 4px 4px 0px 0px !important;
+  border: 1px solid #B7B7B7!important;
+}
+
+.admin-table > table > thead {
+    border-radius: 4px 4px 0px 0px !important;
+  -moz-border-radius: 4px 4px 0px 0px !important;
+  border: 1px solid #B7B7B7!important;
+
+}
+.admin-table > table > thead >tr {
+    border-radius: 4px 4px 0px 0px !important;
+  -moz-border-radius: 4px 4px 0px 0px !important;
+  border: 1px solid #B7B7B7!important;
+
 }
 
 
@@ -1107,7 +1129,16 @@ dl.instructions dt p {
   border: 0;
 }
 
-.admin-table > table > thead {
+.admin-header {
+  background: #E5E5E5;
+  border: 1px solid #B7B7B7;
+  box-sizing: border-box;
+  height: 48px !important;
+  max-height: 48px !important;
+  border-radius: 4px 4px 0px 0px !important;
+}
+
+.admin-header>tr {
   background: #E5E5E5;
   border: 1px solid #B7B7B7;
   box-sizing: border-box;
@@ -1274,6 +1305,11 @@ dl.instructions dt p {
   box-shadow: 0px 4px 4px #B7B7B7;
   border-radius: 4px;
   text-align: center;
+}
+
+.full-modal {
+  background: #FFFFFF;
+  border-radius: 4px;
 }
 
 .admin-switcher-modal-text {
