@@ -1,0 +1,3 @@
+{% for category in categories %}
+  <a href="{{ url_for('category_detail', category_id=category.category.id) }}">{{ category.category.name | safe }}</a>{{ "," if not loop.last }}
+{% endfor %}

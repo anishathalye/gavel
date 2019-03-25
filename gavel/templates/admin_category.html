@@ -1,0 +1,125 @@
+{% extends "layout.html" %}
+{% block title %}Category{% endblock %}
+{% block content %}
+<div class="item">
+  <div class="banner" id="admin-header">
+    <a href="{{ url_for('admin') }}"><h1>Category</h1></a>
+  </div>
+  <div class="info">
+    <table>
+      <tr>
+        <th>Id</th>
+        <td>{{ category.id }}</td>
+      </tr>
+      <tr>
+        <th>Name</th>
+        <td>
+          <form action="/admin/category_patch" method="post">
+            <input type="text" name="name" value="{{ category.name | safe }}">
+            <input type="submit" name="action" value="Update" class="neutral">
+            <input type="hidden" name="category_id" value="{{ category.id }}">
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+          </form>
+        </td>
+      </tr>
+      <tr>
+        <th>Description</th>
+        <td>
+          <textarea name="description" form="description_form">{{ category.description | safe }}</textarea>
+          <form action="/admin/category_patch" method="post" id="description_form">
+            <input type="submit" name="action" value="Update" class="neutral">
+            <input type="hidden" name="category_id" value="{{ category.id }}">
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+          </form>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+
+<div class="item">
+  <div class="banner">
+    <h2>Projects</h2>
+  </div>
+  <div class="info">
+    <table id="items">
+      <thead>
+        <tr>
+          <th data-sort-method="number">Id</th>
+          <th data-sort-method="caseInsensitiveSort">Name</th>
+          <th data-sort-method="caseInsensitiveSort">Location</th>
+          <th data-sort-method="caseInsensitiveSort">Description</th>
+          <th class="sort-default" data-sort-method="number" data-sort-order="desc">Mu</th>
+          <th data-sort-method="number">Sigma Squared</th>
+          <th data-sort-method="number">Votes</th>
+          <th data-sort-method="number">Seen</th>
+          <th data-sort-method="number" data-sort-order="desc">Skipped</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in items %}
+        <tr class="{{ 'disabled' if not item.item.active else '' }}">
+          <td><a href="{{ url_for('item_detail', item_id=item.item.id) }}" class="colored">{{ item.item.id }}</a></td>
+          <td>{{ item.item.name | safe }}</td>
+          <td>{{ item.item.location | safe }}</td>
+          <td class="preserve-formatting">{{ item.item.description | safe }}</td>
+          <td>{{ item.mu | round(4) }}</td>
+          <td>{{ item.sigma_sq | round(4) }}</td>
+          <td>{{ item_counts.get(item.item_id, 0) }}</td>
+          <td>{{ viewed.get(item.item_id, {}) | length }}</td>
+          <td>{{ skipped.get(item.item_id, 0) }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="item">
+  <div class="banner">
+    <h2>Judges</h2>
+  </div>
+  <div class="info">
+    <table id="annotators">
+      <thead>
+        <tr>
+          <th class="sort-default" data-sort-method="number">Id</th>
+          <th data-sort-method="caseInsensitiveSort">Name</th>
+          <th data-sort-method="caseInsensitiveSort">Email</th>
+          <th data-sort-method="caseInsensitiveSort">Description</th>
+          <th data-sort-method="number">Votes</th>
+          <th data-sort-method="number">Next (Id)</th>
+          <th data-sort-method="number">Previous (Id)</th>
+          <th data-sort-method="number" data-sort-order="desc">Updated</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for annotator in annotators %}
+        <tr class="{{ 'disabled' if not annotator.annotator.active else '' }}">
+          <td><a href="{{ url_for('annotator_detail', annotator_id=annotator.annotator_id) }}" class="colored">{{ annotator.annotator_id }}</a></td>
+          <td>{{ annotator.annotator.name | safe }}</td>
+          <td>{{ annotator.annotator.email | safe }}</td>
+          <td>{{ annotator.annotator.description | safe }}</td>
+          <td>{{ counts.get(annotator.annotator_id, 0) }}</td>
+          <td data-sort="{{ annotator.next_id or -1 }}">{{ annotator.next_id }}</td>
+          <td data-sort="{{ annotator.prev_id or -1 }}">{{ annotator.prev_id }}</td>
+          <td data-sort="{{ annotator.updated | utcdatetime_epoch }}">{{ annotator.updated | utcdatetime_local }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<script src="{{ url_for('static', filename='js/vendor/tablesort.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/vendor/tablesort.number.js') }}"></script>
+<script>
+var tables = [
+  document.getElementById('items'),
+  document.getElementById('annotators'),
+];
+for (var i = 0; i < tables.length; i++) {
+  new Tablesort(tables[i]);
+}
+</script>
+{% endblock %}

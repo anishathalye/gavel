@@ -45,14 +45,6 @@
         </td>
       </tr>
       <tr>
-        <th>Mu</th>
-        <td>{{ item.mu }}</td>
-      </tr>
-      <tr>
-        <th>Sigma Squared</th>
-        <td>{{ item.sigma_sq }}</td>
-      </tr>
-      <tr>
         <th>Seen By</th>
         <td>
           <ul>
@@ -80,6 +72,54 @@
             <li><a href="{{ url_for('annotator_detail', annotator_id=annotator.id) }}" class="colored">{{ annotator.name | safe }} [{{ annotator.id }}]</a></li>
             {% endfor %}
           </ul>
+        </td>
+      </tr>
+      <tr>
+        <th>Categories</th>
+        <td>
+          <table>
+            <thead>
+              <tr>
+                <th data-sort-method="number">Id</th>
+                <th data-sort-method="caseInsensitiveSort">Name</th>
+                <th class="no-sort">Delete</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for category in item.categories %}
+                <tr>
+                  <td><a href="{{ url_for('category_detail', category_id=category.category_id) }}" class="colored">{{ category.category_id }}</a></td>
+                  <td>
+                    {{ category.category.name | safe }}
+                  </td>
+                  <td class="compact">
+                    <form action="/admin/item_patch" method="post">
+                      <input type="submit" name="action" value="Delete Category" class="neutral">
+                      <input type="hidden" name="item_id" value="{{ item.id }}">
+                      <input type="hidden" name="item_category_id" value="{{ category.id }}">
+                      <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+                    </form>
+                  </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+
+
+          <form action="/admin/item_patch" method="post">
+            <select name="category_id">
+              {% for category in categories %}
+                <option value="{{ category.id }}">
+                  {{ category.id }}.
+                  {{ category.name }}
+                </option>
+              {% endfor %}
+            </select>
+
+            <input type="submit" name="action" value="Add Category" class="neutral">
+            <input type="hidden" name="item_id" value="{{ item.id }}">
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+          </form>
         </td>
       </tr>
     </table>

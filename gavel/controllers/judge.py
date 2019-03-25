@@ -60,57 +60,102 @@ def index():
             )
         if not annotator.read_welcome:
             return redirect(url_for('welcome'))
-        maybe_init_annotator(annotator)
-        if annotator.next is None:
+
+        categories = [ac.category for ac in annotator.categories if ac.category.active]
+        if len(categories) == 1:
+            return redirect(url_for('judge', category_id=categories[0].id))
+        if len(categories) == 0:
+            return render_template(
+                'closed.html',
+                content=utils.render_markdown(settings.CLOSED_MESSAGE)
+            )
+
+
+        return render_template('categories.html', categories=categories)
+
+
+@app.route('/category/<category_id>/')
+def judge(category_id):
+    annotator = get_current_annotator()
+    if annotator is None:
+        return render_template(
+            'logged_out.html',
+            content=utils.render_markdown(settings.LOGGED_OUT_MESSAGE)
+        )
+    else:
+        annotator_category = annotator.get_category(category_id)
+        if annotator_category is None:
+            return utils.user_error('AnnotatorCategory %s not found ' % category_id)
+
+        if not annotator_category.category.active:
+            return render_template(
+                'closed.html',
+                content=utils.render_markdown(settings.CLOSED_MESSAGE)
+            )
+
+
+        maybe_init_annotator(annotator, annotator_category)
+        if annotator_category.next is None:
             return render_template(
                 'wait.html',
                 content=utils.render_markdown(settings.WAIT_MESSAGE)
             )
-        elif annotator.prev is None:
-            return render_template('begin.html', item=annotator.next)
+        elif annotator_category.prev is None:
+            return render_template('begin.html', item=annotator_category.next, category=annotator_category.category)
         else:
-            return render_template('vote.html', prev=annotator.prev, next=annotator.next)
+            return render_template('vote.html', prev=annotator_category.prev, next=annotator_category.next, category=annotator_category.category)
+
 
 @app.route('/vote', methods=['POST'])
 @requires_open(redirect_to='index')
 @requires_active_annotator(redirect_to='index')
 def vote():
     annotator = get_current_annotator()
-    if annotator.prev.id == int(request.form['prev_id']) and annotator.next.id == int(request.form['next_id']):
+    category_id = request.form['category_id']
+    annotator_category = annotator.get_category(category_id)
+    if annotator_category.category.active and annotator_category.prev.id == int(request.form['prev_id']) and annotator_category.next.id == int(request.form['next_id']):
         if request.form['action'] == 'Skip':
-            annotator.ignore.append(annotator.next)
+            annotator_category.ignore.append(annotator_category.next)
         else:
             # ignore things that were deactivated in the middle of judging
-            if annotator.prev.active and annotator.next.active:
+            if annotator_category.prev.active and annotator_category.next.active:
                 if request.form['action'] == 'Previous':
-                    perform_vote(annotator, next_won=False)
-                    decision = Decision(annotator, winner=annotator.prev, loser=annotator.next)
+                    perform_vote(annotator, annotator_category, next_won=False)
+                    decision = Decision(annotator,
+                            category=annotator_category.category,
+                            winner=annotator_category.prev,
+                            loser=annotator_category.next)
                 elif request.form['action'] == 'Current':
-                    perform_vote(annotator, next_won=True)
-                    decision = Decision(annotator, winner=annotator.next, loser=annotator.prev)
+                    perform_vote(annotator, annotator_category, next_won=True)
+                    decision = Decision(annotator,
+                            category=annotator_category.category,
+                            winner=annotator_category.next,
+                            loser=annotator_category.prev)
                 db.session.add(decision)
-            annotator.next.viewed.append(annotator) # counted as viewed even if deactivated
-            annotator.prev = annotator.next
-            annotator.ignore.append(annotator.prev)
-        annotator.update_next(choose_next(annotator))
+            annotator_category.next.get_category(category_id).viewed.append(annotator) # counted as viewed even if deactivated
+            annotator_category.prev = annotator_category.next
+            annotator_category.ignore.append(annotator_category.prev)
+        annotator_category.update_next(choose_next(annotator, annotator_category))
         db.session.commit()
-    return redirect(url_for('index'))
+    return redirect(url_for('judge', category_id=category_id))
 
 @app.route('/begin', methods=['POST'])
 @requires_open(redirect_to='index')
 @requires_active_annotator(redirect_to='index')
 def begin():
     annotator = get_current_annotator()
-    if annotator.next.id == int(request.form['item_id']):
-        annotator.ignore.append(annotator.next)
+    category_id = request.form['category_id']
+    annotator_category = annotator.get_category(category_id)
+    if annotator_category.category.active and annotator_category.next.id == int(request.form['item_id']):
+        annotator_category.ignore.append(annotator_category.next)
         if request.form['action'] == 'Done':
-            annotator.next.viewed.append(annotator)
-            annotator.prev = annotator.next
-            annotator.update_next(choose_next(annotator))
+            annotator_category.next.get_category(category_id).viewed.append(annotator)
+            annotator_category.prev = annotator_category.next
+            annotator_category.update_next(choose_next(annotator, annotator_category))
         elif request.form['action'] == 'Skip':
-            annotator.next = None # will be reset in index
+            annotator_category.next = None # will be reset in index
         db.session.commit()
-    return redirect(url_for('index'))
+    return redirect(url_for('judge', category_id=category_id))
 
 @app.route('/logout')
 def logout():
@@ -149,7 +194,7 @@ def welcome_done():
 def get_current_annotator():
     return Annotator.by_id(session.get(ANNOTATOR_ID, None))
 
-def preferred_items(annotator):
+def preferred_items(annotator, annotator_category):
     '''
     Return a list of preferred items for the given annotator to look at next.
 
@@ -157,21 +202,24 @@ def preferred_items(annotator):
     projects.
     '''
     items = []
-    ignored_ids = {i.id for i in annotator.ignore}
+    ignored_ids = {i.id for i in annotator_category.ignore}
 
     if ignored_ids:
-        available_items = Item.query.filter(
-            (Item.active == True) & (~Item.id.in_(ignored_ids))
+        available_items = ItemCategory.query.join(ItemCategory.item).filter(
+            (Item.active == True) & (~ItemCategory.item_id.in_(ignored_ids)) &
+            (ItemCategory.category_id == annotator_category.category_id)
         ).all()
     else:
-        available_items = Item.query.filter(Item.active == True).all()
+        available_items = ItemCategory.query.join(ItemCategory.item).filter(
+            (Item.active == True) & (ItemCategory.category_id == annotator_category.category_id)
+        ).all()
 
     prioritized_items = [i for i in available_items if i.prioritized]
 
     items = prioritized_items if prioritized_items else available_items
 
-    annotators = Annotator.query.filter(
-        (Annotator.active == True) & (Annotator.next != None) & (Annotator.updated != None)
+    annotators = AnnotatorCategory.query.join(AnnotatorCategory.annotator).filter(
+        (Annotator.active == True) & (AnnotatorCategory.next != None) & (AnnotatorCategory.updated != None)
     ).all()
     busy = {i.next.id for i in annotators if \
         (datetime.utcnow() - i.updated).total_seconds() < settings.TIMEOUT * 60}
@@ -182,15 +230,15 @@ def preferred_items(annotator):
 
     return less_seen if less_seen else preferred
 
-def maybe_init_annotator(annotator):
-    if annotator.next is None:
-        items = preferred_items(annotator)
+def maybe_init_annotator(annotator, annotator_category):
+    if annotator_category.next is None:
+        items = preferred_items(annotator, annotator_category)
         if items:
-            annotator.update_next(choice(items))
+            annotator_category.update_next(choice(items))
             db.session.commit()
 
-def choose_next(annotator):
-    items = preferred_items(annotator)
+def choose_next(annotator, annotator_category):
+    items = preferred_items(annotator, annotator_category)
 
     shuffle(items) # useful for argmax case as well in the case of ties
     if items:
@@ -198,32 +246,36 @@ def choose_next(annotator):
             return items[0]
         else:
             return crowd_bt.argmax(lambda i: crowd_bt.expected_information_gain(
-                annotator.alpha,
-                annotator.beta,
-                annotator.prev.mu,
-                annotator.prev.sigma_sq,
+                annotator_category.alpha,
+                annotator_category.beta,
+                annotator_category.prev.get_category(annotator_category.category_id).mu,
+                annotator_category.prev.get_category(annotator_category.category_id).sigma_sq,
                 i.mu,
                 i.sigma_sq), items)
     else:
         return None
 
-def perform_vote(annotator, next_won):
+def perform_vote(annotator, annotator_category, next_won):
     if next_won:
-        winner = annotator.next
-        loser = annotator.prev
+        winner = annotator_category.next
+        loser = annotator_category.prev
     else:
-        winner = annotator.prev
-        loser = annotator.next
+        winner = annotator_category.prev
+        loser = annotator_category.next
+
+    winner = winner.get_category(annotator_category.category_id)
+    loser = loser.get_category(annotator_category.category_id)
+
     u_alpha, u_beta, u_winner_mu, u_winner_sigma_sq, u_loser_mu, u_loser_sigma_sq = crowd_bt.update(
-        annotator.alpha,
-        annotator.beta,
+        annotator_category.alpha,
+        annotator_category.beta,
         winner.mu,
         winner.sigma_sq,
         loser.mu,
         loser.sigma_sq
     )
-    annotator.alpha = u_alpha
-    annotator.beta = u_beta
+    annotator_category.alpha = u_alpha
+    annotator_category.beta = u_beta
     winner.mu = u_winner_mu
     winner.sigma_sq = u_winner_sigma_sq
     loser.mu = u_loser_mu
