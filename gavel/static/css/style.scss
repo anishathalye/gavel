@@ -1243,11 +1243,15 @@ dl.instructions dt p {
 
 .admin-options {
   margin-bottom: 16px;
+  height: 48px!important;
+  max-height: 48px!important;
+  overflow: visible;
+
 }
 
 .admin-switcher {
   position: relative;
-  display: block;
+  display: inline-block;
   background: #000F9B;
   box-shadow: 0px 2px 10px #B7B7B7;
   border-radius: 3px;
@@ -1307,11 +1311,45 @@ dl.instructions dt p {
   text-align: center;
 }
 
-.full-modal {
-  background: #FFFFFF;
-  border-radius: 4px;
+.modal-wrapper {
+  display: none;
+  position: fixed;
+  z-index: 100;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background: rgba(0, 0, 0, 0.25);
+  -webkit-animation-name: fadeIn;
+  -moz-animation-name: fadeIn;
+  -o-animation-name: fadeIn;
+  animation-name: fadeIn;
+  -webkit-animation-duration: 0.2s;
+  -moz-animation-duration: 0.2s;
+  -o-animation-duration: 0.2s;
+  animation-duration: 0.2s;
 }
 
+.full-modal {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 50%;
+}
+
+.add-modal {
+  width: 376px;
+  height: 300px;
+  box-shadow: 0px 2px 6px #B7B7B7;
+}
+
+.admin-modal-content {
+  background: white;
+  margin-top: -25%;
+  padding: 12px 16px 16px;
+
+}
 .admin-switcher-modal-text {
   font-family: Rubik;
   font-style: normal;
@@ -1371,4 +1409,41 @@ thead th.down>.tablesorter-header-inner>a{
   height: 13px;
   color: $branding-purple;
   background: url("/static/img/sorting-arrow-down.svg") no-repeat left center;
+}
+
+.normal-20 {
+  font-family: Rubik;
+font-style: normal;
+font-weight: normal;
+font-size: 20px;
+line-height: normal;
+}
+
+.normal-caps-purple-14 {
+  font-family: Rubik;
+font-style: normal;
+font-weight: 500;
+font-size: 14px;
+line-height: normal;
+text-transform: uppercase;
+
+color: #000F9B!important;
+
+}
+.admin-add-button {
+  position: fixed;
+  display: inline-block!important;
+  text-align: center;
+  height: 40px!important;
+  line-height: 40px;
+
+}
+
+.admin-add-button>span{
+  padding-left: 24px;
+
+  display: inline-block;
+  vertical-align: middle;
+  line-height: normal;
+  cursor: pointer;
 }

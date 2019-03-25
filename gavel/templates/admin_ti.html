@@ -33,16 +33,20 @@
         <div class="admin-data-text" id="average-seen"></div>
       </div>
     </div>
-    <div class="admin-options">
+    <div class="admin-options row">
       <div class="admin-switcher" id="switcher" onclick="toggleSelector()">
         <span id="admin-switcher-content">Manage Reports</span>
         <a class="admin-drop-single-chevron center"></a>
         <div class="admin-switcher-modal" id="selector">
           <div class="full" onclick="showTab('reports')"><h3 class="admin-switcher-modal-text">Manage Reports</h3>
           </div>
-          <div class="full" onclick="showTab('projects')"><h3 class="admin-switcher-modal-text">Manage Projects</h3></div>
+          <div class="full" onclick="showTab('projects')"><h3 class="admin-switcher-modal-text">Manage Projects</h3>
+          </div>
           <div class="full" onclick="showTab('judges')"><h3 class="admin-switcher-modal-text">Manage Judges</h3></div>
         </div>
+      </div>
+      <div class="admin-add-button" id="add">
+        <span class="normal-caps-purple-14" id="add-text"></span>
       </div>
     </div>
     <div class="admin-tabs live-table">
@@ -113,30 +117,53 @@
         </table>
       </div>
     </div>
-    <div class="full-modal add-modal" id="add-projects">
-
+    <div class="modal-wrapper">
+      <div class="full-modal" id="add-projects">
+        <div class="admin-modal-content add-modal">
+          <h4 class="normal-20">Add Projects</h4>
+        </div>
+      </div>
     </div>
 
-    <div class="full-modal add-modal" id="add-judges">
+    <div class="modal-wrapper">
+      <div class="full-modal" id="add-judges">
+        <div class="admin-modal-content add-modal">
 
+        </div>
+      </div>
     </div>
 
-    <div class="full-modal batch-modal" id="add-judges">
+    <div class="modal-wrapper">
+      <div class="full-modal batch-modal" id="add-judges">
+        <div class="admin-modal-content">
 
+        </div>
+      </div>
     </div>
 
-    <div class="full-modal stop-modal" id="stop-session">
+    <div class="modal-wrapper">
+      <div class="full-modal stop-modal" id="stop-session">
+        <div class="admin-modal-content">
 
+        </div>
+      </div>
     </div>
 
-    <div class="full-modal edit-modal" id="edit-judge">
+    <div class="modal-wrapper">
+      <div class="full-modal edit-modal" id="edit-judge">
+        <div class="admin-modal-content">
 
+        </div>
+      </div>
     </div>
 
-    <div class="full-modal edit-modal" id="edit-project">
+    <div class="modal-wrapper">
+      <div class="full-modal edit-modal" id="edit-project">
+        <div class="admin-modal-content">
 
+        </div>
+      </div>
     </div>
-
   </div>
 {% endblock %}
 {% block end %}
@@ -157,30 +184,30 @@
         let c = "{{ setting_closed }}";
         c === "True" ? checkbox.checked = false : checkbox.checked = true;#}
     $('#judges').tablesorter({
-        cssAsc: 'up',
-        cssDesc: 'down',
+      cssAsc: 'up',
+      cssDesc: 'down',
       headers: {
-          '.no-sort' : {
-            sorter: false,
-          }
+        '.no-sort': {
+          sorter: false,
+        }
       }
     });
     $('#reports').tablesorter({
-        cssAsc: 'up',
-        cssDesc: 'down',
+      cssAsc: 'up',
+      cssDesc: 'down',
       headers: {
-          '.no-sort' : {
-            sorter: false,
-          }
+        '.no-sort': {
+          sorter: false,
+        }
       }
     });
     $('#projects').tablesorter({
-        cssAsc: 'up',
-        cssDesc: 'down',
+      cssAsc: 'up',
+      cssDesc: 'down',
       headers: {
-          '.no-sort' : {
-            sorter: false,
-          }
+        '.no-sort': {
+          sorter: false,
+        }
       }
     });
 
@@ -221,11 +248,36 @@
           content.innerText = "Manage Reports";
           break;
       }
+      setAddButtonState();
     }
-
     window.addEventListener("DOMContentLoaded", function () {
       showTab(localStorage.getItem("currentTab") || "admin-reports");
     });
+    function setAddButtonState() {
+      const judges = document.getElementById("admin-judges").style.display === "block";
+      const projects = document.getElementById("admin-projects").style.display === "block";
+      const reports = document.getElementById("admin-reports").style.display === "block";
+      const text = document.getElementById('add-text');
+      console.log(judges,projects,reports,text);
+      if(!!judges){
+        text.innerText = "+ Add Judges";
+        text.onclick=openModal('judges');
+      }
+      if(!!projects){
+        text.innerText = "+ Add Projects";
+        text.onclick=openModal('projects');
+      }
+      if(!!reports){
+        text.innerText = "";
+        text.onclick=null;
+      }
+    }
+
+    function openModal (modal) {
+      switch(modal){
+
+      }
+    }
   </script>
 
 {% endblock %}
