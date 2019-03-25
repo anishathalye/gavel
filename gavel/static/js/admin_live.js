@@ -188,3 +188,4 @@ async function refresh(token) {
     $('#reports').trigger("update");
     $('#projects').trigger("update");
 }
+
