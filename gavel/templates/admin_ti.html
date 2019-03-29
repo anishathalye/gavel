@@ -117,48 +117,51 @@
         </table>
       </div>
     </div>
-    <div class="modal-wrapper">
-      <div class="full-modal" id="add-projects">
+    <div class="modal-wrapper" id="add-projects">
+      <div class="full-modal">
         <div class="admin-modal-content add-modal">
+          <div class="admin-close-button" onclick="openModal(null)"></div>
           <h4 class="normal-20">Add Projects</h4>
         </div>
       </div>
     </div>
 
-    <div class="modal-wrapper">
-      <div class="full-modal" id="add-judges">
+    <div class="modal-wrapper" id="add-judges">
+      <div class="full-modal">
         <div class="admin-modal-content add-modal">
-
+          <div class="admin-close-button" onclick="openModal(null)"></div>
+          <h4 class="normal-20">Add Judges</h4>
+          <p class="normal-12">CSV Format: Judge Name, Email, Description</p>
         </div>
       </div>
     </div>
 
-    <div class="modal-wrapper">
-      <div class="full-modal batch-modal" id="add-judges">
+    <div class="modal-wrapper" id="delete-entries">
+      <div class="full-modal batch-modal">
         <div class="admin-modal-content">
 
         </div>
       </div>
     </div>
 
-    <div class="modal-wrapper">
-      <div class="full-modal stop-modal" id="stop-session">
+    <div class="modal-wrapper" id="stop-session">
+      <div class="full-modal stop-modal">
         <div class="admin-modal-content">
 
         </div>
       </div>
     </div>
 
-    <div class="modal-wrapper">
-      <div class="full-modal edit-modal" id="edit-judge">
+    <div class="modal-wrapper" id="edit-judge">
+      <div class="full-modal edit-modal">
         <div class="admin-modal-content">
 
         </div>
       </div>
     </div>
 
-    <div class="modal-wrapper">
-      <div class="full-modal edit-modal" id="edit-project">
+    <div class="modal-wrapper" id="edit-project">
+      <div class="full-modal edit-modal">
         <div class="admin-modal-content">
 
         </div>
@@ -258,14 +261,17 @@
       const projects = document.getElementById("admin-projects").style.display === "block";
       const reports = document.getElementById("admin-reports").style.display === "block";
       const text = document.getElementById('add-text');
+      const add = document.getElementById('add');
       console.log(judges,projects,reports,text);
       if(!!judges){
         text.innerText = "+ Add Judges";
-        text.onclick=openModal('judges');
+        text.onclick=function() {openModal('add-judges')};
+        //text.addEventListener('onclick', openModal('add-judges'));
       }
       if(!!projects){
         text.innerText = "+ Add Projects";
-        text.onclick=openModal('projects');
+        text.onclick=function() {openModal('add-projects')};
+        //text.addEventListener('onclick', openModal('add-projects'));
       }
       if(!!reports){
         text.innerText = "";
@@ -274,9 +280,19 @@
     }
 
     function openModal (modal) {
-      switch(modal){
+      const addJudges = document.getElementById('add-judges');
+      const addProjects = document.getElementById('add-projects');
+      const deleteEntries = document.getElementById('delete-entries');
+      const stopSession = document.getElementById('stop-session');
+      const editJudge = document.getElementById('edit-judge');
+      const editProject = document.getElementById('edit-project');
 
-      }
+      const modals = [addJudges,addProjects,deleteEntries,stopSession,editJudge,editProject];
+      modals.forEach((e) => {
+        e.style.display = 'none';
+      });
+      var dumdum;
+      modal ? document.getElementById(modal).style.display = 'block' : dumdum = 'dum';
     }
   </script>
 
