@@ -53,7 +53,10 @@ async function refresh(token) {
         const resolved2 = flag.resolved ? "negative" : "positive";
         const resolved3 = flag.resolved ? "open" : "resolve";
 
-        const reports_template = '<tr class="' + resolved + '">\n' +
+        try {
+
+        } catch (e) {
+            const reports_template = '<tr class="' + resolved + '">\n' +
             '              <td><span class="admin-check"></span></td>\n' +
             '              <td>' + flag.id + '</td>\n' +
             '              <td><a href="/admin/annotator/'+annotator.id+'"\n' +
@@ -82,6 +85,8 @@ async function refresh(token) {
         const newRow = reports_table.insertRow(reports_table.rows.length);
         newRow.innerHTML = reports_template;
 
+        }
+
     }
 
     // Populate projects
@@ -92,9 +97,8 @@ async function refresh(token) {
 
         if (!item.id)
             continue;
-
-
-        const items_template = '<tr class="' + (item.active ? item.prioritized ? 'prioritized' : '' : 'disabled') + '">\n' +
+        try {
+            const items_template = '<tr class="' + (item.active ? item.prioritized ? 'prioritized' : '' : 'disabled') + '">\n' +
             '              <td><span class="admin-check"></span></td>\n' +
             '              <td><a href="/admin/item/'+item.id+'" class="colored">' + item.id + '</a></td>\n' +
             '              <td>' + item.name + '</td>\n' +
@@ -132,6 +136,9 @@ async function refresh(token) {
 
         const newRow = projects_table.insertRow(projects_table.rows.length);
         newRow.innerHTML = items_template;
+        } catch (e) {
+            console.log(e)
+        }
 
     }
 
@@ -143,8 +150,8 @@ async function refresh(token) {
 
         if (!annotator.id)
             continue;
-
-        const annotator_template = '<tr class="' + (annotator.active ? '' : 'disabled') + '">\n' +
+        try {
+            const annotator_template = '<tr class="' + (annotator.active ? '' : 'disabled') + '">\n' +
             '              <td><span class="admin-check"></span></td>\n' +
             '              <td><a href="/admin/annotator/'+annotator.id+'"\n' +
             '                     class="colored">'+annotator.id+'</a></td>\n' +
@@ -182,6 +189,9 @@ async function refresh(token) {
 
         const newRow = judges_table.insertRow(judges_table.rows.length);
         newRow.innerHTML = annotator_template;
+        } catch (e) {
+            console.log(e);
+        }
     }
 
     $('#judges').trigger("update");
