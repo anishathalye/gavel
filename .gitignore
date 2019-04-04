@@ -3,3 +3,8 @@ config.yaml
 env/
 .vagrant/
 .idea
+
+# Elastic Beanstalk Files
+.elasticbeanstalk/*
+!.elasticbeanstalk/*.cfg.yml
+!.elasticbeanstalk/*.global.yml
