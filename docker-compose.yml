@@ -1,25 +1,22 @@
 version: '3'
 services:
   db:
-      image: postgres:latest
-      restart: always
+      image: postgres
       ports:
           - 5432:5432
       environment:
           - POSTGRES_DB=gavel
-          - POSTGRES_PASSWORD=postgres
-          - POSTGRES_USER=postgres
       volumes:
           - database_data:/var/lib/postgresql/data
-#  web:
-#      build: .
-#      expose:
-#          - 5000
-#      ports:
-#          - "5000:5000"
-#          - "5432:5432"
-#      environment:
-#          - DB_URI=postgres://localhost/gavel
+#   web:
+#       build: .
+#       expose:
+#           - 5000
+#       ports:
+#           - "5000:5000"
+#           - "5432:5432"
+#       environment:
+#           - DB_URI=postgres://postgres/gavel
   redis:
       image: "redis:alpine"
       restart: always
