@@ -956,8 +956,8 @@ dl.instructions dt p {
   font-weight: normal;
   line-height: normal;
   font-size: 14px;
-
   color: #000000;
+  display: inline-table;
 
 }
 
@@ -1615,4 +1615,9 @@ p.normal-12 {
 
 .live-inactive {
   color: $branding-red
+}
+
+td>.reportCheck {
+  vertical-align: middle;
+
 }
