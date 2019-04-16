@@ -63,6 +63,14 @@
 
       button.value = vals.trim();
     }
+
+    $(document).ready(function() {
+    $('.report-table tr').click(function(event) {
+    if (event.target.type !== 'checkbox') {
+      $(':checkbox', this).trigger('click');
+      }
+    });
+  });
   </script>
   <style type="text/css">
 table {
@@ -98,14 +106,14 @@ table {
       <div class="modal-content-projects-container">
         <h2 class="skipTitle" style="padding-bottom: 0; margin-bottom: 16px;">I need to skip the <span class="skipTitlePurple">current project</span> because:</h2>
         <table style="width: 100%" class="borderless" rules="none">
-          <tr>
+          <tr onclick="topSkip()">
             <td>
               <div class="skipRadio" id="skipRadioTop" onclick="topSkip()"></div>
             </td>
             <td class="skipText">They are not present for judging</td>
           </tr>
           <tr style="height: 16px;"></tr>
-          <tr>
+          <tr onclick="bottomSkip()">
             <td>
               <div class="skipRadio" id="skipRadioBottom" onclick="bottomSkip()"></div>
             </td>
@@ -134,26 +142,32 @@ table {
       <div class="modal-content-projects-container">
         <h2 class="skipTitle" style="padding-bottom: 0; margin-bottom: 16px;">The <span class="skipTitlePurple">current project</span> needs to be reviewed for the following reasons:</h2>
         <form id="checkboxForm">
-        <table style="width: 100%" class="borderless" rules="none">
+        <table style="width: 100%" class="borderless report-table" rules="none">
           <tr>
             <td>
               <input type="checkbox" class="reportCheck" id="reportCheckOne" value="NoDemo" name="checkbox[]" onclick="setChecks()"/>
             </td>
-            <td class="skipText">The team cannot demo their project or provide evidence of the work described.</td>
+            <td>
+              <label for=reportCheckOne class="skipText">The team cannot demo their project or provide evidence of the work described.</label>
+            </td>
           </tr>
           <tr style="height: 16px;"></tr>
           <tr>
             <td>
               <input type="checkbox" class="reportCheck" id="reportCheckTwo" value="TooComplex" name="checkbox[]" onclick="setChecks()"/>
             </td>
-            <td class="skipText">The project appears too complex to have been created within the prescribed timeframe of the hackathon.</td>
+            <td>
+              <label for="reportCheckTwo" class="skipText">The project appears too complex to have been created within the prescribed timeframe of the hackathon.</label>
+            </td>
           </tr>
           <tr style="height: 16px;"></tr>
           <tr>
             <td>
               <input type="checkbox" class="reportCheck" id="reportCheckThree" value="Offensive" name="checkbox[]" onclick="setChecks()"/>
             </td>
-            <td class="skipText">The project is or has offensive, harrassing, or inappropriate content and/or breaks the Code of Conduct and Ethics.</td>
+            <td>
+              <label for="reportCheckThree" class="skipText">The project is or has offensive, harrassing, or inappropriate content and/or breaks the Code of Conduct and Ethics.</label>
+            </td>
           </tr>
         </table>
         </form>
