@@ -358,7 +358,7 @@ input[type=submit].neutral {
 }
 
 .prioritized {
-  background-color: $prioritized-color;
+  background-color: $prioritized-color!important;
 }
 
 .upload-container {
@@ -1605,4 +1605,12 @@ p.normal-12 {
 
 .admin-container {
   height: 100%;
+}
+
+.live-active {
+  color: $branding-purple;
+}
+
+.live-inactive {
+  color: $branding-red
 }
