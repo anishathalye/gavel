@@ -161,7 +161,7 @@ async function refresh(token) {
             // language=HTML
             const annotator_template = `
             <tr class=${annotator.active? '' : 'disabled'}>
-              <td><span class="admin-check"></span></td>
+              <td><input type="checkbox" name="annotator" value="${annotator.id}" class="admin-check"/></td>
               <td><a onclick="openJudge(${annotator.id})" class="colored">${i}</a></td>
               <td>${annotator.name}</td>
               <td>${annotator.email}</td>
