@@ -2,7 +2,7 @@
 {% block title %}Admin{% endblock %}
 {% block content %}
   <div class="admin-container">
-    <div class="banner-branded">Gavel Admin Dashboard
+    <div class="banner-branded">Gavel Admin Dashboard<span style="cursor: pointer;" onclick="toggleAutoRefresh()" class="live-active" id="live"> Live</span>
       <div class="admin-toggle float-right">
         <button class="normal-white-18 noborder {{ 'admin-judging-active' if setting_closed else 'admin-judging-inactive' }}"
                 onclick="{{ document.getElementById('admin-judge-setting-form').submit() if setting_closed else 'admin'}}">
@@ -221,9 +221,11 @@
   <script src="{{ url_for('static', filename="js/jquery.tablesorter.widgets.js") }}"></script>
   <script>
     let initial_response = refresh("{{ csrf_token() }}");
-    window.setInterval(function () {
-      let response = refresh("{{ csrf_token() }}");
-    }, 5000);
+    let responseInterval = function () {let response = refresh("{{ csrf_token() }}");};
+    let intervalid = window.setInterval(responseInterval, 5000);
+    let livereload = true;
+
+
   </script>
   <script>
     {#    let checkbox = document.getElementById('fs');
@@ -364,6 +366,13 @@
       const editJudge = document.getElementById('edit-judge');
       //TODO: Populate modal with data
       openModal('edit-judge');
+    }
+
+    function toggleAutoRefresh() {
+      livereload = !livereload;
+      !livereload ? window.clearInterval(intervalid) : intervalid = window.setInterval(responseInterval,5000);
+      let rel = document.getElementById("live");
+      rel.classList = livereload ? ['live-active'] : ['live-inactive'];
     }
 
   </script>
