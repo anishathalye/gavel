@@ -2,20 +2,20 @@
 {% block title %}Admin{% endblock %}
 {% block content %}
   <div class="admin-container">
-    <div class="banner-branded">Gavel Admin Dashboard</div>
-    <div class="admin-data-bar">
-      <div class="admin-data">
-        <span>JUDGING SESSION STATUS</span>
-        <div class="admin-toggle">
-          <form id="admin-judge-setting-form" action="/admin/setting" method="post"
-                class="{{ 'admin-judging-active' if not setting_closed else 'admin-judging-inactive' }}"
-                onclick="document.getElementById('admin-judge-setting-form').submit()">
+    <div class="banner-branded">Gavel Admin Dashboard
+      <div class="admin-toggle float-right">
+        <button class="normal-white-18 noborder {{ 'admin-judging-active' if setting_closed else 'admin-judging-inactive' }}"
+                onclick="{{ document.getElementById('admin-judge-setting-form').submit() if setting_closed else 'admin'}}">
+          {{ 'Stop Session' if not setting_closed else 'Start Session' }}
+        </button>
+        <form id="admin-judge-setting-form" action="/admin/setting" method="post">
             <input type="hidden" name="action" value="{{ 'Open' if setting_closed else 'Close' }}">
             <input type="hidden" name="key" value="closed">
             <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
           </form>
         </div>
-      </div>
+    </div>
+    <div class="admin-data-bar">
       <div class="admin-data">
         <span>TOTAL VOTES</span>
         <div class="admin-data-text" id="total-votes">{{ votes }}</div>
@@ -122,6 +122,21 @@
         <div class="admin-modal-content add-modal">
           <div class="admin-close-button" onclick="openModal(null)"></div>
           <h4 class="normal-20">Add Projects</h4>
+          <p class="normal-12 compact">CSV Format: Project Name, Location, Description</p>
+          <label class="upload-judges-button bold-caps-white-12 compact" for="annotator-file">
+            Upload Projects CSV File
+            <input style="display: none" type="file" name="file" form="item_form" accept=".csv,.xls,.xlsx"
+                   id="item-file">
+          </label>
+          <p class="normal-12 compact">Manually Add New Projects</p>
+          <textarea name="data" form="item_form" class="admin-textarea"></textarea>
+          <button class="inlineButton-32 normal-caps-white-15 noborder" onclick="openModal(null)">Cancel</button>
+          <form action="/admin/item" method="post" id="item_form" enctype="multipart/form-data" style="display: inline;">
+            <button type="submit" name="action" value="Submit"
+                    class="background-purple inlineButton-32 normal-caps-white-15 float-right noborder">Add Projects
+            </button>
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+          </form>
         </div>
       </div>
     </div>
@@ -131,7 +146,21 @@
         <div class="admin-modal-content add-modal">
           <div class="admin-close-button" onclick="openModal(null)"></div>
           <h4 class="normal-20">Add Judges</h4>
-          <p class="normal-12">CSV Format: Judge Name, Email, Description</p>
+          <p class="normal-12 compact">CSV Format: Judge Name, Email, Description</p>
+          <label class="upload-judges-button bold-caps-white-12 compact" for="annotator-file">
+            Upload Judges CSV File
+            <input style="display: none" type="file" name="file" form="annotator_form" accept=".csv,.xls,.xlsx"
+                   id="annotator-file">
+          </label>
+          <p class="normal-12 compact">Manually Add New Judges</p>
+          <textarea name="data" form="annotator_form" class="admin-textarea"></textarea>
+          <button class="inlineButton-32 normal-caps-white-15 noborder" onclick="openModal(null)">Cancel</button>
+          <form action="/admin/annotator" method="post" id="annotator_form" enctype="multipart/form-data" style="display: inline;">
+            <button type="submit" name="action" value="Submit"
+                    class="background-purple inlineButton-32 normal-caps-white-15 float-right noborder">Add Judges
+            </button>
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+          </form>
         </div>
       </div>
     </div>
@@ -153,9 +182,23 @@
     </div>
 
     <div class="modal-wrapper" id="edit-judge">
-      <div class="full-modal edit-modal">
-        <div class="admin-modal-content">
-
+      <div class="full-modal">
+        <div class="admin-modal-content edit-modal">
+          <div class="admin-close-button" onclick="openModal(null)"></div>
+          <h4 class="normal-20" id="title">Judge ID: <span id="id"></span></h4>
+          <p class="normal-12"><span class="bold-12">Name: </span><span id="name"></span></p>
+          <p class="normal-12"><span class="bold-12">Email: </span><span id="email"></span></p>
+          <p class="normal-12"><span class="bold-12">Description: </span><span id="description"></span></p>
+          <p class="normal-12"><span class="bold-12">Login URL: </span><span id="login"></span></p>
+          <p class="normal-12"><span class="bold-12">Total Votes: </span><span id="votes"></span></p>
+          <p class="normal-12"><span class="bold-12">Current Team: </span><span id="team"></span></p>
+          <p class="normal-12"><span class="bold-12">Previous Team: </span><span id="previous"></span></p>
+          <p class="normal-12"><span class="bold-12">Updated: </span><span id="updated"></span></p>
+          <p class="normal-12"><span class="bold-12">Avg Pace: </span><span id="pace"></span></p>
+          <p class="normal-12"><span class="bold-12">Alpha: </span><span id="alpha"></span></p>
+          <p class="normal-12"><span class="bold-12">Beta: </span><span id="beta"></span></p>
+          <p class="normal-12"><span class="bold-12">Seen Teams: </span><span id="seen"></span></p>
+          <p class="normal-12"><span class="bold-12">Skipped Teams: </span><span id="skipped"></span></p>
         </div>
       </div>
     </div>
@@ -253,33 +296,39 @@
       }
       setAddButtonState();
     }
+
     window.addEventListener("DOMContentLoaded", function () {
       showTab(localStorage.getItem("currentTab") || "admin-reports");
     });
+
     function setAddButtonState() {
       const judges = document.getElementById("admin-judges").style.display === "block";
       const projects = document.getElementById("admin-projects").style.display === "block";
       const reports = document.getElementById("admin-reports").style.display === "block";
       const text = document.getElementById('add-text');
       const add = document.getElementById('add');
-      console.log(judges,projects,reports,text);
-      if(!!judges){
+      console.log(judges, projects, reports, text);
+      if (!!judges) {
         text.innerText = "+ Add Judges";
-        text.onclick=function() {openModal('add-judges')};
+        text.onclick = function () {
+          openModal('add-judges')
+        };
         //text.addEventListener('onclick', openModal('add-judges'));
       }
-      if(!!projects){
+      if (!!projects) {
         text.innerText = "+ Add Projects";
-        text.onclick=function() {openModal('add-projects')};
+        text.onclick = function () {
+          openModal('add-projects')
+        };
         //text.addEventListener('onclick', openModal('add-projects'));
       }
-      if(!!reports){
+      if (!!reports) {
         text.innerText = "";
-        text.onclick=null;
+        text.onclick = null;
       }
     }
 
-    function openModal (modal) {
+    function openModal(modal) {
       const addJudges = document.getElementById('add-judges');
       const addProjects = document.getElementById('add-projects');
       const deleteEntries = document.getElementById('delete-entries');
@@ -287,13 +336,36 @@
       const editJudge = document.getElementById('edit-judge');
       const editProject = document.getElementById('edit-project');
 
-      const modals = [addJudges,addProjects,deleteEntries,stopSession,editJudge,editProject];
+      const modals = [addJudges, addProjects, deleteEntries, stopSession, editJudge, editProject];
       modals.forEach((e) => {
         e.style.display = 'none';
       });
       var dumdum;
       modal ? document.getElementById(modal).style.display = 'block' : dumdum = 'dum';
     }
+
+    $(document).click(function (event) {
+      //if you click on anything except the modal itself or the "open modal" link, close the modal
+      if (!$(event.target).hasClass('admin-modal-content') && $(event.target).hasClass('full-modal')) {
+        $("body").find(".modal-wrapper").css('display', 'none')
+      }
+    });
+
+    $(document).click(function (event) {
+      if(!$(event.target).hasClass('admin-switcher-modal') &&
+        !$(event.target).parents('*').hasClass('admin-switcher') &&
+        !$(event.target).hasClass('admin-switcher')) {
+        $("body").find("#selector").css('display', 'none')
+      }
+    });
+
+    function openJudge(i) {
+      const annotator = currentAnnotators[i];
+      const editJudge = document.getElementById('edit-judge');
+      //TODO: Populate modal with data
+      openModal('edit-judge');
+    }
+
   </script>
 
 {% endblock %}

@@ -194,6 +194,7 @@ hr {
 
 .compact {
   padding: 0 0;
+  margin: 0 0;
 }
 
 .center {
@@ -283,6 +284,13 @@ input[type=submit] {
   width: 48%;
 }
 
+.float-right {
+  float: right!important;
+}
+
+.float-left {
+  float: left !important;
+}
 .button-full {
   background-color: $branding-blue;
   color: $light;
@@ -650,6 +658,20 @@ dl.instructions dt p {
   background: url('/static/img/skip_button.svg') center center no-repeat;
 }
 
+.inlineButton-32 {
+  display: inline-block;
+  height: 32px;
+  width: 160px;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+  -webkit-box-shadow: none !important;
+  -moz-box-shadow: none !important;
+  box-shadow: none !important;
+  background-color: $branding-grey;
+  background: $branding-grey;
+}
+
 .doneButton {
   float: right !important;
   margin-top: 1rem;
@@ -679,7 +701,6 @@ dl.instructions dt p {
   letter-spacing: 0.02em;
   color: white;
 }
-
 
 .modal {
   display: none;
@@ -962,7 +983,7 @@ dl.instructions dt p {
   margin: 36px;
 }
 
-.admin-container span {
+.admin-data-bar span {
   font-family: Rubik;
   font-style: normal;
   font-weight: 500;
@@ -988,7 +1009,7 @@ dl.instructions dt p {
 }
 
 .admin-toggle {
-  display: block;
+  display: inline;
   position: relative;
   margin-top: 10px;
   cursor: pointer;
@@ -1258,8 +1279,8 @@ dl.instructions dt p {
   width: 188px;
   height: 40px;
   cursor: pointer;
-
 }
+
 
 .admin-switcher span {
   font-family: Rubik;
@@ -1332,26 +1353,27 @@ dl.instructions dt p {
 }
 
 .full-modal {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: 50%;
+  position: absolute;
+  width: 100%;
+  height: 100%;
 }
 
 .add-modal {
   width: 376px;
-  height: 300px;
+  height: auto;
   box-shadow: 0px 2px 6px #B7B7B7;
 }
 
 .admin-modal-content {
-  position: relative;
+  position: fixed;
   background: white;
-  margin-top: -25%;
-  padding: 12px 16px 16px;
+  transform: translate(-50%,-50%);
+  top: 50%;
+  left: 50%;
+  padding: 12px 24px 24px;
   background: #FFFFFF;
-box-shadow: 0px 2px 6px #B7B7B7;
-border-radius: 4px;
+  box-shadow: 0px 2px 6px #B7B7B7;
+  border-radius: 4px;
 
 }
 .admin-switcher-modal-text {
@@ -1384,17 +1406,27 @@ border-radius: 4px;
 .admin-judging-active {
   height: 40px;
   max-height: 40px;
-  width: 120px;
-  max-width: 120px;
-  background: transparent url("/static/img/judging_toggle_active.svg");
+  width: 161px;
+  background: $branding-purple;
+  -webkit-box-shadow: 0px 2px 10px hoff voff blur $branding-grey;
+  -moz-box-shadow: 0px 2px 10px hoff voff blur $branding-grey;
+  box-shadow: 0px 2px 10px hoff voff blur $branding-grey;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
 }
 
 .admin-judging-inactive {
   height: 40px;
   max-height: 40px;
-  width: 120px;
-  max-width: 120px;
-  background: transparent url("/static/img/judging_toggle_inactive.svg");
+  width: 161px;
+  background: $branding-red;
+    -webkit-box-shadow: 0px 2px 10px hoff voff blur $branding-grey;
+  -moz-box-shadow: 0px 2px 10px hoff voff blur $branding-grey;
+  box-shadow: 0px 2px 10px hoff voff blur $branding-grey;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
 }
 
 thead th.up>.tablesorter-header-inner>a{
@@ -1435,6 +1467,43 @@ color: #000F9B!important;
 
 }
 
+.normal-white-18 {
+  font-family: Rubik;
+font-style: normal;
+font-weight: normal;
+font-size: 18px;
+line-height: normal;
+text-align: center;
+
+color: #FFFFFF;
+}
+
+.normal-caps-white-15 {
+  font-family: Rubik;
+font-style: normal;
+font-weight: 500;
+font-size: 12px;
+line-height: normal;
+text-align: center;
+text-transform: uppercase;
+
+color: #FFFFFF;
+}
+
+.bold-caps-white-12 {
+  vertical-align: center;
+
+font-family: Rubik;
+font-style: normal;
+font-weight: 500;
+font-size: 12px;
+line-height: normal;
+text-align: center;
+text-transform: uppercase;
+
+color: #FFFFFF!important;
+}
+
 .normal-12 {
 
 font-family: Rubik;
@@ -1445,7 +1514,7 @@ color: #000000;
 }
 
 .admin-add-button {
-  position: fixed;
+  position: absolute;
   display: inline-block!important;
   text-align: center;
   height: 40px!important;
@@ -1476,3 +1545,64 @@ color: #000000;
   position: absolute;
 }
 
+.upload-judges-button {
+  position: relative;
+  display: inline-block;
+  background: #000F9B;
+  border-radius: 3px;
+  cursor: pointer;
+  width: 192px;
+  height: 32px;
+  line-height: 32px;
+  align-content: center;
+  margin-top: 8px;
+  margin-bottom: 24px;
+}
+
+.admin-textarea {
+  margin-top: 8px;
+  height: 150px;
+  background: #FFFFFF;
+border: 1px solid #363946;
+box-sizing: border-box;
+border-radius: 3px;
+}
+
+.background-red {
+  background: $branding-red;
+}
+.background-purple {
+  background: $branding-purple;
+}
+.background-grey {
+  background: $branding-grey;
+}
+
+.noborder {
+  border: none;
+}
+
+.bold-12 { font-weight: bold; font-family: Rubik;
+font-style: normal;
+font-weight: bold;
+font-size: 12px;
+line-height: normal;
+
+color: #000000; }
+
+
+.edit-modal {
+  width: 330px;
+  background: #FFFFFF;
+box-shadow: 0px 2px 6px #B7B7B7;
+border-radius: 4px;
+}
+
+p.normal-12 {
+  line-height: normal;
+  padding-bottom: 0;
+}
+
+.admin-container {
+  height: 100%;
+}
