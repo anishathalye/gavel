@@ -1,3 +1,6 @@
+let currentAnnotators;
+let currentItems;
+
 async function refresh(token) {
     const data = await $.ajax({
         url: "/admin/live",
@@ -37,7 +40,7 @@ async function refresh(token) {
     average_sigma.innerText = sigma.toFixed(4);
 
     let average_seen = document.getElementById("average-seen");
-    average_seen.innerText = seen;
+    average_seen.innerText = seen.toFixed(2);
 
     // Populate reports
     let reports_table = document.getElementById("reports-body");
@@ -49,37 +52,35 @@ async function refresh(token) {
 
         if (!flag.id)
             continue;
-        const resolved = flag.resolved ? "open" : "resolve";
-        const resolved2 = flag.resolved ? "negative" : "positive";
-        const resolved3 = flag.resolved ? "open" : "resolve";
 
         try {
 
         } catch (e) {
-            const reports_template = '<tr class="' + resolved + '">\n' +
-            '              <td><span class="admin-check"></span></td>\n' +
-            '              <td>' + flag.id + '</td>\n' +
-            '              <td><a href="/admin/annotator/'+annotator.id+'"\n' +
-            '                     class="colored">'+annotator.name+'</a></td>\n' +
-            '              <td><a href="/admin/item/'+item.id+'" class="colored">' + item.name + '</a></td>\n' +
-            '              <td>' + item.location + '</td>\n' +
-            '              <td>' + flag.reason + '</td>\n' +
-            '          <td class="compact">\n' +
-            '            <form action="/admin/item" method="post">\n' +
-            '              <input type="submit" name="action" value="'+(item.active ? 'Disable' : 'Enable')+'" class="'+(item.active? 'negative': 'positive')+'">\n' +
-            '              <input type="hidden" name="item_id" value="'+item.id+'">\n' +
-            '              <input type="hidden" name="_csrf_token" value="'+token+'">\n' +
-            '            </form>\n' +
-            '          </td> \n' +
-            '              <td class="compact">\n' +
-            '                <form action="/admin/report" method="post">\n' +
-            '                  <input type="submit" name="action" value="' + resolved3 + '"\n' +
-            '                         class="' + resolved2 + '">\n' +
-            '                  <input type="hidden" name="flag_id" value="' + flag.id + '">\n' +
-            '                  <input type="hidden" name="_csrf_token" value="' + token + '">\n' +
-            '                </form>\n' +
-            '              </td>\n' +
-            '            </tr>';
+            const reports_template = `
+            <tr class="${flag.resolved ? "open" : "resolve"}">
+              <td><span class="admin-check"></span></td>
+              <td>'${flag.id}'</td>
+              <td><a href="/admin/annotator/${annotator.id}"
+                     class="colored">${annotator.name}</a></td>
+              <td><a href="/admin/item/${item.id}" class="colored">${item.name}</a></td>
+              <td>${item.location}</td>
+              <td>${flag.reason}</td>
+          <td class="compact">
+            <form action="/admin/item" method="post">
+              <input type="submit" name="action" value="${(item.active ? 'Disable' : 'Enable')}" class="${(item.active? 'negative': 'positive')}">
+              <input type="hidden" name="item_id" value="${item.id}">
+              <input type="hidden" name="_csrf_token" value="${token}">
+            </form>
+          </td>
+              <td class="compact">
+                <form action="/admin/report" method="post">
+                  <input type="submit" name="action" value="${flag.resolved ? "open" : "resolve"}"
+                         class="${flag.resolved ? "negative" : "positive"}">
+                  <input type="hidden" name="flag_id" value="${flag.id}">
+                  <input type="hidden" name="_csrf_token" value="${token}">
+                </form>
+              </td>
+            </tr>`;
 
 
         const newRow = reports_table.insertRow(reports_table.rows.length);
@@ -92,47 +93,51 @@ async function refresh(token) {
     // Populate projects
     let projects_table = document.getElementById("items-body");
     projects_table.innerHTML = "";
+    currentItems=items;
     for (let i = 0; i < items.length; i++) {
-        const item = items[i];
-
-        if (!item.id)
-            continue;
         try {
-            const items_template = '<tr class="' + (item.active ? item.prioritized ? 'prioritized' : '' : 'disabled') + '">\n' +
-            '              <td><span class="admin-check"></span></td>\n' +
-            '              <td><a href="/admin/item/'+item.id+'" class="colored">' + item.id + '</a></td>\n' +
-            '              <td>' + item.name + '</td>\n' +
-            '              <td>' + item.location + '</td>\n' +
-            '              <td class="preserve-formatting">' + item.description + '</td>\n' +
-            '              <td>' + item.mu.toFixed(4) + '</td>\n' +
-            '              <td>' + item.sigma_sq.toFixed(4) + '</td>\n' +
-            '              <td>' + item_counts[item.id] + '</td>\n' +
-            '              <td>' + viewed[item.id] + '</td>\n' +
-            '              <td>' + skipped[item.id] + '</td>\n' +
-            '              <td class="compact" data-sort="' + item.prioritized + '">\n' +
-            '                <form action="/admin/item" method="post">\n' +
-            '                  <input type="submit" name="action" value="' + (item.prioritized ? 'Cancel' : 'Prioritize') + '"\n' +
-            '                         class="' + (item.prioritized ? 'negative' : 'positive') + '">\n' +
-            '                  <input type="hidden" name="item_id" value="' + item.id + '">\n' +
-            '                  <input type="hidden" name="_csrf_token" value="' + token + '">\n' +
-            '                </form>\n' +
-            '              </td>\n' +
-            '              <td class="compact" data-sort="' + item.active + '">\n' +
-            '                <form action="/admin/item" method="post">\n' +
-            '                  <input type="submit" name="action" value="' + (item.active ? 'Disable' : 'Enable') + '"\n' +
-            '                         class="' + (item.active ? 'negative' : 'positive') + '">\n' +
-            '                  <input type="hidden" name="item_id" value="' + item.id + '">\n' +
-            '                  <input type="hidden" name="_csrf_token" value="' + token + '">\n' +
-            '                </form>\n' +
-            '              </td>\n' +
-            '              <td class="compact">\n' +
-            '                <form action="/admin/item" method="post">\n' +
-            '                  <input type="submit" name="action" value="Delete" class="negative">\n' +
-            '                  <input type="hidden" name="item_id" value="' + item.id + '">\n' +
-            '                  <input type="hidden" name="_csrf_token" value="' + token + '">\n' +
-            '                </form>\n' +
-            '              </td>\n' +
-            '            </tr>';
+            const item = items[i];
+
+            if (!item.id)
+                continue;
+
+            // language=HTML
+            const items_template = `
+            <tr class="${(item.active ? item.prioritized ? 'prioritized' : '' : 'disabled')}">
+              <td><span class="admin-check"></span></td>
+              <td><a href="/admin/item/${item.id}" class="colored">${item.id}</a></td>
+              <td>${item.name}</td>
+              <td>${item.location}</td>
+              <td class="preserve-formatting">${item.description}</td>
+              <td>${item.mu.toFixed(4)}</td>
+              <td>${item.sigma_sq.toFixed(4)}</td>
+              <td>${item_counts[item.id]}</td>
+              <td>${viewed[item.id]}</td>
+              <td>${skipped[item.id]}</td>
+              <td class="compact" data-sort="${item.prioritized}">
+                <form action="/admin/item" method="post">
+                  <input type="submit" name="action" value="${(item.prioritized ? 'Cancel' : 'Prioritize')}"
+                         class="${(item.prioritized ? 'negative' : 'positive')}">
+                  <input type="hidden" name="item_id" value="${item.id}">
+                  <input type="hidden" name="_csrf_token" value="${token}">
+                </form>
+              </td>
+              <td class="compact" data-sort="${item.active}">
+                <form action="/admin/item" method="post">
+                  <input type="submit" name="action" value="${(item.active ? 'Disable' : 'Enable')}"
+                         class="${(item.active ? 'negative' : 'positive')}">
+                  <input type="hidden" name="item_id" value="${item.id}">
+                  <input type="hidden" name="_csrf_token" value="${token}">
+                </form>
+              </td>
+              <td class="compact">
+                <form action="/admin/item" method="post">
+                  <input type="submit" name="action" value="Delete" class="negative">
+                  <input type="hidden" name="item_id" value="${item.id}">
+                  <input type="hidden" name="_csrf_token" value="${token}">
+                </form>
+              </td>
+            </tr>`;
 
         const newRow = projects_table.insertRow(projects_table.rows.length);
         newRow.innerHTML = items_template;
@@ -145,47 +150,49 @@ async function refresh(token) {
     // Populate Judges
     let judges_table = document.getElementById("judges-body");
     judges_table.innerHTML = "";
+    currentAnnotators = annotators;
     for (let i = 0; i < annotators.length; i++) {
-        const annotator = annotators[i];
-
-        if (!annotator.id)
-            continue;
         try {
-            const annotator_template = '<tr class="' + (annotator.active ? '' : 'disabled') + '">\n' +
-            '              <td><span class="admin-check"></span></td>\n' +
-            '              <td><a href="/admin/annotator/'+annotator.id+'"\n' +
-            '                     class="colored">'+annotator.id+'</a></td>\n' +
-            '              <td>' + annotator.name + '</td>\n' +
-            '              <td>' + annotator.email + '</td>\n' +
-            '              <td>' + annotator.description + '</td>\n' +
-            '              <td>' + (counts[annotator.id]||0) + '</td>\n' +
-            '              <td data-sort="{{ annotator.next_id or -1 }}">' + (annotator.next_id||'None') + '</td>\n' +
-            '              <td data-sort="{{ annotator.prev_id or -1 }}">' + (annotator.prev_id||'None') + '</td>\n' +
-            '              <td\n' +
-            '                data-sort="{{ annotator.updated | utcdatetime_epoch }}">' + (annotator.updated || 'Undefined') + '</td>\n' +
-            '              <td class="compact">\n' +
-            '                <form action="/admin/annotator" method="post">\n' +
-            '                  <input type="submit" name="action" value="Email" class="neutral">\n' +
-            '                  <input type="hidden" name="annotator_id" value="' + annotator.id + '">\n' +
-            '                  <input type="hidden" name="_csrf_token" value="' + token + '">\n' +
-            '                </form>\n' +
-            '              </td>\n' +
-            '              <td class="compact" data-sort="' + annotator.active + '">\n' +
-            '                <form action="/admin/annotator" method="post">\n' +
-            '                  <input type="submit" name="action" value="' + (annotator.active ? 'Disable' : 'Enable') + '"\n' +
-            '                         class="' + (annotator.active ? 'negative' : 'positive') + '">\n' +
-            '                  <input type="hidden" name="annotator_id" value="' + annotator.id + '">\n' +
-            '                  <input type="hidden" name="_csrf_token" value="' + token + '">\n' +
-            '                </form>\n' +
-            '              </td>\n' +
-            '              <td class="compact">\n' +
-            '                <form action="/admin/annotator" method="post">\n' +
-            '                  <input type="submit" name="action" value="Delete" class="negative">\n' +
-            '                  <input type="hidden" name="annotator_id" value="' + annotator.id + '">\n' +
-            '                  <input type="hidden" name="_csrf_token" value="' + token + '">\n' +
-            '                </form>\n' +
-            '              </td>\n' +
-            '            </tr>';
+            const annotator = annotators[i];
+
+            if (!annotator.id)
+                continue;
+
+            // language=HTML
+            const annotator_template = `
+            <tr class=${annotator.active? '' : 'disabled'}>
+              <td><span class="admin-check"></span></td>
+              <td><a onclick="openJudge(${annotator.id})" class="colored">${i}</a></td>
+              <td>${annotator.name}</td>
+              <td>${annotator.email}</td>
+              <td>${annotator.description}</td>
+              <td>${(counts[annotator.id]||0)}</td>
+              <td>${(annotator.next_id||'None')}</td>
+              <td>${(annotator.prev_id||'None')}</td>
+              <td>${(annotator.updated || 'Undefined')}</td>
+              <td class="compact">
+                <form action="/admin/annotator" method="post">
+                  <input type="submit" name="action" value="Email" class="neutral">
+                  <input type="hidden" name="annotator_id" value="${annotator.id}">
+                  <input type="hidden" name="_csrf_token" value="${token}">
+                </form>
+              </td>
+              <td class="compact" data-sort="${annotator.active}">
+                <form action="/admin/annotator" method="post">
+                  <input type="submit" name="action" value="${(annotator.active ? 'Disable' : 'Enable')}"
+                         class="${(annotator.active ? 'negative' : 'positive')}">
+                  <input type="hidden" name="annotator_id" value="${annotator.id}">
+                  <input type="hidden" name="_csrf_token" value="${token}">
+                </form>
+              </td>
+              <td class="compact">
+                <form action="/admin/annotator" method="post">
+                  <input type="submit" name="action" value="Delete" class="negative">
+                  <input type="hidden" name="annotator_id" value="${annotator.id}">
+                  <input type="hidden" name="_csrf_token" value="${token}">
+                </form>
+              </td>
+            </tr>`;
 
         const newRow = judges_table.insertRow(judges_table.rows.length);
         newRow.innerHTML = annotator_template;
