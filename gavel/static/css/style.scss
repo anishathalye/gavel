@@ -1363,6 +1363,7 @@ dl.instructions dt p {
   width: 376px;
   height: auto;
   box-shadow: 0px 2px 6px #B7B7B7;
+  padding: 0 !important;
 }
 
 .admin-modal-content {
@@ -1468,6 +1469,17 @@ color: #000F9B!important;
 
 }
 
+.normal-purple-14 {
+   font-family: Rubik;
+font-style: normal;
+font-weight: 500;
+font-size: 14px;
+line-height: normal;
+
+
+color: #000F9B!important;
+}
+
 .normal-white-18 {
   font-family: Rubik;
 font-style: normal;
@@ -1509,6 +1521,14 @@ color: #FFFFFF!important;
 
 font-family: Rubik;
 font-size: 12px;
+line-height: normal;
+
+color: #000000;
+}
+
+.normal-14 {
+  font-family: Rubik;
+font-size: 14px;
 line-height: normal;
 
 color: #000000;
@@ -1592,12 +1612,23 @@ line-height: normal;
 
 color: #000000; }
 
+.bold-14 {
+  font-weight: bold; font-family: Rubik;
+font-style: normal;
+font-weight: bold;
+font-size: 14px;
+line-height: normal;
+
+color: #000000;
+}
+
 
 .edit-modal {
   width: 330px;
   background: #FFFFFF;
 box-shadow: 0px 2px 6px #B7B7B7;
 border-radius: 4px;
+  overflow: auto;
 }
 
 p.normal-12 {
@@ -1620,4 +1651,9 @@ p.normal-12 {
 td>.reportCheck {
   vertical-align: middle;
 
+}
+
+iframe {
+  box-shadow: 0;
+  border: 0;
 }

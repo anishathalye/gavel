@@ -1,81 +1,73 @@
 {% extends "layout.html" %}
 {% block title %}Judge{% endblock %}
 {% block content %}
-<div class="item">
-  <div class="banner" id="admin-header">
-    <a href="{{ url_for('admin') }}"><h1>Annotator</h1></a>
-  </div>
-  <div class="info">
-    <table>
-      <tr>
-        <th>Id</th>
-        <td>{{ annotator.id }}</td>
-      </tr>
-      <tr>
-        <th>Name</th>
-        <td>{{ annotator.name | safe }}</td>
-      </tr>
-      <tr>
-        <th>Email</th>
-        <td>{{ annotator.email | safe }}</td>
-      </tr>
-      <tr>
-        <th>Description</th>
-        <td>{{ annotator.description | safe }}</td>
-      </tr>
-      <tr>
-        <th>Login URL</th>
-        <td><a href="{{ login_link }}">{{ login_link }}</a></td>
-      </tr>
-      <tr>
-        <th>Next</th>
-        {% if annotator.next %}
-        <td><a href="{{ url_for('item_detail', item_id=annotator.next.id) }}" class="colored">{{ annotator.next.name | safe }} [{{ annotator.next_id }}]</a></td>
-        {% else %}
-        <td>None</td>
-        {% endif %}
-      </tr>
-      <tr>
-        <th>Previous</th>
-        {% if annotator.prev %}
-        <td><a href="{{ url_for('item_detail', item_id=annotator.prev.id) }}" class="colored">{{ annotator.prev.name | safe }} [{{ annotator.prev_id }}]</a></td>
-        {% else %}
-        <td>None</td>
-        {% endif %}
-      </tr>
-      <tr>
-        <th>Updated</th>
-        <td>{{ annotator.updated | utcdatetime_local }}</td>
-      </tr>
-      <tr>
-        <th>Alpha</th>
-        <td>{{ annotator.alpha | round(4) }}</td>
-      </tr>
-      <tr>
-        <th>Beta</th>
-        <td>{{ annotator.beta | round(4) }}</td>
-      </tr>
-      <tr>
-        <th>Seen</th>
-        <td>
-          <ul>
+  <div class="item" >
+    <div class="info" style="padding: 0;">
+    <base target="_blank"/>
+      <style>
+        th {
+          text-align: left;
+        }
+        p {
+          line-height: 0;
+          margin: 0;
+        }
+      </style>
+      <h4 class="normal-20" id="title">Judge ID: <span id="id">{{ annotator.id }}</span></h4>
+      <p class="normal-14"><span class="bold-14">Name: </span><span id="name">{{ annotator.name | safe }}</span></p>
+      <p class="normal-14"><span class="bold-14">Email: </span><span id="email">{{ annotator.email | safe }}</span></p>
+      <p class="normal-14"><span class="bold-14">Description: </span><span
+        id="description">{{ annotator.description | safe }}</span></p>
+      <p class="normal-14"><span class="bold-14">Login URL: </span><span id="login"><a
+        href="{{ login_link }}" class="normal-purple-14" style="overflow: hidden;">{{ login_link }}</a></span></p>
+      <p class="normal-14"><span class="bold-14">Total Votes: </span>
+        <span id="votes">
             {% for item in seen %}
-            <li><a href="{{ url_for('item_detail', item_id=item.id) }}" class="colored">{{ item.name | safe }} [{{ item.id }}]</a></li>
+              <li><a href="{{ url_for('item_detail', item_id=item.id) }}"
+                     class="colored" target="_parent">{{ item.name | safe }} [{{ item.id }}]</a></li>
             {% endfor %}
-          </ul>
-        </td>
-      </tr>
-      <tr>
-        <th>Skipped</th>
-        <td>
-          <ul>
-            {% for item in skipped %}
-            <li><a href="{{ url_for('item_detail', item_id=item.id) }}" class="colored">{{ item.name | safe }} [{{ item.id }}]</a></li>
-            {% endfor %}
-          </ul>
-        </td>
-      </tr>
-    </table>
+      </span>
+      </p>
+      <p class="normal-14"><span class="bold-14">Current Team: </span><span id="team">
+      {% if annotator.next %}
+        <td><a href="{{ url_for('item_detail', item_id=annotator.next.id) }}"
+               class="colored">{{ annotator.next.name | safe }} [{{ annotator.next_id }}]</a></td>
+      {% else %}
+        <td>None</td>
+      {% endif %}
+    </span></p>
+      <p class="normal-14"><span class="bold-14">Previous Team: </span><span id="previous">
+      {% if annotator.prev %}
+        <td><a href="{{ url_for('item_detail', item_id=annotator.prev.id) }}"
+               class="colored">{{ annotator.prev.name | safe }} [{{ annotator.prev_id }}]</a></td>
+      {% else %}
+        <td>None</td>
+      {% endif %}
+    </span></p>
+      <p class="normal-14"><span class="bold-14">Updated: </span><span id="updated">
+      {{ annotator.updated | safe }}
+    </span></p>
+      <p class="normal-14"><span class="bold-14">Avg Pace: </span><span id="pace">
+      TBI
+    </span></p>
+      <p class="normal-14"><span class="bold-14">Alpha: </span><span id="alpha">
+      {{ annotator.alpha | safe }}
+    </span></p>
+      <p class="normal-14"><span class="bold-14">Beta: </span><span id="beta">
+      {{ annotator.beta | safe }}
+    </span></p>
+      <p class="normal-14"><span class="bold-14">Seen Teams: </span><span id="seen">
+      {% for item in seen %}
+        <li><a href="{{ url_for('item_detail', item_id=item.id) }}"
+               class="colored">{{ item.name | safe }} [{{ item.id }}]</a></li>
+      {% endfor %}
+    </span></p>
+      <p class="normal-14"><span class="bold-14">Skipped Teams: </span><span id="skipped">
+      {% for item in skipped %}
+        <li><a href="{{ url_for('item_detail', item_id=item.id) }}"
+               class="colored">{{ item.name | safe }} [{{ item.id }}]</a></li>
+      {% endfor %}
+    </span></p>
+    </div>
   </div>
-</div>
 {% endblock %}
