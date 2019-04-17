@@ -10,7 +10,7 @@ async function refresh(token) {
             return error;
         },
         success: async function (data) {
-            return data;
+            await data;
         }
     });
     const annotators = data.annotators;
@@ -150,7 +150,8 @@ async function refresh(token) {
     // Populate Judges
     let judges_table = document.getElementById("judges-body");
     judges_table.innerHTML = "";
-    currentAnnotators = annotators;
+    currentAnnotators = [];
+
     for (let i = 0; i < annotators.length; i++) {
         try {
             const annotator = annotators[i];
