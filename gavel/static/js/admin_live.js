@@ -105,7 +105,7 @@ async function refresh(token) {
             const items_template = `
             <tr class="${(item.active ? item.prioritized ? 'prioritized' : '' : 'disabled')}">
               <td><span class="admin-check"></span></td>
-              <td><a href="/admin/item/${item.id}" class="colored">${item.id}</a></td>
+              <td><a onclick="openProject(${item.id})" class="colored">${i}</a></td>
               <td>${item.name}</td>
               <td>${item.location}</td>
               <td class="preserve-formatting">${item.description}</td>
