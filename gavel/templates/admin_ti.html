@@ -185,17 +185,20 @@
       <div class="full-modal">
         <div class="admin-modal-content edit-modal">
           <div class="admin-close-button" onclick="openModal(null)"></div>
-          <div style="overflow: auto">
-            <iframe src="/admin/annotator/1/" width="100%" height="340px" scrolling="no" style="overflow: visible"></iframe>
+          <div class="responsive-iframe-container">
+            <iframe onload="iframeLoaded('annotatorframe')" class="responsive-iframe" src="/admin/annotator/1/" scrolling="no" id="annotatorframe" sandbox="allow-top-navigation allow-scripts allow-forms"></iframe>
           </div>
         </div>
       </div>
     </div>
 
     <div class="modal-wrapper" id="edit-project">
-      <div class="full-modal edit-modal">
-        <div class="admin-modal-content">
-
+      <div class="full-modal">
+        <div class="admin-modal-content edit-modal">
+          <div class="admin-close-button" onclick="openModal(null)"></div>
+          <div class="responsive-iframe-container">
+            <iframe onload="iframeLoaded('itemframe')" height="" class="responsive-iframe" src="/admin/item/1/" scrolling="no" id="itemframe" sandbox="allow-top-navigation allow-scripts allow-forms"></iframe>
+          </div>
         </div>
       </div>
     </div>
@@ -357,6 +360,13 @@
       openModal('edit-judge');
     }
 
+    function openProject(i) {
+      const item = currentItems[i];
+      const editProject = document.getElementById('edit-project');
+
+      openModal('edit-project');
+    }
+
     function toggleAutoRefresh() {
       livereload = !livereload;
       !livereload ? window.clearInterval(intervalid) : intervalid = window.setInterval(responseInterval,5000);
@@ -365,5 +375,6 @@
     }
 
   </script>
+
 
 {% endblock %}
