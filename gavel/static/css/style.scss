@@ -139,7 +139,6 @@ table th.sort-down::after {
 textarea,
 input[type=text] {
   font-weight: normal;
-  width: 100%;
   margin-top: 0.25rem;
   margin-bottom: 0.25rem;
 }
@@ -349,6 +348,7 @@ input[type=submit].negative {
 }
 
 input[type=submit].neutral {
+  display: inline;
   background-color: $neutral-color;
   color: $dark;
 }
@@ -1363,7 +1363,7 @@ dl.instructions dt p {
   width: 376px;
   height: auto;
   box-shadow: 0px 2px 6px #B7B7B7;
-  padding: 0 !important;
+
 }
 
 .admin-modal-content {
@@ -1656,4 +1656,37 @@ td>.reportCheck {
 iframe {
   box-shadow: 0;
   border: 0;
+}
+
+/* Style the form - display items horizontally */
+.form-inline {
+  display: flex;
+  flex-flow: row wrap;
+  align-items: center;
+}
+
+/* Add some margins for each label */
+.form-inline label {
+  margin: 0 10px 0 0;
+}
+
+/* Style the input fields */
+.form-inline input {
+  vertical-align: middle;
+  margin: 0 10px 0 0;
+  padding: 2px;
+  background-color: #fff;
+  border: 1px solid #ddd;
+}
+
+/* Style the submit button */
+.form-inline button {
+  padding: 0px 5px;
+  background-color: dodgerblue;
+  border: 1px solid #ddd;
+  color: white;
+}
+
+.form-inline button:hover {
+  background-color: royalblue;
 }
