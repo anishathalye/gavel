@@ -134,6 +134,16 @@ def item():
             db.session.commit()
         except IntegrityError as e:
             return utils.server_error(str(e))
+    elif action == 'BatchDelete':
+        item_ids = request.form['item_ids']
+        error = []
+        for item_id in item_ids:
+            try:
+                db.session.execute(ignore_table.delete(ignore_table.c.item_id == item_id))
+                Item.query.filter_by(id=item_id).delete()
+                db.session.commit()
+            except IntegrityError as e:
+                error.append(item_id)
     return redirect(url_for('admin'))
 
 
@@ -269,6 +279,16 @@ def annotator():
             db.session.commit()
         except IntegrityError as e:
             return utils.server_error(str(e))
+    elif action == 'BatchDelete':
+        annotator_ids = request.form['annotator_ids']
+        errored = []
+        for annotator_id in annotator_ids:
+            try:
+                db.session.execute(ignore_table.delete(ignore_table.c.annotator_id == annotator_id))
+                Annotator.query.filter_by(id=annotator_id).delete()
+                db.session.commit()
+            except IntegrityError as e:
+                errored.append(annotator_id)
     return redirect(url_for('admin'))
 
 
