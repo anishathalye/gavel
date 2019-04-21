@@ -1690,3 +1690,19 @@ iframe {
 .form-inline button:hover {
   background-color: royalblue;
 }
+
+.responsive-iframe-container {
+  position: relative;
+    overflow: hidden;
+    padding-top: 100%;
+}
+
+.responsive-iframe {
+  position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+
+}
