@@ -213,6 +213,22 @@ def item_patch():
     return redirect(url_for('item_detail', item_id=item.id))
 
 
+@app.route('/admin/annotator_patch', methods=['POST'])
+@utils.requires_auth
+def annotator_patch():
+    annotator = Annotator.by_id(request.form['annotator_id'])
+    if not item:
+        return utils.user_error('Annotator %s not found ' % request.form['annotator_id'])
+    if 'name' in request.form:
+        annotator.name = request.form['name']
+    if 'email' in request.form:
+        annotator.email = request.form['email']
+    if 'description' in request.form:
+        annotator.description = request.form['description']
+    db.session.commit()
+    return redirect(url_for('annotator_detail', annotator_id=annotator.id))
+
+
 @app.route('/admin/annotator', methods=['POST'])
 @utils.requires_auth
 def annotator():
