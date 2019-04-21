@@ -1,88 +1,54 @@
 {% extends "layout.html" %}
 {% block title %}Project{% endblock %}
 {% block content %}
-<div class="item">
-  <div class="banner" id="admin-header">
-    <a href="{{ url_for('admin') }}"><h1>Item</h1></a>
-  </div>
-  <div class="info">
-    <table>
-      <tr>
-        <th>Id</th>
-        <td>{{ item.id }}</td>
-      </tr>
-      <tr>
-        <th>Name</th>
-        <td>
-          <form action="/admin/item_patch" method="post">
+  <div class="item">
+    <div class="info" style="padding: 0;">
+      <base target="_self"/>
+      <style>
+        th {
+          text-align: left;
+        }
+
+        p {
+          line-height: 0;
+          margin: 0;
+        }
+      </style>
+      <h4 class="normal-20" id="title">Project ID: <span id="id">{{ item.id }}</span></h4>
+      <p class="normal-14"><span class="bold-14">Name: </span><span>
+    <form action="/admin/item_patch" method="post" class="form-inline">
             <input type="text" name="name" value="{{ item.name | safe }}">
-            <input type="submit" name="action" value="Update" class="neutral">
+      <button type="submit" name="action" value="Update" >Update</button>
             <input type="hidden" name="item_id" value="{{ item.id }}">
             <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
           </form>
-        </td>
-      </tr>
-      <tr>
-        <th>Location</th>
-        <td>
-          <form action="/admin/item_patch" method="post">
+  </span></p>
+      <p class="normal-14"><span class="bold-14">Location: </span><span>
+    <form action="/admin/item_patch" method="post" class="form-inline">
             <input type="text" name="location" value="{{ item.location | safe }}">
-            <input type="submit" name="action" value="Update" class="neutral">
+      <button type="submit" name="action" value="Update">Update</button>
             <input type="hidden" name="item_id" value="{{ item.id }}">
             <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
           </form>
-        </td>
-      </tr>
-      <tr>
-        <th>Description</th>
-        <td>
-          <textarea name="description" form="description_form">{{ item.description | safe }}</textarea>
-          <form action="/admin/item_patch" method="post" id="description_form">
-            <input type="submit" name="action" value="Update" class="neutral">
-            <input type="hidden" name="item_id" value="{{ item.id }}">
-            <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
-          </form>
-        </td>
-      </tr>
-      <tr>
-        <th>Mu</th>
-        <td>{{ item.mu }}</td>
-      </tr>
-      <tr>
-        <th>Sigma Squared</th>
-        <td>{{ item.sigma_sq }}</td>
-      </tr>
-      <tr>
-        <th>Seen By</th>
-        <td>
-          <ul>
-            {% for annotator in item.viewed %}
-            <li><a href="{{ url_for('annotator_detail', annotator_id=annotator.id) }}" class="colored">{{ annotator.name | safe }} [{{ annotator.id }}]</a></li>
-            {% endfor %}
-          </ul>
-        </td>
-      </tr>
-      <tr>
-        <th>Assigned To</th>
-        <td>
-          <ul>
-            {% for annotator in assigned %}
-            <li><a href="{{ url_for('annotator_detail', annotator_id=annotator.id) }}" class="colored">{{ annotator.name | safe }} [{{ annotator.id }}]</a></li>
-            {% endfor %}
-          </ul>
-        </td>
-      </tr>
-      <tr>
-        <th>Skipped By</th>
-        <td>
-          <ul>
-            {% for annotator in skipped %}
-            <li><a href="{{ url_for('annotator_detail', annotator_id=annotator.id) }}" class="colored">{{ annotator.name | safe }} [{{ annotator.id }}]</a></li>
-            {% endfor %}
-          </ul>
-        </td>
-      </tr>
-    </table>
+  </span></p>
+    <p class="normal-14"><span class="bold-14">Mu: </span>{{ item.mu }}</p>
+    <p class="normal-14"><span class="bold-14">Sigma Squared: </span>{{ item.sigma_sq }}</p>
+    <p class="normal-14"><span class="bold-14">Seen By Judges: </span>
+    <span>
+      {% for annotator in item.viewed %}
+                <span><a href="{{ url_for('annotator_detail', annotator_id=annotator.id) }}"
+                       class="colored">{{ annotator.id }},</a></span>
+              {% endfor %}
+    </span>
+    </p>
+    <p class="normal-14"><span class="bold-14">Skipped By Judges: </span>
+    <span>
+      {% for annotator in skipped %}
+                <span><a href="{{ url_for('annotator_detail', annotator_id=annotator.id) }}"
+                       class="colored">{{ annotator.id }},</a></span>
+              {% endfor %}
+    </span>
+    </p>
+    </div>
   </div>
-</div>
 {% endblock %}
