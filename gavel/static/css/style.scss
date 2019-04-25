@@ -290,6 +290,13 @@ input[type=submit] {
 .float-left {
   float: left !important;
 }
+
+.align-items-center {
+  align-items: center!important;
+  justify-content: center!important;
+  display: flex;
+}
+
 .button-full {
   background-color: $branding-blue;
   color: $light;
@@ -672,6 +679,18 @@ dl.instructions dt p {
   background: $branding-grey;
 }
 
+.w144 {
+  width: 144px!important;
+}
+
+.margright4 {
+  margin-right: 4px;
+}
+
+.white {
+  color: white!important;
+}
+
 .doneButton {
   float: right !important;
   margin-top: 1rem;
@@ -961,6 +980,10 @@ dl.instructions dt p {
 
 }
 
+.caps {
+  text-transform: capitalize!important;
+}
+
 .reportCheck {
   height: 32px;
   max-height: 32px;
@@ -1210,27 +1233,6 @@ dl.instructions dt p {
   font-size: 14px;
 }
 
-.admin-check {
-  margin: 16px !important;
-  height: 16px;
-  max-height: 16px;
-  width: 16px;
-  max-width: 16px;
-  min-width: 16px;
-  display: block;
-  background-color: white;
-  border: 1px solid #363946;
-  box-sizing: border-box;
-  border-radius: 3px;
-
-}
-
-
-.admin-check-active {
-  border: 0 !important;
-  background: $branding-blue url("/static/img/admin_checkmark.svg") no-repeat center center;
-}
-
 .admin-head-check {
   width: 48px;
   max-width: 48px !important;
@@ -1264,7 +1266,7 @@ dl.instructions dt p {
 }
 
 .admin-options {
-  margin-bottom: 16px;
+  margin-bottom: 8px;
   height: 48px!important;
   max-height: 48px!important;
   overflow: visible;
@@ -1310,6 +1312,38 @@ dl.instructions dt p {
   float: right;
   margin-right: 12px;
   vertical-align: center;
+}
+
+.disabledeye {
+  display: inline-block;
+  background: url('/static/img/disabled_eye.svg') center center no-repeat;
+  color: $branding-dark;
+  width: 12px;
+  max-width: 12px;
+  max-height: 10.3px;
+  height: 40px;
+  line-height: 40px;
+  margin-top: 4.6px;
+  margin-right: 8px;
+  vertical-align: center;
+}
+
+.trashcan {
+  display: inline-block;
+  background: url('/static/img/trashcan.svg') center center no-repeat;
+  color: $branding-red;
+  width: 10px;
+  max-width: 10px;
+  max-height: 9px;
+  height: 40px;
+  line-height: 40px;
+  margin-top: 3px;
+  margin-right: 8px;
+  vertical-align: center;
+}
+
+.pointer {
+  cursor: pointer;
 }
 
 .admin-switcher a {
@@ -1364,6 +1398,12 @@ dl.instructions dt p {
   height: auto;
   box-shadow: 0px 2px 6px #B7B7B7;
 
+}
+
+.batch-modal {
+  width: 376px;
+  height: auto;
+  box-shadow: 0px 2px 6px #B7B7B7;
 }
 
 .admin-modal-content {
@@ -1480,6 +1520,25 @@ line-height: normal;
 color: #000F9B!important;
 }
 
+.normal-caps-14 {
+  font-family: Rubik;
+font-style: normal;
+font-weight: 500;
+font-size: 14px;
+line-height: normal;
+text-transform: uppercase;
+}
+
+.normal-caps-red-14 {
+  font-family: Rubik;
+font-style: normal;
+font-weight: 500;
+font-size: 14px;
+line-height: normal;
+text-transform: uppercase;
+  color: $branding-red;
+}
+
 .normal-white-18 {
   font-family: Rubik;
 font-style: normal;
@@ -1552,6 +1611,16 @@ color: #000000;
   cursor: pointer;
 }
 
+.admin-batch-button {
+  display: inline-block!important;
+  height: 40px!important;
+  line-height: 40px;
+}
+.admin-batch-button>span{
+  cursor: pointer;
+  vertical-align: center;
+}
+
 .admin-close-button {
   display: block;
   justify-items: right;
@@ -1583,10 +1652,11 @@ color: #000000;
 .admin-textarea {
   margin-top: 8px;
   height: 150px;
+  width: 100%;
   background: #FFFFFF;
-border: 1px solid #363946;
-box-sizing: border-box;
-border-radius: 3px;
+  border: 1px solid #363946;
+  box-sizing: border-box;
+  border-radius: 3px;
   font-size: 12px;
 }
 
@@ -1705,4 +1775,42 @@ iframe {
     height: 100%;
     border: 0;
 
+}
+
+.inline {
+  display: inline;
+}
+
+
+.admin-check {
+  margin: 16px !important;
+  height: 16px;
+  max-height: 16px;
+  width: 16px;
+  max-width: 16px;
+  min-width: 16px;
+  display: block;
+  background-color: white;
+  border: 1px solid #363946;
+  box-sizing: border-box;
+  border-radius: 3px;
+
+}
+
+.admin-check:checked {
+  border: 0 !important;
+  background: $branding-blue url("/static/img/admin_checkmark.svg") no-repeat center center;
+}
+
+
+.admin-check-active {
+  border: 0 !important;
+  background: $branding-blue url("/static/img/admin_checkmark.svg") no-repeat center center;
+}
+
+.stop-modal {
+  width: 496px;
+  background: #FFFFFF;
+box-shadow: 0px 2px 6px #B7B7B7;
+border-radius: 4px;
 }
