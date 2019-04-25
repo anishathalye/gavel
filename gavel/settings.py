@@ -65,6 +65,7 @@ MIN_VIEWS =       int(c.get('min_views',       'MIN_VIEWS',                defau
 TIMEOUT =       float(c.get('timeout',         'TIMEOUT',                  default=5.0)) # in minutes
 WELCOME_MESSAGE =     c.get('welcome_message',                             default=constants.DEFAULT_WELCOME_MESSAGE)
 CLOSED_MESSAGE =      c.get('closed_message',                              default=constants.DEFAULT_CLOSED_MESSAGE)
+CLOSING_MESSAGE =     c.get('closing_message',                             default=constants.DEFAULT_CLOSING_MESSAGE)
 DISABLED_MESSAGE =    c.get('disabled_message',                            default=constants.DEFAULT_DISABLED_MESSAGE)
 LOGGED_OUT_MESSAGE =  c.get('logged_out_message',                          default=constants.DEFAULT_LOGGED_OUT_MESSAGE)
 WAIT_MESSAGE =        c.get('wait_message',                                default=constants.DEFAULT_WAIT_MESSAGE)

@@ -52,6 +52,10 @@ DEFAULT_CLOSED_MESSAGE = '''
 Gavel judging is currently closed. If judging is still happening in person, try refreshing the page.
 '''.strip()
 
+DEFAULT_CLOSING_MESSAGE = '''
+Gavel judging is in the process of shutting down. Please wait.
+'''.strip()
+
 DEFAULT_DISABLED_MESSAGE = '''
 Your account is currently disabled. Reload the page to try again.
 '''.strip()
