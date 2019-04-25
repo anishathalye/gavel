@@ -5,7 +5,7 @@
     <div class="banner-branded">Gavel Admin Dashboard<span style="cursor: pointer;" onclick="toggleAutoRefresh()" class="live-active" id="live"> Live</span>
       <div class="admin-toggle float-right">
         <button class="normal-white-18 noborder {{ 'admin-judging-active' if setting_closed else 'admin-judging-inactive' }}"
-                onclick="{{ document.getElementById('admin-judge-setting-form').submit() if setting_closed else 'admin'}}">
+                onclick="{{ "document.getElementById('admin-judge-setting-form').submit()" if setting_closed else "openModal('stop-session')"}}">
           {{ 'Stop Session' if not setting_closed else 'Start Session' }}
         </button>
         <form id="admin-judge-setting-form" action="/admin/setting" method="post">
@@ -48,13 +48,21 @@
       <div class="admin-add-button" id="add">
         <span class="normal-caps-purple-14" id="add-text"></span>
       </div>
+      <div class="admin-batch-button float-right" id="batchPanel">
+        <div class="normal-caps-14 inline pointer" id="" style="margin-right: 24px;" onclick="openModal('disable-entries')"><span class="disabledeye"></span><span>BATCH DISABLE</span></div>
+        <div class="normal-caps-red-14 inline pointer" id="" onclick="openModal('delete-entries')"><span class="trashcan"></span>BATCH DELETE</div>
+      </div>
     </div>
     <div class="admin-tabs live-table">
       <div id="admin-reports" class="admin-table live-table">
         <table id="reports">
           <thead class="admin-header">
           <tr>
-            <th class="admin-head-check no-sort"><span class="admin-check" id="check-all-reports"></span></th>
+            <th class="admin-head-check no-sort">
+              <label>
+                <input onclick="checkAllReports()" id="check-all-reports" type="checkbox" class="admin-check">
+              </label>
+            </th>
             <th class="admin-head-id">Id<a></a></th>
             <th class="admin-head-judge">Judge Name<a></a></th>
             <th class="admin-head-project">Project Name<a></a></th>
@@ -73,7 +81,11 @@
         <table id="projects">
           <thead class="admin-header">
           <tr>
-            <th class="no-sort admin-head-check"><span class="admin-check" id="check-all-projects"></span></th>
+            <th class="no-sort admin-head-check">
+              <label>
+                <input onclick="checkAllProjects()" id="check-all-projects" type="checkbox" class="admin-check">
+              </label>
+            </th>
             <th class="admin-head-id">Id<a></a></th>
             <th class="admin-head-project">Project Name<a></a></th>
             <th class="admin-head-standard">Location<a></a></th>
@@ -97,14 +109,18 @@
         <table id="judges">
           <thead class="admin-header">
           <tr>
-            <th class="no-sort admin-head-check"><span class="admin-check" id="check-all-judges"></span></th>
+            <th class="no-sort admin-head-check">
+              <label>
+                <input onclick="checkAllJudges()" id="check-all-judges" type="checkbox" class="admin-check">
+              </label>
+            </th>
             <th class="sort-default admin-head-id">Id<a></a></th>
             <th>Name<a></a></th>
             <th>Email<a></a></th>
             <th>Description<a></a></th>
             <th>Votes<a></a></th>
             <th>Next (Id)<a></a></th>
-            <th>Previous (Id)<a></a></th>
+            <th>Prev. (Id)<a></a></th>
             <th>Updated<a></a></th>
             <th class="no-sort">Email<a></a></th>
             <th class="no-sort">Active<a></a></th>
@@ -117,10 +133,11 @@
         </table>
       </div>
     </div>
+
     <div class="modal-wrapper" id="add-projects">
       <div class="full-modal">
         <div class="admin-modal-content add-modal">
-          <div class="admin-close-button" onclick="openModal(null)"></div>
+          <div class="admin-close-button" onclick="openModal('close')"></div>
           <h4 class="normal-20">Add Projects</h4>
           <p class="normal-12 compact">CSV Format: Project Name, Location, Description</p>
           <label class="upload-judges-button bold-caps-white-12 compact" for="annotator-file">
@@ -130,7 +147,7 @@
           </label>
           <p class="normal-12 compact">Manually Add New Projects</p>
           <textarea name="data" form="item_form" class="admin-textarea"></textarea>
-          <button class="inlineButton-32 normal-caps-white-15 noborder" onclick="openModal(null)">Cancel</button>
+          <button class="inlineButton-32 normal-caps-white-15 noborder" onclick="openModal('close')">Cancel</button>
           <form action="/admin/item" method="post" id="item_form" enctype="multipart/form-data" style="display: inline;">
             <button type="submit" name="action" value="Submit"
                     class="background-purple inlineButton-32 normal-caps-white-15 float-right noborder">Add Projects
@@ -154,7 +171,7 @@
           </label>
           <p class="normal-12 compact">Manually Add New Judges</p>
           <textarea name="data" form="annotator_form" class="admin-textarea"></textarea>
-          <button class="inlineButton-32 normal-caps-white-15 noborder" onclick="openModal(null)">Cancel</button>
+          <button class="inlineButton-32 normal-caps-white-15 noborder float-left" onclick="openModal(null)">Cancel</button>
           <form action="/admin/annotator" method="post" id="annotator_form" enctype="multipart/form-data" style="display: inline;">
             <button type="submit" name="action" value="Submit"
                     class="background-purple inlineButton-32 normal-caps-white-15 float-right noborder">Add Judges
@@ -166,17 +183,69 @@
     </div>
 
     <div class="modal-wrapper" id="delete-entries">
-      <div class="full-modal batch-modal">
-        <div class="admin-modal-content">
+      <div class="full-modal">
+        <div class="admin-modal-content batch-modal">
+          <h4 class="normal-20">Are you sure you want to <span class="purpleBold">delete</span> these entries?</h4>
+          <button class="normal-white-18 noborder inlineButton-32" onclick="openModal('close')">NO I DON'T</button>
+          <button class="normal-white-18 noborder inlineButton-32 background-red" id="batchDelete">YES I DO</button>
+          <form action='/admin/item' method="post" id="batchDeleteItems">
+            <input type="hidden" name="action" value="BatchDelete">
+            {# Ids filled in later     #}
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+          </form>
+          <form action='/admin/annotator' method="post" id="batchDeleteAnnotators">
+            <input type="hidden" name="action" value="BatchDelete">
+            {# Ids filled in later     #}
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+          </form>
+        </div>
+      </div>
+    </div>
 
+    <div class="modal-wrapper" id="disable-entries">
+      <div class="full-modal">
+        <div class="admin-modal-content batch-modal">
+          <h4 class="normal-20">Are you sure you want to <span class="purpleBold">disable</span> these entries?</h4>
+          <button class="normal-white-18 noborder inlineButton-32" onclick="openModal('close')">NO I DON'T</button>
+          <button class="normal-white-18 noborder inlineButton-32 background-red" id="batchDisable">YES I DO</button>
+          <form action='/admin/item' method="post" id="batchDisableItems">
+            <input type="hidden" name="action" value="BatchDisable">
+            {# Ids filled in later     #}
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+          </form>
+          <form action='/admin/annotator' method="post" id="batchDisableAnnotators">
+            <input type="hidden" name="action" value="BatchDisable">
+            {# Ids filled in later     #}
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+          </form>
         </div>
       </div>
     </div>
 
     <div class="modal-wrapper" id="stop-session">
-      <div class="full-modal stop-modal">
-        <div class="admin-modal-content">
-
+      <div class="full-modal">
+        <div class="admin-modal-content stop-modal">
+          <h3 class="normal-20 center">Are you sure you want to <span class="redBold">stop</span><br>the judging session?</h3>
+          <p class="center normal-14">
+            If you choose to soft close, expo judges will be allowed to make a decision on the
+            team they are currently visiting. Final results as of closing are subject to change
+            based on these last entries.
+          </p>
+          <p class="center normal-14">
+            Optionally, ending the session now will preserve the rankings shown.
+          </p>
+          <button class="normal-12 float-left white caps background-grey noborder inlineButton-32 w144" onclick="openModal('close')">CONTINUE JUDGING</button>
+            <form class="inline" style="margin-left: 8px;" action="/admin/queueshutdown" method="post" id="softClose">
+              <input type="hidden" name="action" value="queue">
+              <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+              <button class="normal-12 white caps background-red noborder inlineButton-32 w144" type="submit">SOFT CLOSE</button>
+            </form>
+            <form class="inline float-right" action="/admin/setting" method="post">
+              <input type="hidden" name="action" value="Close">
+              <input type="hidden" name="key" value="closed">
+              <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+              <button class="normal-12 white caps background-red noborder inlineButton-32 w144">END SESSION NOW</button>
+            </form>
         </div>
       </div>
     </div>
@@ -184,9 +253,9 @@
     <div class="modal-wrapper" id="edit-judge">
       <div class="full-modal">
         <div class="admin-modal-content edit-modal">
-          <div class="admin-close-button" onclick="openModal(null)"></div>
-          <div class="responsive-iframe-container">
-            <iframe onload="iframeLoaded('annotatorframe')" class="responsive-iframe" src="/admin/annotator/1/" scrolling="no" id="annotatorframe" sandbox="allow-top-navigation allow-scripts allow-forms"></iframe>
+          <div class="admin-close-button" onclick="openModal('close')"></div>
+          <div>
+            <iframe onload="iframeLoaded('annotatorframe')" width=100% height="400px" src="/admin/annotator/1/" scrolling="no" id="annotatorframe" sandbox="allow-top-navigation allow-scripts allow-forms"></iframe>
           </div>
         </div>
       </div>
@@ -195,7 +264,7 @@
     <div class="modal-wrapper" id="edit-project">
       <div class="full-modal">
         <div class="admin-modal-content edit-modal">
-          <div class="admin-close-button" onclick="openModal(null)"></div>
+          <div class="admin-close-button" onclick="openModal('close')"></div>
           <div class="responsive-iframe-container">
             <iframe onload="iframeLoaded('itemframe')" height="" class="responsive-iframe" src="/admin/item/1/" scrolling="no" id="itemframe" sandbox="allow-top-navigation allow-scripts allow-forms"></iframe>
           </div>
@@ -216,7 +285,7 @@
     let responseInterval = function () {let response = refresh("{{ csrf_token() }}");};
     let intervalid = window.setInterval(responseInterval, 5000);
     let livereload = true;
-
+    let currentTab = "reports";
 
   </script>
   <script>
@@ -265,19 +334,24 @@
       const projects = document.getElementById("admin-projects");
       const reports = document.getElementById("admin-reports");
       const content = document.getElementById("admin-switcher-content");
+      const batch = document.getElementById("batchPanel");
+      currentTab = e;
       judges.style.display = "none";
       projects.style.display = "none";
       reports.style.display = "none";
       content.innerText = "none";
+      batch.style.display = "none";
       localStorage.setItem("currentTab", e);
       switch (localStorage.getItem("currentTab")) {
         case "judges":
           judges.style.display = "block";
           content.innerText = "Manage Judges";
+          batch.style.display = "inline-block";
           break;
         case "projects":
           projects.style.display = "block";
           content.innerText = "Manage Projects";
+          batch.style.display = "inline-block";
           break;
         case "reports":
           reports.style.display = "block";
@@ -323,19 +397,10 @@
     }
 
     function openModal(modal) {
-      const addJudges = document.getElementById('add-judges');
-      const addProjects = document.getElementById('add-projects');
-      const deleteEntries = document.getElementById('delete-entries');
-      const stopSession = document.getElementById('stop-session');
-      const editJudge = document.getElementById('edit-judge');
-      const editProject = document.getElementById('edit-project');
+      $("body").find(".modal-wrapper").css('display', 'none');
 
-      const modals = [addJudges, addProjects, deleteEntries, stopSession, editJudge, editProject];
-      modals.forEach((e) => {
-        e.style.display = 'none';
-      });
       var dumdum;
-      modal ? document.getElementById(modal).style.display = 'block' : dumdum = 'dum';
+      modal !== 'close' && modal ? document.getElementById(modal).style.display = 'block' : dumdum = 'dum';
     }
 
     $(document).click(function (event) {
@@ -353,16 +418,62 @@
       }
     });
 
+    function checkAllReports () {
+      let check = document.getElementById('check-all-reports');
+      if (check.checked) {
+        $('#reports').find('input[type=checkbox]').each(function () {
+          this.checked = true;
+        });
+        check.checked = true;
+      } else {
+        $('#reports').find('input[type=checkbox]:checked').each(function () {
+          this.checked = false;
+        });
+        check.checked = false;
+      }
+    }
+
+    function checkAllProjects () {
+      let check = document.getElementById('check-all-projects');
+      if (check.checked) {
+        $('#projects').find('input[type=checkbox]').each(function () {
+          this.checked = true;
+        });
+        check.checked = true;
+      } else {
+        $('#projects').find('input[type=checkbox]:checked').each(function () {
+          this.checked = false;
+        });
+        check.checked = false;
+      }
+    }
+
+    function checkAllJudges () {
+      let check = document.getElementById('check-all-judges');
+      if (check.checked) {
+        $('#judges').find('input[type=checkbox]').each(function () {
+          this.checked = true;
+        });
+        check.checked = true;
+      } else {
+        $('#judges').find('input[type=checkbox]:checked').each(function () {
+          this.checked = false;
+        });
+        check.checked = false;
+      }
+    }
+
     function openJudge(i) {
       const annotator = currentAnnotators[i];
-      const editJudge = document.getElementById('edit-judge');
-      //TODO: Populate modal with data
+      const editJudge = document.getElementById('annotatorframe');
+      editJudge.src=`/admin/annotator/${annotator.id}/`;
       openModal('edit-judge');
     }
 
     function openProject(i) {
       const item = currentItems[i];
-      const editProject = document.getElementById('edit-project');
+      const editProject = document.getElementById('itemframe');
+      editProject.src=`/admin/item/${item.id}/`;
 
       openModal('edit-project');
     }
@@ -374,6 +485,53 @@
       rel.classList = livereload ? ['live-active'] : ['live-inactive'];
     }
 
+  </script>
+  <script>
+    let judgeIds = [];
+    let projectIds = [];
+    let form = null;
+    $('#batchDelete').click(async function () {
+      projectIds = [];
+      judgeIds = [];
+      form = null;
+      if ( currentTab === 'projects' ) {
+        form = document.getElementById('batchDeleteItems');
+      } else if ( currentTab === 'judges' ) {
+        form = document.getElementById('batchDeleteAnnotators');
+      }
+      $('#'+currentTab).find('input[type="checkbox"]:checked').each(function () {
+        form.innerHTML = form.innerHTML + '<input type="hidden" name="ids" value="'+this.id+'"/>';
+      });
+      try {
+        form.serializeArray()
+      } catch {
+
+      }
+      const full = await form;
+      await full.submit();
+
+    });
+
+    $('#batchDisable').click(async function () {
+      projectIds = [];
+      judgeIds = [];
+      form = null;
+      if ( currentTab === 'projects' ) {
+        form = document.getElementById('batchDisableItems');
+      } else if ( currentTab === 'judges' ) {
+        form = document.getElementById('batchDisableAnnotators');
+      }
+      $('#'+currentTab).find('input[type="checkbox"]:checked').each(function () {
+        form.innerHTML = form.innerHTML + '<input type="hidden" name="ids" value="'+this.id+'"/>';
+      });
+      try {
+        form.serializeArray();
+      } catch {
+
+      }
+      const full = await form;
+      await full.submit();
+    });
   </script>
 
 
