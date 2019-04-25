@@ -104,6 +104,7 @@ def admin():
 @app.route('/admin/item', methods=['POST'])
 @utils.requires_auth
 def item():
+    print(request.form)
     action = request.form['action']
     if action == 'Submit':
         data = parse_upload_form()
@@ -134,16 +135,29 @@ def item():
             db.session.commit()
         except IntegrityError as e:
             return utils.server_error(str(e))
+    elif action == 'BatchDisable':
+        item_ids = request.form.getlist('ids')
+        error = []
+        for item_id in item_ids:
+            try:
+                Item.by_id(item_id).active = False
+                db.session.commit()
+            except:
+                error.append(item_id)
+                db.session.rollback()
     elif action == 'BatchDelete':
-        item_ids = request.form['item_ids']
+        db.Session.autocommit = True
+        item_ids = request.form.getlist('ids')
         error = []
         for item_id in item_ids:
             try:
                 db.session.execute(ignore_table.delete(ignore_table.c.item_id == item_id))
                 Item.query.filter_by(id=item_id).delete()
                 db.session.commit()
-            except IntegrityError as e:
-                error.append(item_id)
+            except Exception as e:
+                error.append(str(e))
+                db.session.rollback()
+                continue
     return redirect(url_for('admin'))
 
 
@@ -151,7 +165,6 @@ def item():
 @utils.requires_auth
 def queue_shutdown():
     action = request.form['action']
-    print(action, " *** action")
     annotators = Annotator.query.order_by(Annotator.id).all()
     if action == 'queue':
         for an in annotators:
@@ -279,15 +292,26 @@ def annotator():
             db.session.commit()
         except IntegrityError as e:
             return utils.server_error(str(e))
+    elif action == 'BatchDisable':
+        annotator_ids = request.form['ids']
+        errored = []
+        for annotator_id in annotator_ids:
+            try:
+                Annotator.by_id(annotator_id).active = False
+                db.session.commit()
+            except:
+                db.session.rollback()
+                errored.append(annotator_id)
     elif action == 'BatchDelete':
-        annotator_ids = request.form['annotator_ids']
+        annotator_ids = request.form['ids']
         errored = []
         for annotator_id in annotator_ids:
             try:
                 db.session.execute(ignore_table.delete(ignore_table.c.annotator_id == annotator_id))
                 Annotator.query.filter_by(id=annotator_id).delete()
                 db.session.commit()
-            except IntegrityError as e:
+            except:
+                db.session.rollback()
                 errored.append(annotator_id)
     return redirect(url_for('admin'))
 
