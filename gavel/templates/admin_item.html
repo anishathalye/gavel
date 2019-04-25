@@ -23,14 +23,28 @@
             <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
           </form>
   </span></p>
-      <p class="normal-14"><span class="bold-14">Location: </span><span>
+      <p class="normal-14"><span class="bold-14">Location: </span>
+        <span>
     <form action="/admin/item_patch" method="post" class="form-inline">
             <input type="text" name="location" value="{{ item.location | safe }}">
       <button type="submit" name="action" value="Update">Update</button>
             <input type="hidden" name="item_id" value="{{ item.id }}">
             <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
           </form>
-  </span></p>
+  </span>
+      </p>
+    <p class="normal-14">
+      <span class="bold-14">Description:</span>
+      <br>
+      <span>
+        <textarea name="description" form="description_form">{{ item.description | safe }}</textarea>
+          <form action="/admin/item_patch" method="post" id="description_form" class="form-inline">
+            <input type="hidden" name="item_id" value="{{ item.id }}">
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+            <button type="submit" name="action" value="Update">Update</button>
+          </form>
+      </span>
+    </p>
     <p class="normal-14"><span class="bold-14">Mu: </span>{{ item.mu }}</p>
     <p class="normal-14"><span class="bold-14">Sigma Squared: </span>{{ item.sigma_sq }}</p>
     <p class="normal-14"><span class="bold-14">Seen By Judges: </span>
