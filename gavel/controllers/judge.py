@@ -61,7 +61,7 @@ def index():
         if not annotator.active and annotator.stop_next:
             return render_template(
                 'closed.html',
-                content=utils.render_markdown(settings.CLOSED_MESSAGE)
+                content=utils.render_markdown(settings.CLOSING_MESSAGE)
             )
         if not annotator.read_welcome:
             return redirect(url_for('welcome'))
