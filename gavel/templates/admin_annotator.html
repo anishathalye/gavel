@@ -19,27 +19,22 @@
       <p class="normal-14"><span class="bold-14">Description: </span><span
         id="description">{{ annotator.description | safe }}</span></p>
       <p class="normal-14"><span class="bold-14">Login URL: </span><span id="login"><a
-        href="{{ login_link }}" class="normal-purple-14" style="overflow: hidden;">{{ login_link }}</a></span></p>
+        href="{{ login_link }}" target="_parent" class="normal-purple-14" style="overflow: hidden;">{{ login_link }}</a></span></p>
       <p class="normal-14"><span class="bold-14">Total Votes: </span>
         <span id="votes">
-            {% for item in seen %}
-              <li><a href="{{ url_for('item_detail', item_id=item.id) }}"
-                     class="colored" target="_parent">{{ item.name | safe }} [{{ item.id }}]</a></li>
-            {% endfor %}
+            {{ seen | length }}
       </span>
       </p>
       <p class="normal-14"><span class="bold-14">Current Team: </span><span id="team">
       {% if annotator.next %}
-        <td><a href="{{ url_for('item_detail', item_id=annotator.next.id) }}"
-               class="colored">{{ annotator.next.name | safe }} [{{ annotator.next_id }}]</a></td>
+        <span>{{ annotator.next_id }}</span>
       {% else %}
         <td>None</td>
       {% endif %}
     </span></p>
       <p class="normal-14"><span class="bold-14">Previous Team: </span><span id="previous">
       {% if annotator.prev %}
-        <td><a href="{{ url_for('item_detail', item_id=annotator.prev.id) }}"
-               class="colored">{{ annotator.prev.name | safe }} [{{ annotator.prev_id }}]</a></td>
+        <span>{{ annotator.prev_id }}</span>
       {% else %}
         <td>None</td>
       {% endif %}
@@ -58,14 +53,12 @@
     </span></p>
       <p class="normal-14"><span class="bold-14">Seen Teams: </span><span id="seen">
       {% for item in seen %}
-        <li><a href="{{ url_for('item_detail', item_id=item.id) }}"
-               class="colored">{{ item.name | safe }} [{{ item.id }}]</a></li>
+        <span>{{ item.id }},</span>
       {% endfor %}
     </span></p>
       <p class="normal-14"><span class="bold-14">Skipped Teams: </span><span id="skipped">
       {% for item in skipped %}
-        <li><a href="{{ url_for('item_detail', item_id=item.id) }}"
-               class="colored">{{ item.name | safe }} [{{ item.id }}]</a></li>
+        <span>{{ item.id }},</span>
       {% endfor %}
     </span></p>
     </div>
