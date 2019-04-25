@@ -293,7 +293,7 @@ def annotator():
         except IntegrityError as e:
             return utils.server_error(str(e))
     elif action == 'BatchDisable':
-        annotator_ids = request.form['ids']
+        annotator_ids = request.form.getlist('ids')
         errored = []
         for annotator_id in annotator_ids:
             try:
@@ -302,8 +302,9 @@ def annotator():
             except:
                 db.session.rollback()
                 errored.append(annotator_id)
+                continue
     elif action == 'BatchDelete':
-        annotator_ids = request.form['ids']
+        annotator_ids = request.form.getlist('ids')
         errored = []
         for annotator_id in annotator_ids:
             try:
@@ -313,6 +314,7 @@ def annotator():
             except:
                 db.session.rollback()
                 errored.append(annotator_id)
+                continue
     return redirect(url_for('admin'))
 
 
