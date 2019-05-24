@@ -207,3 +207,215 @@ async function refresh(token) {
     $('#projects').trigger("update");
 }
 
+let responseInterval = function () {let response = refresh("{{ csrf_token() }}");};
+let intervalid = window.setInterval(responseInterval, 5000);
+let livereload = true;
+let currentTab = "reports";
+
+function openJudge(i) {
+    const annotator = currentAnnotators[i];
+    const editJudge = document.getElementById('annotatorframe');
+    editJudge.src = `/admin/annotator/${annotator.id}/`;
+    openModal('edit-judge');
+}
+
+function openProject(i) {
+    const item = currentItems[i];
+    const editProject = document.getElementById('itemframe');
+    editProject.src = `/admin/item/${item.id}/`;
+
+    openModal('edit-project');
+}
+
+function toggleSelector() {
+    const selectorModal = document.getElementById("selector");
+    selectorModal.style.display = selectorModal.style.display === "block" ? "none" : "block";
+}
+
+function showTab(e) {
+    const judges = document.getElementById("admin-judges");
+    const projects = document.getElementById("admin-projects");
+    const reports = document.getElementById("admin-reports");
+    const content = document.getElementById("admin-switcher-content");
+    const batch = document.getElementById("batchPanel");
+    currentTab = e;
+    judges.style.display = "none";
+    projects.style.display = "none";
+    reports.style.display = "none";
+    content.innerText = "none";
+    batch.style.display = "none";
+    localStorage.setItem("currentTab", e);
+    switch (localStorage.getItem("currentTab")) {
+        case "judges":
+            judges.style.display = "block";
+            content.innerText = "Manage Judges";
+            batch.style.display = "inline-block";
+            break;
+        case "projects":
+            projects.style.display = "block";
+            content.innerText = "Manage Projects";
+            batch.style.display = "inline-block";
+            break;
+        case "reports":
+            reports.style.display = "block";
+            content.innerText = "Manage Reports";
+            break;
+        default:
+            reports.style.display = "block";
+            content.innerText = "Manage Reports";
+            break;
+    }
+    setAddButtonState();
+}
+
+window.addEventListener("DOMContentLoaded", function () {
+    showTab(localStorage.getItem("currentTab") || "admin-reports");
+});
+
+function setAddButtonState() {
+    const judges = document.getElementById("admin-judges").style.display === "block";
+    const projects = document.getElementById("admin-projects").style.display === "block";
+    const reports = document.getElementById("admin-reports").style.display === "block";
+    const text = document.getElementById('add-text');
+    const add = document.getElementById('add');
+    console.log(judges, projects, reports, text);
+    if (!!judges) {
+        text.innerText = "+ Add Judges";
+        text.onclick = function () {
+            openModal('add-judges')
+        };
+        //text.addEventListener('onclick', openModal('add-judges'));
+    }
+    if (!!projects) {
+        text.innerText = "+ Add Projects";
+        text.onclick = function () {
+            openModal('add-projects')
+        };
+        //text.addEventListener('onclick', openModal('add-projects'));
+    }
+    if (!!reports) {
+        text.innerText = "";
+        text.onclick = null;
+    }
+}
+
+function openModal(modal) {
+    $("body").find(".modal-wrapper").css('display', 'none');
+
+    var dumdum;
+    modal !== 'close' && modal ? document.getElementById(modal).style.display = 'block' : dumdum = 'dum';
+}
+
+$(document).click(function (event) {
+    //if you click on anything except the modal itself or the "open modal" link, close the modal
+    if (!$(event.target).hasClass('admin-modal-content') && $(event.target).hasClass('full-modal')) {
+        $("body").find(".modal-wrapper").css('display', 'none')
+    }
+});
+
+$(document).click(function (event) {
+    if (!$(event.target).hasClass('admin-switcher-modal') &&
+        !$(event.target).parents('*').hasClass('admin-switcher') &&
+        !$(event.target).hasClass('admin-switcher')) {
+        $("body").find("#selector").css('display', 'none')
+    }
+});
+
+function checkAllReports() {
+    let check = document.getElementById('check-all-reports');
+    if (check.checked) {
+        $('#reports').find('input[type=checkbox]').each(function () {
+            this.checked = true;
+        });
+        check.checked = true;
+    } else {
+        $('#reports').find('input[type=checkbox]:checked').each(function () {
+            this.checked = false;
+        });
+        check.checked = false;
+    }
+}
+
+function checkAllProjects() {
+    let check = document.getElementById('check-all-projects');
+    if (check.checked) {
+        $('#projects').find('input[type=checkbox]').each(function () {
+            this.checked = true;
+        });
+        check.checked = true;
+    } else {
+        $('#projects').find('input[type=checkbox]:checked').each(function () {
+            this.checked = false;
+        });
+        check.checked = false;
+    }
+}
+
+function checkAllJudges() {
+    let check = document.getElementById('check-all-judges');
+    if (check.checked) {
+        $('#judges').find('input[type=checkbox]').each(function () {
+            this.checked = true;
+        });
+        check.checked = true;
+    } else {
+        $('#judges').find('input[type=checkbox]:checked').each(function () {
+            this.checked = false;
+        });
+        check.checked = false;
+    }
+}
+
+function toggleAutoRefresh() {
+    livereload = !livereload;
+    !livereload ? window.clearInterval(intervalid) : intervalid = window.setInterval(responseInterval, 5000);
+    let rel = document.getElementById("live");
+    rel.classList = livereload ? ['live-active'] : ['live-inactive'];
+}
+
+
+let judgeIds = [];
+let projectIds = [];
+let form = null;
+$('#batchDelete').click(async function () {
+    projectIds = [];
+    judgeIds = [];
+    form = null;
+    if (currentTab === 'projects') {
+        form = document.getElementById('batchDeleteItems');
+    } else if (currentTab === 'judges') {
+        form = document.getElementById('batchDeleteAnnotators');
+    }
+    $('#' + currentTab).find('input[type="checkbox"]:checked').each(function () {
+        form.innerHTML = form.innerHTML + '<input type="hidden" name="ids" value="' + this.id + '"/>';
+    });
+    try {
+        form.serializeArray()
+    } catch {
+
+    }
+    const full = await form;
+    await full.submit();
+
+});
+
+$('#batchDisable').click(async function () {
+    projectIds = [];
+    judgeIds = [];
+    form = null;
+    if (currentTab === 'projects') {
+        form = document.getElementById('batchDisableItems');
+    } else if (currentTab === 'judges') {
+        form = document.getElementById('batchDisableAnnotators');
+    }
+    $('#' + currentTab).find('input[type="checkbox"]:checked').each(function () {
+        form.innerHTML = form.innerHTML + '<input type="hidden" name="ids" value="' + this.id + '"/>';
+    });
+    try {
+        form.serializeArray();
+    } catch {
+
+    }
+    const full = await form;
+    await full.submit();
+});

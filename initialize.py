@@ -6,3 +6,4 @@
 if __name__ == '__main__':
     from gavel.models import db
     db.create_all()
+
