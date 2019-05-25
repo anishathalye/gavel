@@ -1,0 +1,10 @@
+.git
+.idea
+.gitignore
+.dockerignore
+.editorconfig
+.gitattributes
+.buildspec.yml
+config.template.yaml
+config.vagrant.yaml
+Vagrantfile
