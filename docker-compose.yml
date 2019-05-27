@@ -15,17 +15,16 @@ services:
     image: redis:5.0-alpine
 
   gavel:
-    environment:
-      - DATABASE_URL=postgresql://gavel:gavel@postgres/gavel
-      - ADMIN_PASSWORD=password
+    env_file:
+      - .env
     build:
       context: .
       dockerfile: Dockerfile
     ports:
-      - "80:5000"
+      - "8080:5000"
     depends_on:
       - postgres
-    command: bash -c "python initialize.py && /usr/local/bin/gunicorn -w 3 -b 0.0.0.0:5000 gavel:app"
+    command: bash -c "python initialize.py && /usr/local/bin/gunicorn -c workers.py"
 
 
   worker:
@@ -38,6 +37,8 @@ services:
     depends_on:
       - gavel
       - redis
+    ports:
+        - "5555"
     command: celery -A gavel:celery worker
 
 volumes:
