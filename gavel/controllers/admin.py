@@ -104,7 +104,6 @@ def admin():
 @app.route('/admin/item', methods=['POST'])
 @utils.requires_auth
 def item():
-    print(request.form)
     action = request.form['action']
     if action == 'Submit':
         data = parse_upload_form()
@@ -508,7 +507,7 @@ def annotator_link(annotator):
     return urllib.parse.urljoin(settings.BASE_URL, url_for('login', secret=annotator.secret))
 
 
-def email_invite_links(annotators):
+async def email_invite_links(annotators):
     if settings.DISABLE_EMAIL or annotators is None:
         return
     if not isinstance(annotators, list):
