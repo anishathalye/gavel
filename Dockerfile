@@ -6,12 +6,12 @@ RUN mkdir /web
 
 WORKDIR /root
 
-ADD requirements.txt /web/requirements.txt
+COPY requirements.txt /web/requirements.txt
 RUN python -m pip install -r /web/requirements.txt --no-cache-dir
 
 WORKDIR /web
 
-ADD . /web
+COPY . /web
 
 ENV PORT 5000
 
