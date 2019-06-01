@@ -21,10 +21,10 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - "8080:5000"
+      - "5000:5000"
     depends_on:
       - postgres
-    command: bash -c "python initialize.py && /usr/local/bin/gunicorn -c workers.py"
+    command: bash -c "python initialize.py && /usr/local/bin/gunicorn gavel:app -c workers.py"
 
 
   worker:
