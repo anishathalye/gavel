@@ -3,6 +3,8 @@
   <p class="preserve-formatting">{{ item.description | safe }}</p>
   <h3>Project Video</h3>
   <br />
-  <div style="position:relative;padding-top:40%;"><iframe src="{{ item.location | safe }}" allowfullscreen="allowfullscreen" frameborder="0" style="position:absolute;top:0;left:0;width:100%;height:100%;"></iframe></div>
-  <p class="preserve-formatting"><a href="{{ item.location | safe }}" target="_blank">Link to video on Google Drive (if embed not working)</a></p>
+  {% if 'id=' in item.location %}
+    <div style="position:relative;padding-top:40%;"><iframe src="{{ item.getVideoPreviewURL() | safe }}" allowfullscreen="allowfullscreen" frameborder="0" style="position:absolute;top:0;left:0;width:100%;height:100%;"></iframe></div>
+  {% endif %}
+  <p class="preserve-formatting">📹<a href="{{ item.location | safe }}" target="_blank">Link to video on Google Drive</a></p>
 </div>

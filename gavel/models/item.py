@@ -1,6 +1,8 @@
 from gavel.models import db
 import gavel.crowd_bt as crowd_bt
 from sqlalchemy.orm.exc import NoResultFound
+from urllib.parse import urlparse
+from urllib.parse import parse_qs
 
 view_table = db.Table('view',
     db.Column('item_id', db.Integer, db.ForeignKey('item.id')),
@@ -35,3 +37,7 @@ class Item(db.Model):
         except NoResultFound:
             item = None
         return item
+
+    def getVideoPreviewURL(self):
+        # try and convert to video preview
+        return 'https://drive.google.com/file/d/'+parse_qs(urlparse(self.location).query)['id'][0]+'/preview'
