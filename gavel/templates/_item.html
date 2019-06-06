@@ -1,10 +1,15 @@
 <div class="info">
   <h2>{{ item.name | safe }}</h2>
   <p class="preserve-formatting">{{ item.description | safe }}</p>
-  <h3>Project Video</h3>
-  <br />
-  {% if 'id=' in item.location %}
-    <div style="position:relative;padding-top:40%;"><iframe src="{{ item.getVideoPreviewURL() | safe }}" allowfullscreen="allowfullscreen" frameborder="0" style="position:absolute;top:0;left:0;width:100%;height:100%;"></iframe></div>
+  {% if 'drive.google.com' in item.location %}
+    <h3>Project Video</h3>
+    <br />
+    {% if 'id=' in item.location %}
+      <div style="position:relative;padding-top:40%;"><iframe src="{{ item.getVideoPreviewURL() | safe }}" allowfullscreen="allowfullscreen" frameborder="0" style="position:absolute;top:0;left:0;width:100%;height:100%;"></iframe></div>
+    {% endif %}
+    <p class="preserve-formatting">📹<a href="{{ item.location | safe }}" target="_blank">Link to video on Google Drive</a></p>
+  {% else %}
+    <h3>Location</h3>
+    <p class="preserve-formatting">{{ item.location | safe }}</p>
   {% endif %}
-  <p class="preserve-formatting">📹<a href="{{ item.location | safe }}" target="_blank">Link to video on Google Drive</a></p>
 </div>
