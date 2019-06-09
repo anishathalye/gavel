@@ -9,21 +9,31 @@ services:
       - POSTGRES_DB=gavel
       - POSTGRES_USER=gavel
       - POSTGRES_PASSWORD=gavel
-    restart: always
+    restart: on-failure
 
   redis:
     image: redis:5.0-alpine
+    restart: on-failure
 
   gavel:
-    env_file:
-      - .env
-    build:
-      context: .
-      dockerfile: Dockerfile
+    environment:
+        - DATABASE_URL=postgres://gavel:gavel@postgres/gavel
+        - ADMIN_PASSWORD=admin
+        - REDIS_URL=redis://redis/0
+        - BASE_URL=localhost
+        - EMAIL_FROM=
+        - EMAIL_USER=
+        - EMAIL_PASSWORD=
+        - IGNORE_CONFIG_FILE=true
+        - SECRET_KEY=asdasd
+        - FLASK_DEBUG=1
+    build: .
     ports:
       - "5000:5000"
     depends_on:
       - postgres
+    volumes:
+      - './gavel:/web/gavel'
     command: bash -c "python initialize.py && /usr/local/bin/gunicorn gavel:app -c workers.py"
 
 

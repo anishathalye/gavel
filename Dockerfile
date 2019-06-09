@@ -15,4 +15,6 @@ COPY . /web
 
 ENV PORT 5000
 
+EXPOSE 5000
+
 CMD ["python","initialize.py","&&","gunicorn", "-b","0.0.0.0:$PORT","gavel:app","-w","3"]
