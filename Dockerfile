@@ -1,10 +1,20 @@
-FROM python:3.6
-ADD . /code
-WORKDIR /code
+FROM python:3.7.3-slim
 
-RUN apt-get update -qqy && apt-get install -qqy libopenblas-dev gfortran
-RUN apt-get install -y make automake g++ subversion python3-dev
-RUN apt-get install -y gcc musl-dev postgresql
-RUN python -m pip install -r requirements.txt --no-cache-dir
-RUN python initialize.py
-CMD ["python", "./runserver.py"]
+RUN apt update
+
+RUN mkdir /web
+
+WORKDIR /root
+
+COPY requirements.txt /web/requirements.txt
+RUN python -m pip install -r /web/requirements.txt --no-cache-dir
+
+WORKDIR /web
+
+COPY . /web
+
+ENV PORT 5000
+
+EXPOSE 5000
+
+CMD ["python","initialize.py","&&","gunicorn", "-b","0.0.0.0:$PORT","gavel:app","-w","3"]

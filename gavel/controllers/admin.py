@@ -104,7 +104,6 @@ def admin():
 @app.route('/admin/item', methods=['POST'])
 @utils.requires_auth
 def item():
-    print(request.form)
     action = request.form['action']
     if action == 'Submit':
         data = parse_upload_form()
@@ -452,14 +451,15 @@ def admin_live():
             flags_padded_final.append(None)
 
     # Calculate average sigma
-    average_sigma = 0.0
     holder = 0.0
     for it in items:
         holder += it.sigma_sq
-    average_sigma = holder/len(items)
+    try:
+        average_sigma = holder/len(items)
+    except:
+        average_sigma = 0.0
 
     # Calculate average seen
-    average_seen = 0
     holder = 0
     for an in annotators:
         seen = Item.query.filter(Item.viewed.contains(an)).all()
@@ -507,7 +507,7 @@ def annotator_link(annotator):
     return urllib.parse.urljoin(settings.BASE_URL, url_for('login', secret=annotator.secret))
 
 
-def email_invite_links(annotators):
+async def email_invite_links(annotators):
     if settings.DISABLE_EMAIL or annotators is None:
         return
     if not isinstance(annotators, list):
