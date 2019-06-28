@@ -2,9 +2,11 @@
 #
 # This software is released under AGPLv3. See the included LICENSE.txt for
 # details.
+import os
 
 from flask import Flask
 app = Flask(__name__)
+app.config['DEBUG'] = os.environ.get('DEBUG', False)
 
 import gavel.settings as settings
 app.config['SQLALCHEMY_DATABASE_URI'] = settings.DB_URI
