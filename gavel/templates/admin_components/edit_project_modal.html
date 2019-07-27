@@ -1,0 +1,12 @@
+{% block content %}
+  <div class="modal-wrapper" id="edit-project">
+    <div class="full-modal">
+      <div class="admin-modal-content edit-modal">
+        <div class="admin-close-button" onclick="openModal('close')"></div>
+        <div>
+          <iframe onload="iframeLoaded('itemframe')" height="400px" src="/admin/item/1/" scrolling="no" id="itemframe" sandbox="allow-top-navigation allow-scripts allow-forms"></iframe>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

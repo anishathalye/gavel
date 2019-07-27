@@ -1,0 +1,25 @@
+{% block content %}
+<div class="modal-wrapper" id="add-projects">
+  <div class="full-modal">
+    <div class="admin-modal-content add-modal">
+      <div class="admin-close-button" onclick="openModal('close')"></div>
+      <h4 class="normal-20">Add Projects</h4>
+      <p class="normal-12 compact">CSV Format: Project Name, Location, Description</p>
+      <label class="upload-judges-button bold-caps-white-12 compact" for="annotator-file">
+        Upload Projects CSV File
+        <input style="display: none" type="file" name="file" form="item_form" accept=".csv,.xls,.xlsx"
+               id="item-file">
+      </label>
+      <p class="normal-12 compact">Manually Add New Projects</p>
+      <textarea name="data" form="item_form" class="admin-textarea"></textarea>
+      <button class="inlineButton-32 normal-caps-white-15 noborder" onclick="openModal('close')">Cancel</button>
+      <form action="/admin/item" method="post" id="item_form" enctype="multipart/form-data" style="display: inline;">
+        <button type="submit" name="action" value="Submit"
+                class="background-purple inlineButton-32 normal-caps-white-15 float-right noborder">Add Projects
+        </button>
+        <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

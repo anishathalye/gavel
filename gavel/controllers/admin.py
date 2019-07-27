@@ -47,7 +47,7 @@ def admin_legacy():
     setting_closed = Setting.value_of(SETTING_CLOSED) == SETTING_TRUE
     setting_stop_queue = Setting.value_of(SETTING_STOP_QUEUE) == SETTING_TRUE
     return render_template(
-        'admin.html',
+        'admin_legacy.html',
         annotators=annotators,
         counts=counts,
         item_counts=item_counts,
@@ -87,7 +87,7 @@ def admin():
     # settings
     setting_closed = Setting.value_of(SETTING_CLOSED) == SETTING_TRUE
     return render_template(
-        'admin_ti.html',
+        'admin.html',
         annotators=annotators,
         counts=counts,
         item_counts=item_counts,

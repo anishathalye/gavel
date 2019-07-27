@@ -1,271 +1,203 @@
 {% extends "layout.html" %}
 {% block title %}Admin{% endblock %}
 {% block content %}
-<div class="item">
-  <div class="banner" id="admin-header">
-    <h1>Admin</h1>
-  </div>
-</div>
-
-<div class="item">
-  <div class="banner">
-    <h2>Stats</h2>
-  </div>
-  <div class="info">
-    <p><strong>Votes: </strong>{{ votes }}</p>
-    <span><strong>Reports: </strong>{{ flag_count }}</span>
-  </div>
-</div>
-
-<div class="item">
-  <div class="banner">
-    <h2>Reports</h2>
-  </div>
-  <div class="info">
-    <table id="reports">
-      <thead>
-      <tr>
-        <th data-sort-method="number">Id</th>
-        <th data-sort-method="number">Judge name</th>
-        <th data-sort-method="number">Project Name</th>
-        <th data-sort-method="number">Project Location</th>
-        <th data-sort-method="caseInsensitiveSort">Reasons(s)</th>
-        <th class="sort-default" data-sort-method="caseInsensitiveSort" data-sort-order="desc">Status</th>
-      </tr>
-      </thead>
-      <tbody>
-      {% for flag in flags %}
-        <tr class="{{ 'open' if not flag.resolved else 'resolved' }}">
-          <td>{{ flag.id | safe }}</td>
-          <td>{{ flag.annotator.name | safe }}</td>
-          <td>{{ flag.project.name | safe }}</td>
-          <td>{{ flag.project.location | safe }}</td>
-          <td>{{ flag.reason | safe }}</td>
-          <td class="compact" data-sort="{{ not flag.resolved }}">
-            <form action="/admin/report" method="post">
-              <input type="submit" name="action" value="{{ 'resolve' if not flag.resolved else 'open' }}" class="{{ 'positive' if not flag.resolved else 'negative' }}">
-              <input type="hidden" name="flag_id" value="{{ flag.id }}">
-              <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
-            </form>
-          </td>
-        </tr>
-      {% endfor %}
-      </tbody>
-    </table>
-  </div>
-</div>
-
-<div class="item">
-  <div class="banner">
-    <h2>Projects</h2>
-  </div>
-  <div class="info">
-    <table id="items">
-      <thead>
-        <tr>
-          <th data-sort-method="number">Id</th>
-          <th data-sort-method="caseInsensitiveSort">Name</th>
-          <th data-sort-method="caseInsensitiveSort">Location</th>
-          <th data-sort-method="caseInsensitiveSort">Description</th>
-          <th class="sort-default" data-sort-method="number" data-sort-order="desc">Mu</th>
-          <th data-sort-method="number">Sigma Squared</th>
-          <th data-sort-method="number">Votes</th>
-          <th data-sort-method="number">Seen</th>
-          <th data-sort-method="number" data-sort-order="desc">Skipped</th>
-          <th data-sort-method="caseInsensitiveSort" data-sort-order="desc">Prioritize</th>
-          <th data-sort-method="caseInsensitiveSort">Active</th>
-          <th class="no-sort">Delete</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for item in items %}
-        <tr class="{{ 'disabled' if not item.active else 'prioritized' if item.prioritized else '' }}">
-          <td><a href="{{ url_for('item_detail', item_id=item.id) }}" class="colored">{{ item.id }}</a></td>
-          <td>{{ item.name | safe }}</td>
-          <td>{{ item.location | safe }}</td>
-          <td class="preserve-formatting">{{ item.description | safe }}</td>
-          <td>{{ item.mu | round(4) }}</td>
-          <td>{{ item.sigma_sq | round(4) }}</td>
-          <td>{{ item_counts.get(item.id, 0) }}</td>
-          <td>{{ item.viewed | length }}</td>
-          <td>{{ skipped.get(item.id, 0) }}</td>
-          <td class="compact" data-sort="{{ item.prioritized }}">
-            <form action="/admin/item" method="post">
-              <input type="submit" name="action" value="{{ 'Prioritize' if not item.prioritized else 'Cancel' }}" class="{{ 'positive' if not item.prioritized else 'negative' }}">
-              <input type="hidden" name="item_id" value="{{ item.id }}">
-              <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
-            </form>
-          </td>
-          <td class="compact" data-sort="{{ item.active }}">
-            <form action="/admin/item" method="post">
-              <input type="submit" name="action" value="{{ 'Disable' if item.active else 'Enable' }}" class="{{ 'negative' if item.active else 'positive' }}">
-              <input type="hidden" name="item_id" value="{{ item.id }}">
-              <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
-            </form>
-          </td>
-          <td class="compact">
-            <form action="/admin/item" method="post">
-              <input type="submit" name="action" value="Delete" class="negative">
-              <input type="hidden" name="item_id" value="{{ item.id }}">
-              <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
-            </form>
-          </td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  </div>
-</div>
-
-<div class="item">
-  <div class="banner">
-    <h2>Judges</h2>
-  </div>
-  <div class="info">
-    <table id="annotators">
-      <thead>
-        <tr>
-          <th class="sort-default" data-sort-method="number">Id</th>
-          <th data-sort-method="caseInsensitiveSort">Name</th>
-          <th data-sort-method="caseInsensitiveSort">Email</th>
-          <th data-sort-method="caseInsensitiveSort">Description</th>
-          <th data-sort-method="number">Votes</th>
-          <th data-sort-method="number">Next (Id)</th>
-          <th data-sort-method="number">Previous (Id)</th>
-          <th data-sort-method="number" data-sort-order="desc">Updated</th>
-          <th class="no-sort">Email</th>
-          <th data-sort-method="caseInsensitiveSort">Active</th>
-          <th class="no-sort">Delete</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for annotator in annotators %}
-        <tr class="{{ 'disabled' if not annotator.active else '' }}">
-          <td><a href="{{ url_for('annotator_detail', annotator_id=annotator.id) }}" class="colored">{{ annotator.id }}</a></td>
-          <td>{{ annotator.name | safe }}</td>
-          <td>{{ annotator.email | safe }}</td>
-          <td>{{ annotator.description | safe }}</td>
-          <td>{{ counts.get(annotator.id, 0) }}</td>
-          <td data-sort="{{ annotator.next_id or -1 }}">{{ annotator.next_id }}</td>
-          <td data-sort="{{ annotator.prev_id or -1 }}">{{ annotator.prev_id }}</td>
-          <td data-sort="{{ annotator.updated | utcdatetime_epoch }}">{{ annotator.updated | utcdatetime_local }}</td>
-          <td class="compact">
-            <form action="/admin/annotator" method="post">
-              <input type="submit" name="action" value="Email" class="neutral">
-              <input type="hidden" name="annotator_id" value="{{ annotator.id }}">
-              <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
-            </form>
-          </td>
-          <td class="compact" data-sort="{{ annotator.active }}">
-            <form action="/admin/annotator" method="post">
-              <input type="submit" name="action" value="{{ 'Disable' if annotator.active else 'Enable' }}" class="{{ 'negative' if annotator.active else 'positive' }}">
-              <input type="hidden" name="annotator_id" value="{{ annotator.id }}">
-              <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
-            </form>
-          </td>
-          <td class="compact">
-            <form action="/admin/annotator" method="post">
-              <input type="submit" name="action" value="Delete" class="negative">
-              <input type="hidden" name="annotator_id" value="{{ annotator.id }}">
-              <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
-            </form>
-          </td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  </div>
-</div>
-
-<div class="item">
-  <div class="banner">
-    <h2>Add Projects</h2>
-  </div>
-  <div class="info">
-    <p>Add name, location, description (CSV format)</p>
-    <textarea name="data" form="item_form"></textarea>
-    <form action="/admin/item" method="post" id="item_form" enctype="multipart/form-data">
-      <div class="upload-container">
-        <span class="field">Or upload a file here:</span>
-        <input type="file" name="file" accept=".csv,.xls,.xlsx">
-      </div>
-      <input type="submit" name="action" value="Submit" class="button-full positive">
-      <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
-    </form>
-  </div>
-</div>
-<div class="item">
-  <div class="banner">
-    <h2>Add Judges</h2>
-  </div>
-  <div class="info">
-    <p>Add name, email, description (CSV format)</p>
-    <textarea name="data" form="annotator_form"></textarea>
-    <form action="/admin/annotator" method="post" id="annotator_form" enctype="multipart/form-data">
-      <div class="upload-container">
-        <span class="field">Or upload a file here:</span>
-        <input type="file" name="file" accept=".csv,.xls,.xlsx">
-      </div>
-      <input type="submit" name="action" value="Submit" class="button-full positive">
-      <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
-    </form>
-  </div>
-</div>
-
-<div class="item">
-  <div class="banner">
-    <h2>Global Settings</h2>
-  </div>
-  <div class="info">
-    <table class="header-row">
-      <thead>
-        <tr>
-          <th>Setting</th>
-          <th>Value</th>
-          <th>Edit</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr class="{{ 'disabled' if setting_closed else '' }}">
-          <td>Closed</td>
-          <td>{{ 'Closed' if setting_closed else 'Open' }}</td>
-          <td class="compact">
-            <form action="/admin/setting" method="post">
-              <input type="submit" name="action" value="{{ 'Open' if setting_closed else 'Close' }}" class="{{ 'positive' if setting_closed else 'negative' }}">
-              <input type="hidden" name="key" value="closed">
-              <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
-            </form>
-          </td>
-        </tr>
-      <tr>
-        <td>Queue Shutdown</td>
-        <td>{{ 'Queued' if setting_stop_queue else 'Not Queued' }}</td>
-        <td class="compact">
-          <form action="/admin/queueshutdown" method="post">
-            <input type="submit" name="action" value="{{ 'queue' if not setting_stop_queue else 'dequeue' }}" class="{{ 'positive' if not setting_stop_queue else 'negative' }}">
-            <input type="hidden" name="key" value="queue">
+  <div class="admin-container">
+    <div class="banner-branded">Gavel Admin Dashboard<span style="cursor: pointer;" onclick="toggleAutoRefresh()" class="live-active" id="live"> Live</span>
+      <div class="admin-toggle float-right">
+        <button class="normal-white-18 noborder {{ 'admin-judging-active' if setting_closed else 'admin-judging-inactive' }}"
+                onclick="{{ "document.getElementById('admin-judge-setting-form').submit()" if setting_closed else "openModal('stop-session')"}}">
+          {{ 'Stop Session' if not setting_closed else 'Start Session' }}
+        </button>
+        <form id="admin-judge-setting-form" action="/admin/setting" method="post">
+            <input type="hidden" name="action" value="{{ 'Open' if setting_closed else 'Close' }}">
+            <input type="hidden" name="key" value="closed">
             <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
           </form>
-        </td>
-      </tr>
-      </tbody>
-    </table>
+        </div>
+    </div>
+    <div class="admin-data-bar">
+      <div class="admin-data">
+        <span>TOTAL VOTES</span>
+        <div class="admin-data-text" id="total-votes">{{ votes }}</div>
+      </div>
+      <div class="admin-data">
+        <span>TOTAL PROJECTS</span>
+        <div class="admin-data-text" id="total-active">{{ item_count }}</div>
+      </div>
+      <div class="admin-data">
+        <span>AVG. SIGMA SQUARED</span>
+        <div class="admin-data-text" id="average-sigma"></div>
+      </div>
+      <div class="admin-data">
+        <span>AVG. SEEN</span>
+        <div class="admin-data-text" id="average-seen"></div>
+      </div>
+    </div>
+    <div class="admin-options row">
+      <div class="admin-switcher" id="switcher" onclick="toggleSelector()">
+        <span id="admin-switcher-content">Manage Reports</span>
+        <a class="admin-drop-single-chevron center"></a>
+        <div class="admin-switcher-modal" id="selector">
+          <div class="full" onclick="showTab('reports')"><h3 class="admin-switcher-modal-text">Manage Reports</h3>
+          </div>
+          <div class="full" onclick="showTab('projects')"><h3 class="admin-switcher-modal-text">Manage Projects</h3>
+          </div>
+          <div class="full" onclick="showTab('judges')"><h3 class="admin-switcher-modal-text">Manage Judges</h3></div>
+        </div>
+      </div>
+      <div class="admin-add-button" id="add">
+        <span class="normal-caps-purple-14" id="add-text"></span>
+      </div>
+      <div class="admin-batch-button float-right" id="batchPanel">
+        <div class="normal-caps-14 inline pointer" id="" style="margin-right: 24px;" onclick="openModal('disable-entries')"><span class="disabledeye"></span><span>BATCH DISABLE</span></div>
+        <div class="normal-caps-red-14 inline pointer" id="" onclick="openModal('delete-entries')"><span class="trashcan"></span>BATCH DELETE</div>
+      </div>
+    </div>
+    <div class="admin-tabs live-table">
+      <div id="admin-reports" class="admin-table live-table">
+        <table id="reports">
+          <thead class="admin-header">
+          <tr>
+            <th class="admin-head-check no-sort">
+              <label>
+                <input onclick="checkAllReports()" id="check-all-reports" type="checkbox" class="admin-check">
+              </label>
+            </th>
+            <th class="admin-head-id">Id<a></a></th>
+            <th class="admin-head-judge">Judge Name<a></a></th>
+            <th class="admin-head-project">Project Name<a></a></th>
+            <th class="admin-head-project">Project Location<a></a></th>
+            <th class="admin-head-standard">Reason<a></a></th>
+            <th class="no-sort">Disable<a></a></th>
+            <th class="no-sort">Status<a></a></th>
+          </tr>
+          </thead>
+          <tbody id="reports-body">
+          {# Auto populates with reports #}
+          </tbody>
+        </table>
+      </div>
+      <div id="admin-projects" class="admin-table live-table">
+        <table id="projects">
+          <thead class="admin-header">
+          <tr>
+            <th class="no-sort admin-head-check">
+              <label>
+                <input onclick="checkAllProjects()" id="check-all-projects" type="checkbox" class="admin-check">
+              </label>
+            </th>
+            <th class="admin-head-id">Id<a></a></th>
+            <th class="admin-head-project">Project Name<a></a></th>
+            <th class="admin-head-standard">Location<a></a></th>
+            <th class="admin-head-double">Description<a></a></th>
+            <th class="sort-default admin-head-standard">Mu<a></a></th>
+            <th class="admin-head-standard">Sigma<sup>2</sup><a></a></th>
+            <th class="admin-head-standard">Votes<a></a></th>
+            <th class="admin-head-standard">Seen<a></a></th>
+            <th class="admin-head-standard">Skipped<a></a></th>
+            <th class="admin-head-standard no-sort">Prioritize<a></a></th>
+            <th class="admin-head-standard no-sort">Active<a></a></th>
+            <th class="no-sort admin-head-standard">Delete<a></a></th>
+          </tr>
+          </thead>
+          <tbody id="items-body">
+          {# Auto populates with projects #}
+          </tbody>
+        </table>
+      </div>
+      <div id="admin-judges" class="admin-table live-table">
+        <table id="judges">
+          <thead class="admin-header">
+          <tr>
+            <th class="no-sort admin-head-check">
+              <label>
+                <input onclick="checkAllJudges()" id="check-all-judges" type="checkbox" class="admin-check">
+              </label>
+            </th>
+            <th class="sort-default admin-head-id">Id<a></a></th>
+            <th>Name<a></a></th>
+            <th>Email<a></a></th>
+            <th>Description<a></a></th>
+            <th>Votes<a></a></th>
+            <th>Next (Id)<a></a></th>
+            <th>Prev. (Id)<a></a></th>
+            <th>Updated<a></a></th>
+            <th class="no-sort">Email<a></a></th>
+            <th class="no-sort">Active<a></a></th>
+            <th class="no-sort">Delete<a></a></th>
+          </tr>
+          </thead>
+          <tbody id="judges-body">
+          {#Auto populates with judges#}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    {% include './admin_components/add_projects_modal.html' %}
+
+    {% include './admin_components/add_judges_modal.html' %}
+
+    {% include './admin_components/delete_entries_modal.html' %}
+
+    {% include './admin_components/disable_entries_modal.html' %}
+
+    {% include './admin_components/stop_session_modal.html' %}
+
+    {% include './admin_components/edit_judge_modal.html' %}
+
+    {% include './admin_components/edit_project_modal.html' %}
+
   </div>
-</div>
 {% endblock %}
 {% block end %}
-<script src="{{ url_for('static', filename="js/admin_live.js") }}"></script>
-<script src="{{ url_for('static', filename='js/vendor/tablesort.min.js') }}"></script>
-<script src="{{ url_for('static', filename="js/jquery-3.3.1.min.js") }}"></script>
-<script src="{{ url_for('static', filename='js/vendor/tablesort.number.js') }}"></script>
-<script>
-var tables = [
-  document.getElementById('items'),
-  document.getElementById('annotators'),
-  document.getElementById('reports'),
-];
-for (var i = 0; i < tables.length; i++) {
-  new Tablesort(tables[i]);
-}
-</script>
+  <script src="{{ url_for('static', filename='js/vendor/tablesort.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/vendor/tablesort.number.js') }}"></script>
+  <script src="{{ url_for('static', filename="js/admin_live.js") }}"></script>
+  <script src="{{ url_for('static', filename="js/jquery-3.3.1.min.js") }}"></script>
+  <script src="{{ url_for('static', filename="js/jquery.tablesorter.min.js") }}"></script>
+  <script src="{{ url_for('static', filename="js/jquery.tablesorter.widgets.js") }}"></script>
+  <script>
+    let initial_response = refresh("{{ csrf_token() }}");
+    {#    let checkbox = document.getElementById('fs');
+        let c = "{{ setting_closed }}";
+        c === "True" ? checkbox.checked = false : checkbox.checked = true;#}
+    $('#judges').tablesorter({
+      cssAsc: 'up',
+      cssDesc: 'down',
+      headers: {
+        '.no-sort': {
+          sorter: false,
+        }
+      }
+    });
+    $('#reports').tablesorter({
+      cssAsc: 'up',
+      cssDesc: 'down',
+      headers: {
+        '.no-sort': {
+          sorter: false,
+        }
+      }
+    });
+    $('#projects').tablesorter({
+      cssAsc: 'up',
+      cssDesc: 'down',
+      headers: {
+        '.no-sort': {
+          sorter: false,
+        }
+      }
+    });
+
+    $('.admin-check').click(function(e){
+      localStorage.e.target.id = !!e.target.checked;
+    })
+
+  </script>
+  <script>
+    showTab(localStorage.getItem("currentTab"));
+
+  </script>
+
 {% endblock %}
