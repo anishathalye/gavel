@@ -8,3 +8,5 @@
 config.template.yaml
 config.vagrant.yaml
 Vagrantfile
+app
+.webassets-cache
