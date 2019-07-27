@@ -1,0 +1,25 @@
+{% block content %}
+<div class="modal-wrapper" id="add-judges">
+  <div class="full-modal">
+    <div class="admin-modal-content add-modal">
+      <div class="admin-close-button" onclick="openModal(null)"></div>
+      <h4 class="normal-20">Add Judges</h4>
+      <p class="normal-12 compact">CSV Format: Judge Name, Email, Description</p>
+      <label class="upload-judges-button bold-caps-white-12 compact" for="annotator-file">
+        Upload Judges CSV File
+        <input style="display: none" type="file" name="file" form="annotator_form" accept=".csv,.xls,.xlsx"
+               id="annotator-file">
+      </label>
+      <p class="normal-12 compact">Manually Add New Judges</p>
+      <textarea name="data" form="annotator_form" class="admin-textarea"></textarea>
+      <button class="inlineButton-32 normal-caps-white-15 noborder float-left" onclick="openModal(null)">Cancel</button>
+      <form action="/admin/annotator" method="post" id="annotator_form" enctype="multipart/form-data" style="display: inline;">
+        <button type="submit" name="action" value="Submit"
+                class="background-purple inlineButton-32 normal-caps-white-15 float-right noborder">Add Judges
+        </button>
+        <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

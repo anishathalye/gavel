@@ -2,6 +2,10 @@ import gavel.constants as constants
 import os
 import yaml
 
+from dotenv import load_dotenv
+
+load_dotenv()
+
 BASE_DIR = os.path.dirname(__file__)
 CONFIG_FILE = os.path.join(BASE_DIR, '..', 'config.yaml')
 

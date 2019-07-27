@@ -1,0 +1,29 @@
+{% block component %}
+  <div class="modal-wrapper" id="stop-session">
+    <div class="full-modal">
+      <div class="admin-modal-content stop-modal">
+        <h3 class="normal-20 center">Are you sure you want to <span class="redBold">stop</span><br>the judging session?</h3>
+        <p class="center normal-14">
+          If you choose to soft close, expo judges will be allowed to make a decision on the
+          team they are currently visiting. Final results as of closing are subject to change
+          based on these last entries.
+        </p>
+        <p class="center normal-14">
+          Optionally, ending the session now will preserve the rankings shown.
+        </p>
+        <button class="normal-12 float-left white caps background-grey noborder inlineButton-32 w144" onclick="openModal('close')">CONTINUE JUDGING</button>
+        <form class="inline" style="margin-left: 8px;" action="/admin/queueshutdown" method="post" id="softClose">
+          <input type="hidden" name="action" value="queue">
+          <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+          <button class="normal-12 white caps background-red noborder inlineButton-32 w144" type="submit">SOFT CLOSE</button>
+        </form>
+        <form class="inline float-right" action="/admin/setting" method="post">
+          <input type="hidden" name="action" value="Close">
+          <input type="hidden" name="key" value="closed">
+          <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+          <button class="normal-12 white caps background-red noborder inlineButton-32 w144">END SESSION NOW</button>
+        </form>
+      </div>
+    </div>
+  </div>
+{% endblock %}

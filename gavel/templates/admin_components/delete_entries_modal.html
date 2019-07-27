@@ -1,0 +1,21 @@
+{% block content %}
+<div class="modal-wrapper" id="delete-entries">
+  <div class="full-modal">
+    <div class="admin-modal-content batch-modal">
+      <h4 class="normal-20">Are you sure you want to <span class="purpleBold">delete</span> these entries?</h4>
+      <button class="normal-white-18 noborder inlineButton-32" onclick="openModal('close')">NO I DON'T</button>
+      <button class="normal-white-18 noborder inlineButton-32 background-red" id="batchDelete">YES I DO</button>
+      <form action='/admin/item' method="post" id="batchDeleteItems">
+        <input type="hidden" name="action" value="BatchDelete">
+        {# Ids filled in later     #}
+        <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+      </form>
+      <form action='/admin/annotator' method="post" id="batchDeleteAnnotators">
+        <input type="hidden" name="action" value="BatchDelete">
+        {# Ids filled in later     #}
+        <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}
