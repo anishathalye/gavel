@@ -1,6 +1,9 @@
 let currentAnnotators;
 let currentItems;
 
+/*
+* BEGIN REFRESH FUNCTION
+* */
 async function refresh(token) {
     const data = await $.ajax({
         url: "/admin/live",
@@ -104,7 +107,7 @@ async function refresh(token) {
             // language=HTML
             const items_template = `
             <tr class="${(item.active ? item.prioritized ? 'prioritized' : '' : 'disabled')}">
-              <td><input id="${item.id}" type="checkbox" name="item" value="${item.id}" class="admin-check"/></td>
+              <td id="project-check-container"><input id="${item.id}" type="checkbox" name="item" value="${item.id}" class="admin-check"/></td>
               <td><a onclick="openProject(${item.id})" class="colored">${i}</a></td>
               <td>${item.name}</td>
               <td>${item.location}</td>
@@ -162,7 +165,7 @@ async function refresh(token) {
             // language=HTML
             const annotator_template = `
             <tr class=${annotator.active ? '' : 'disabled'}>
-              <td><input id="${annotator.id}" type="checkbox" name="annotator" value="${annotator.id}" class="admin-check"/></td>
+              <td id="judge-check-container"><input id="${annotator.id}" type="checkbox" name="annotator" value="${annotator.id}" class="admin-check"/></td>
               <td><a onclick="openJudge(${annotator.id})" class="colored">${i}</a></td>
               <td>${annotator.name}</td>
               <td>${annotator.email}</td>
@@ -205,9 +208,18 @@ async function refresh(token) {
     $('#judges').trigger("update");
     $('#reports').trigger("update");
     $('#projects').trigger("update");
+
+    //document.querySelector('.admin-check').checked = localStorage.e.target.checked
 }
 
-let responseInterval = function () {let response = refresh("{{ csrf_token() }}");};
+/*
+* END REFRESH FUNCTION
+* */
+
+let responseInterval = function () {
+    let response = refresh("{{ csrf_token() }}");
+};
+
 let intervalid = window.setInterval(responseInterval, 5000);
 let livereload = true;
 let currentTab = "reports";
@@ -223,7 +235,6 @@ function openProject(i) {
     const item = currentItems[i];
     const editProject = document.getElementById('itemframe');
     editProject.src = `/admin/item/${item.id}/`;
-
     openModal('edit-project');
 }
 
@@ -306,14 +317,12 @@ function openModal(modal) {
     modal !== 'close' && modal ? document.getElementById(modal).style.display = 'block' : dumdum = 'dum';
 }
 
-$(document).click(function (event) {
+$(".full-modal").click(function (event) {
+    console.log(event);
     //if you click on anything except the modal itself or the "open modal" link, close the modal
     if (!$(event.target).hasClass('admin-modal-content') && $(event.target).hasClass('full-modal')) {
         $("body").find(".modal-wrapper").css('display', 'none')
     }
-});
-
-$(document).click(function (event) {
     if (!$(event.target).hasClass('admin-switcher-modal') &&
         !$(event.target).parents('*').hasClass('admin-switcher') &&
         !$(event.target).hasClass('admin-switcher')) {
@@ -373,6 +382,23 @@ function toggleAutoRefresh() {
     rel.classList = livereload ? ['live-active'] : ['live-inactive'];
 }
 
+const judgeCheckboxValues = JSON.parse(localStorage.getItem('judgeCheckboxValues')) || {};
+const $judgeCheckboxes = $("#judge-check-container :checkbox");
+$judgeCheckboxes.on("change", function() {
+    $judgeCheckboxes.each(function() {
+        judgeCheckboxValues[this.id] = this.checked;
+    });
+    localStorage.setItem("judgeCheckboxValues", JSON.stringify(judgeCheckboxValues))
+});
+
+const projectCheckboxValues = JSON.parse(localStorage.getItem('projectCheckboxValues')) || {};
+const $projectCheckboxes = $("#project-check-container :checkbox");
+$projectCheckboxes.on("change", function() {
+    $projectCheckboxes.each(function() {
+        projectCheckboxValues[this.id] = this.checked;
+    });
+    localStorage.setItem("projectCheckboxValues", JSON.stringify(projectCheckboxValues))
+});
 
 let judgeIds = [];
 let projectIds = [];
