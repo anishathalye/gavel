@@ -37,7 +37,7 @@
       <div class="admin-switcher" id="switcher" onclick="toggleSelector()">
         <span id="admin-switcher-content">Manage Reports</span>
         <a class="admin-drop-single-chevron center"></a>
-        <div class="admin-switcher-modal" id="selector">
+        <div class="admin-switcher-modal modal-autoclose" id="selector">
           <div class="full" onclick="showTab('reports')"><h3 class="admin-switcher-modal-text">Manage Reports</h3>
           </div>
           <div class="full" onclick="showTab('projects')"><h3 class="admin-switcher-modal-text">Manage Projects</h3>
@@ -153,10 +153,10 @@
 {% block end %}
   <script src="{{ url_for('static', filename='js/vendor/tablesort.min.js') }}"></script>
   <script src="{{ url_for('static', filename='js/vendor/tablesort.number.js') }}"></script>
-  <script src="{{ url_for('static', filename="js/admin_live.js") }}"></script>
   <script src="{{ url_for('static', filename="js/jquery-3.3.1.min.js") }}"></script>
   <script src="{{ url_for('static', filename="js/jquery.tablesorter.min.js") }}"></script>
   <script src="{{ url_for('static', filename="js/jquery.tablesorter.widgets.js") }}"></script>
+  <script src="{{ url_for('static', filename="js/admin_live.js") }}"></script>
   <script>
     let initial_response = refresh("{{ csrf_token() }}");
     {#    let checkbox = document.getElementById('fs');
