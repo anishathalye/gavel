@@ -289,7 +289,6 @@ function setAddButtonState() {
     const reports = document.getElementById("admin-reports").style.display === "block";
     const text = document.getElementById('add-text');
     const add = document.getElementById('add');
-    console.log(judges, projects, reports, text);
     if (!!judges) {
         text.innerText = "+ Add Judges";
         text.onclick = function () {
@@ -318,7 +317,6 @@ function openModal(modal) {
 }
 
 $(".full-modal").click(function (event) {
-    console.log(event);
     //if you click on anything except the modal itself or the "open modal" link, close the modal
     if (!$(event.target).hasClass('admin-modal-content') && $(event.target).hasClass('full-modal')) {
         $("body").find(".modal-wrapper").css('display', 'none')
