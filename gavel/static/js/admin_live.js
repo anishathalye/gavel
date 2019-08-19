@@ -321,7 +321,7 @@ $(".full-modal").click(function (event) {
     console.log(event);
     //if you click on anything except the modal itself or the "open modal" link, close the modal
     if (!$(event.target).hasClass('admin-modal-content') && $(event.target).hasClass('full-modal')) {
-        $("body").find(".modal-wrapper").css('display', 'none')
+        openModal('close')
     }
     if (!$(event.target).hasClass('admin-switcher-modal') &&
         !$(event.target).parents('*').hasClass('admin-switcher') &&
