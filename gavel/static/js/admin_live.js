@@ -65,16 +65,10 @@ async function refresh(token) {
               <td><a onclick="openProject(${item.id})" href="#" class="colored">${item.name}</a></td>
               <td>${item.location}</td>
               <td>${flag.reason}</td>
-          <td class="compact">
-            <form action="/admin/item" method="post">
-              <input type="submit" name="action" value="${(item.active ? 'Disable' : 'Enable')}" class="${(item.active ? 'negative' : 'positive')}">
-              <input type="hidden" name="item_id" value="${item.id}">
-              <input type="hidden" name="_csrf_token" value="${token}">
-            </form>
-          </td>
-              <td class="compact">
-                <form action="/admin/report" method="post">
-                  <input type="submit" name="action" value="${flag.resolved ? "open" : "resolve"}"
+              <td>
+                <form action="/admin/report" method="post" class="inline-block">
+                  <button type="submit" class="button-full background-purple h-32 text-12 text-bold uppercase">Resolve Flag</button>
+                  <input type="hidden" name="action" value="${flag.resolved ? "open" : "resolve"}"
                          class="${flag.resolved ? "negative" : "positive"}">
                   <input type="hidden" name="flag_id" value="${flag.id}">
                   <input type="hidden" name="_csrf_token" value="${token}">
@@ -117,25 +111,27 @@ async function refresh(token) {
               <td>${item_counts[item.id]}</td>
               <td>${viewed[item.id]}</td>
               <td>${skipped[item.id]}</td>
-              <td class="compact" data-sort="${item.prioritized}">
-                <form action="/admin/item" method="post">
-                  <input type="submit" name="action" value="${(item.prioritized ? 'Cancel' : 'Prioritize')}"
+              <td data-sort="${item.prioritized}">
+                <form action="/admin/item" method="post" class="inline-block tooltip">
+                  <button type="submit" class="nobackgroundnoborder"><i class="fas ${(item.prioritized ? 'fa-chevron-down' : 'fa-chevron-up')}"></i></button>
+                  <span class="tooltiptext">${(item.prioritized ? 'Cancel' : 'Prioritize')}</span>
+                  <input type="hidden" name="action" value="${(item.prioritized ? 'Cancel' : 'Prioritize')}"
                          class="${(item.prioritized ? 'negative' : 'positive')}">
                   <input type="hidden" name="item_id" value="${item.id}">
                   <input type="hidden" name="_csrf_token" value="${token}">
                 </form>
-              </td>
-              <td class="compact" data-sort="${item.active}">
-                <form action="/admin/item" method="post">
-                  <input type="submit" name="action" value="${(item.active ? 'Disable' : 'Enable')}"
+                <form action="/admin/item" method="post" class="inline-block tooltip">
+                  <button type="submit" class="nobackgroundnoborder"><i class="fas ${(item.active ? 'fa-eye' : 'fa-eye-slash')}"></i></button>
+                  <span class="tooltiptext">${(item.active ? 'Deactivate' : 'Activate')}</span>
+                  <input type="hidden" name="action" value="${(item.active ? 'Disable' : 'Enable')}"
                          class="${(item.active ? 'negative' : 'positive')}">
                   <input type="hidden" name="item_id" value="${item.id}">
                   <input type="hidden" name="_csrf_token" value="${token}">
                 </form>
-              </td>
-              <td class="compact">
-                <form action="/admin/item" method="post">
-                  <input type="submit" name="action" value="Delete" class="negative">
+                <form action="/admin/item" method="post" class="inline-block tooltip">
+                  <button type="submit" class="nobackgroundnoborder"><i class="fas fa-trash-alt"></i></button>
+                  <span class="tooltiptext">Delete</span>
+                  <input type="hidden" name="action" value="Delete" class="negative">
                   <input type="hidden" name="item_id" value="${item.id}">
                   <input type="hidden" name="_csrf_token" value="${token}">
                 </form>
@@ -174,24 +170,26 @@ async function refresh(token) {
               <td>${(annotator.next_id || 'None')}</td>
               <td>${(annotator.prev_id || 'None')}</td>
               <td>${(annotator.updated || 'Undefined')}</td>
-              <td class="compact">
-                <form action="/admin/annotator" method="post">
-                  <input type="submit" name="action" value="Email" class="neutral">
+              <td data-sort="${annotator.active}">
+                <form action="/admin/annotator" method="post" class="inline-block tooltip">
+                  <button type="submit" class="nobackgroundnoborder"><i class="fas fa-envelope"></i></button>
+                  <span class="tooltiptext">Send Email</span>
+                  <input type="hidden" name="action" value="Email" class="neutral">
                   <input type="hidden" name="annotator_id" value="${annotator.id}">
                   <input type="hidden" name="_csrf_token" value="${token}">
                 </form>
-              </td>
-              <td class="compact" data-sort="${annotator.active}">
-                <form action="/admin/annotator" method="post">
-                  <input type="submit" name="action" value="${(annotator.active ? 'Disable' : 'Enable')}"
+                <form action="/admin/annotator" method="post" class="inline-block tooltip">
+                  <button type="submit" class="nobackgroundnoborder"><i class="fas ${(annotator.active ? 'fa-eye' : 'fa-eye-slash')}"></i></button>
+                  <span class="tooltiptext">${(annotator.active ? 'De-Activate' : 'Activate')}</span>
+                  <input type="hidden" name="action" value="${(annotator.active ? 'Disable' : 'Enable')}"
                          class="${(annotator.active ? 'negative' : 'positive')}">
                   <input type="hidden" name="annotator_id" value="${annotator.id}">
                   <input type="hidden" name="_csrf_token" value="${token}">
                 </form>
-              </td>
-              <td class="compact">
-                <form action="/admin/annotator" method="post">
-                  <input type="submit" name="action" value="Delete" class="negative">
+                <form action="/admin/annotator" method="post" class="inline-block tooltip">
+                  <button type="submit" class="nobackgroundnoborder"><i class="fas fa-trash-alt"></i></button>
+                  <input type="hidden" name="action" value="Delete" class="negative">
+                  <span class="tooltiptext">Delete</span>
                   <input type="hidden" name="annotator_id" value="${annotator.id}">
                   <input type="hidden" name="_csrf_token" value="${token}">
                 </form>
