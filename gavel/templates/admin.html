@@ -68,8 +68,7 @@
             <th class="admin-head-project">Project Name<a></a></th>
             <th class="admin-head-project">Project Location<a></a></th>
             <th class="admin-head-standard">Reason<a></a></th>
-            <th class="no-sort">Disable<a></a></th>
-            <th class="no-sort">Status<a></a></th>
+            <th class="no-sort">Actions</th>
           </tr>
           </thead>
           <tbody id="reports-body">
@@ -95,9 +94,7 @@
             <th class="admin-head-standard">Votes<a></a></th>
             <th class="admin-head-standard">Seen<a></a></th>
             <th class="admin-head-standard">Skipped<a></a></th>
-            <th class="admin-head-standard no-sort">Prioritize<a></a></th>
-            <th class="admin-head-standard no-sort">Active<a></a></th>
-            <th class="no-sort admin-head-standard">Delete<a></a></th>
+            <th class="admin-head-standard no-sort">Actions<a></a></th>
           </tr>
           </thead>
           <tbody id="items-body">
@@ -122,9 +119,7 @@
             <th>Next (Id)<a></a></th>
             <th>Prev. (Id)<a></a></th>
             <th>Updated<a></a></th>
-            <th class="no-sort">Email<a></a></th>
-            <th class="no-sort">Active<a></a></th>
-            <th class="no-sort">Delete<a></a></th>
+            <th class="no-sort admin-head-standard">Actions<a></a></th>
           </tr>
           </thead>
           <tbody id="judges-body">
@@ -151,12 +146,12 @@
   </div>
 {% endblock %}
 {% block end %}
-  <script src="{{ url_for('static', filename='js/vendor/tablesort.min.js') }}"></script>
-  <script src="{{ url_for('static', filename='js/vendor/tablesort.number.js') }}"></script>
   <script src="{{ url_for('static', filename="js/jquery-3.3.1.min.js") }}"></script>
   <script src="{{ url_for('static', filename="js/jquery.tablesorter.min.js") }}"></script>
   <script src="{{ url_for('static', filename="js/jquery.tablesorter.widgets.js") }}"></script>
   <script src="{{ url_for('static', filename="js/admin_live.js") }}"></script>
+  <script src="{{ url_for('static', filename="js/vendor/fontawesome/js/all.js") }}"></script>
+  <script src="{{ url_for('static', filename="js/baloon.css") }}"></script>
   <script>
     let initial_response = refresh("{{ csrf_token() }}");
     {#    let checkbox = document.getElementById('fs');
