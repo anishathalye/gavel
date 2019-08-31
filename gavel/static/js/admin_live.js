@@ -112,6 +112,12 @@ async function refresh(token) {
               <td>${viewed[item.id]}</td>
               <td>${skipped[item.id]}</td>
               <td data-sort="${item.prioritized}">
+                <span onclick="openProject(${item.id})" class="inline-block tooltip">
+                  <button class="nobackgroundnoborder">
+                    <i class="fas fa-pencil-alt"></i>
+                  </button>
+                  <span class="tooltiptext">Edit Project</span>
+                </span>
                 <form action="/admin/item" method="post" class="inline-block tooltip">
                   <button type="submit" class="nobackgroundnoborder"><i class="fas ${(item.prioritized ? 'fa-chevron-down' : 'fa-chevron-up')}"></i></button>
                   <span class="tooltiptext">${(item.prioritized ? 'Cancel' : 'Prioritize')}</span>
@@ -165,12 +171,18 @@ async function refresh(token) {
               <td><a onclick="openJudge(${annotator.id})" class="colored">${i}</a></td>
               <td>${annotator.name}</td>
               <td>${annotator.email}</td>
-              <td>${annotator.description}</td>
+              <td class="preserve-formatting">${annotator.description}</td>
               <td>${(counts[annotator.id] || 0)}</td>
               <td>${(annotator.next_id || 'None')}</td>
               <td>${(annotator.prev_id || 'None')}</td>
               <td>${(annotator.updated || 'Undefined')}</td>
               <td data-sort="${annotator.active}">
+                <span onclick="openJudge(${annotator.id})" class="inline-block tooltip">
+                  <button class="nobackgroundnoborder">
+                    <i class="fas fa-pencil-alt"></i>
+                  </button>
+                  <span class="tooltiptext">Edit Judge</span>
+                </span>
                 <form action="/admin/annotator" method="post" class="inline-block tooltip">
                   <button type="submit" class="nobackgroundnoborder"><i class="fas fa-envelope"></i></button>
                   <span class="tooltiptext">Send Email</span>
@@ -213,14 +225,6 @@ async function refresh(token) {
 /*
 * END REFRESH FUNCTION
 * */
-
-let responseInterval = function () {
-    let response = refresh("{{ csrf_token() }}");
-};
-
-let intervalid = window.setInterval(responseInterval, 5000);
-let livereload = true;
-let currentTab = "reports";
 
 function openJudge(i) {
     const annotator = currentAnnotators[i];
@@ -369,13 +373,6 @@ function checkAllJudges() {
         });
         check.checked = false;
     }
-}
-
-function toggleAutoRefresh() {
-    livereload = !livereload;
-    !livereload ? window.clearInterval(intervalid) : intervalid = window.setInterval(responseInterval, 5000);
-    let rel = document.getElementById("live");
-    rel.classList = livereload ? ['live-active'] : ['live-inactive'];
 }
 
 const judgeCheckboxValues = JSON.parse(localStorage.getItem('judgeCheckboxValues')) || {};
