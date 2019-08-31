@@ -1,0 +1,73 @@
+{% block content %}
+  <script>
+    function toggleModal() {
+      let modal = document.getElementById('doneModal');
+      modal.style.display = modal.style.display === "block" ? "none" : "block";
+    }
+    function activatePrevious() {
+      let prev = document.getElementById('previousProject');
+      let next = document.getElementById('nextProject');
+      let button = document.getElementById('modalNextButton');
+      let bottomText = document.getElementById('bottomText');
+      let topText = document.getElementById('topText');
+      let buttonText = document.getElementById('modalNextText');
+      next.classList = ['item projectItem'];
+      prev.classList = ['item projectItem enabledProjectItem'];
+      button.value = 'Previous';
+      button.type='submit';
+      button.classList = ['modal-next-button-button active-button'];
+      buttonText.classList = ['modal-button-text modal-button-text-active'];
+      topText.classList = ['selectedText selectedSelected'];
+      bottomText.classList = ['selectedText selectedNotSelected'];
+    }
+    function activateNext() {
+      let prev = document.getElementById('previousProject');
+      let next = document.getElementById('nextProject');
+      let button = document.getElementById('modalNextButton');
+      let bottomText = document.getElementById('bottomText');
+      let topText = document.getElementById('topText');
+      let buttonText = document.getElementById('modalNextText');
+      next.classList = ['item projectItem enabledProjectItem'];
+      prev.classList = ['item projectItem'];
+      button.value = 'Current';
+      button.type='submit';
+      button.classList = ['modal-next-button-button active-button'];
+      buttonText.classList = ['modal-button-text modal-button-text-active'];
+      topText.classList = ['selectedText selectedNotSelected'];
+      bottomText.classList = ['selectedText selectedSelected'];
+    }
+  </script>
+  <div class="modal" id="doneModal">
+    <div class="modal-content">
+      <div class="modal-content-projects-container">
+        <h2 class="projectScreenTitle" style="margin-bottom: 16px; padding-bottom: 0;">Select the better project to continue.</h2>
+        <p class="voteItemTeam purpleBold" style="color: black; padding-bottom: 8px; padding-top: 0;">CURRENT PROJECT</p>
+        <div class="item projectItem" style="padding-bottom:0" id="nextProject" onclick="activateNext()">
+          {% with item=next %}
+            {% include "_strippeditem.html" %}
+          {% endwith %}
+          <p class="selectedText" id="bottomText"></p>
+        </div>
+        <p class="voteItemTeam" style="color: black; padding-bottom: 8px; padding-top: 16px; margin-top: 0;">PREVIOUS PROJECT</p>
+        <div class="item projectItem" style="padding-bottom:0" id="previousProject" onclick="activatePrevious()">
+          {% with item=prev %}
+            {% include "_strippeditem.html" %}
+          {% endwith %}
+          <p class="selectedText" id="topText"></p>
+        </div>
+      </div>
+      <div class="modal-close">
+        <span class="modal-button-text" id="modalCloseButton" style="height: 100%; margin-top: 0; padding-top: 24px;" onclick="toggleModal()">CLOSE</span>
+      </div>
+      <div class="modal-next">
+        <form action="/vote" method="post" class="submit-form">
+          <button id="modalNextButton" class="modal-next-button-button" name="action" type="button" value=""
+                  style="background: 0; border: 0;"><a class="modal-button-text" id="modalNextText" style="margin: 0;">NEXT PROJECT</a></button>
+          <input type="hidden" name="prev_id" value="{{ prev.id }}">
+          <input type="hidden" name="next_id" value="{{ next.id }}">
+          <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+        </form>
+      </div>
+    </div>
+  </div>
+{% endblock %}

@@ -1,0 +1,95 @@
+{% block content %}
+  <script>
+    function toggleReport() {
+      let modal = document.getElementById('reportModal');
+      modal.style.display = modal.style.display === "block" ? "none" : "block";
+    }
+
+    function setChecks() {
+      let checks = document.forms['checkboxForm'].elements['checkbox[]'];
+      let button = document.getElementById('modalReportButton');
+      let buttonText = document.getElementById('modalReportText');
+      buttonText.classList = ['modal-button-text modal-report-text-active'];
+      let vals = "";
+      let checkedCount = 0;
+      for(let i = 0; i < checks.length; i++) {
+        if (checks[i].checked) {
+          vals += checks[i].value + " ";
+          checks[i].classList = ['reportCheck reportActive'];
+          checkedCount++;
+        } else {
+          checks[i].classList = ['reportCheck'];
+        }
+      }
+
+      if(checkedCount === 0) {
+        button.classList = ['modal-next-button-button'];
+        button.type = 'button';
+      } else {
+        button.classList = ['modal-next-button-button report-active'];
+        button.type = 'submit';
+      }
+
+      button.value = vals.trim();
+    }
+
+    $(document).ready(function() {
+      $('.report-table tr td').click(function(event) {
+        if (event.target.type !== 'checkbox') {
+          $(':checkbox', this).trigger('click');
+        }
+      });
+    });
+  </script>
+  <div class="modal" id="reportModal">
+    <div class="modal-content">
+      <div class="modal-content-projects-container">
+        <h2 class="skipTitle" style="padding-bottom: 0; margin-bottom: 16px;">The <span class="skipTitlePurple">current project</span> needs to be reviewed for the following reasons:</h2>
+        <form id="checkboxForm">
+          <table style="width: 100%" class="borderless report-table" rules="none">
+            <tr>
+              <td>
+                <input type="checkbox" class="reportCheck" id="reportCheckOne" value="NoDemo" name="checkbox[]" onclick="setChecks()"/>
+              </td>
+              <td>
+                <label for=reportCheckOne class="skipText">The team cannot demo their project or provide evidence of the work described.</label>
+              </td>
+            </tr>
+            <tr style="height: 16px;"></tr>
+            <tr>
+              <td>
+                <input type="checkbox" class="reportCheck" id="reportCheckTwo" value="TooComplex" name="checkbox[]" onclick="setChecks()"/>
+              </td>
+              <td>
+                <label for="reportCheckTwo" class="skipText">The project appears too complex to have been created within the prescribed timeframe of the hackathon.</label>
+              </td>
+            </tr>
+            <tr style="height: 16px;"></tr>
+            <tr>
+              <td>
+                <input type="checkbox" class="reportCheck" id="reportCheckThree" value="Offensive" name="checkbox[]" onclick="setChecks()"/>
+              </td>
+              <td>
+                <label for="reportCheckThree" class="skipText">The project is or has offensive, harrassing, or inappropriate content and/or breaks the Code of Conduct and Ethics.</label>
+              </td>
+            </tr>
+          </table>
+        </form>
+      </div>
+
+      <div class="modal-close">
+        <span class="modal-button-text" id="skipCloseButton" style="height: 100%; margin-top: 0; padding-top: 24px;" onclick="toggleReport()">CLOSE</span>
+      </div>
+
+      <div class="modal-next">
+        <form action="/report" method="post" class="submit-form">
+          <button id="modalReportButton" class="modal-next-button-button" name="reason" type="button" value="Unknown"
+                  style="background: 0; border: 0;"><a class="modal-button-text" id="modalReportText" style="margin: 0;">SUBMIT FOR REVIEW</a></button>
+          <input type="hidden" name="next_id" value="{{ next.id }}">
+          <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+        </form>
+      </div>
+
+    </div>
+  </div>
+{% endblock %}
