@@ -1,0 +1,75 @@
+{% block content %}
+  <script>
+    function toggleSkip() {
+      let modal = document.getElementById('skipModal');
+      modal.style.display = modal.style.display === "block" ? "none" : "block";
+    }
+    function topSkip() {
+      const skip = document.getElementById('modalSkipButton');
+      let top = document.getElementById('skipRadioTop');
+      let bottom = document.getElementById('skipRadioBottom');
+      let button = document.getElementById('modalSkipButton');
+      let buttonText = document.getElementById('modalSkipText');
+      buttonText.classList = ['modal-button-text modal-skip-text-active'];
+      button.type = 'submit';
+      button.classList = ['modal-next-button-button skip-active'];
+      top.classList = ['skipRadio skipActive'];
+      bottom.classList = ['skipRadio'];
+      skip.value = 'SkipAbsent';
+    }
+    function bottomSkip() {
+      const skip = document.getElementById('modalSkipButton');
+      let top = document.getElementById('skipRadioTop');
+      let bottom = document.getElementById('skipRadioBottom');
+      let button = document.getElementById('modalSkipButton');
+      let buttonText = document.getElementById('modalSkipText');
+      buttonText.classList = ['modal-button-text modal-skip-text-active'];
+      button.type = 'submit';
+      button.classList = ['modal-next-button-button skip-active'];
+      bottom.classList = ['skipRadio skipActive'];
+      top.classList = ['skipRadio'];
+      skip.value = 'SkipBusy';
+    }
+  </script>
+  <div class="modal" id="skipModal">
+    <div class="modal-content">
+      <div class="modal-content-projects-container">
+        <h2 class="skipTitle" style="padding-bottom: 0; margin-bottom: 16px;">I need to skip the <span class="skipTitlePurple">current project</span> because:</h2>
+        <table style="width: 100%" class="borderless" rules="none">
+          <tr onclick="topSkip()">
+            <td>
+              <div class="skipRadio" id="skipRadioTop" onclick="topSkip()"></div>
+            </td>
+            <td class="skipText">They are not present for judging</td>
+          </tr>
+          <tr style="height: 16px;"></tr>
+          <tr onclick="bottomSkip()">
+            <td>
+              <div class="skipRadio" id="skipRadioBottom" onclick="bottomSkip()"></div>
+            </td>
+            <td class="skipText">They are currently occupied with presenting to another judge.</td>
+          </tr>
+        </table>
+      </div>
+
+      <div class="modal-close">
+        <span class="modal-button-text" id="skipCloseButton" style="height: 100%; margin-top: 0; padding-top: 24px;" onclick="toggleSkip()">CLOSE</span>
+      </div>
+
+      <div class="modal-next">
+        <form action="{{ action }}" method="post" class="submit-form">
+        <button id="modalSkipButton" class="modal-next-button-button" name="action" type="button" value="Skip"
+                style="background: 0; border: 0;"><a class="modal-button-text" id="modalSkipText" style="margin: 0;">CONFIRM SKIP</a></button>
+        {% if prev and next %}
+          <input type="hidden" name="prev_id" value="{{ prev.id }}">
+          <input type="hidden" name="next_id" value="{{ next.id }}">
+        {% elif item %}
+          <input type="hidden" name="item_id" value="{{ item.id }}">
+        {% endif %}
+        <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+        </form>
+      </div>
+    </div>
+  </div>
+
+{% endblock %}
