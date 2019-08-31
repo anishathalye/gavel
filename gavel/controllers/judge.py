@@ -140,11 +140,10 @@ def begin():
             annotator.prev = annotator.next
             annotator.update_next(choose_next(annotator))
         elif request.form['action'] in ['Skip', 'SkipAbsent', 'SkipBusy']:
-            annotator.next = None # will be reset in index
-
             if request.form['action'] == 'SkipAbsent':
                 flag = Flag(annotator, annotator.next, 'Absent')
                 db.session.add(flag)
+            annotator.next = None # will be reset in index
         if annotator.stop_next:
             annotator.active = False
         db.session.commit()
