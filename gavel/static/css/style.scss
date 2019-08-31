@@ -1602,9 +1602,10 @@ color: #000000;
   position: absolute;
   display: inline-block!important;
   text-align: center;
-  height: 40px!important;
-  line-height: 40px;
+}
 
+#add-text {
+  padding-top: 14px;
 }
 
 .admin-add-button>span{

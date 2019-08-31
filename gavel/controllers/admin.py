@@ -86,6 +86,7 @@ def admin():
                 skipped[i.id] = skipped.get(i.id, 0) + 1
     # settings
     setting_closed = Setting.value_of(SETTING_CLOSED) == SETTING_TRUE
+    setting_stop_queue = Setting.value_of(SETTING_STOP_QUEUE) == SETTING_TRUE
     return render_template(
         'admin.html',
         annotators=annotators,
@@ -96,6 +97,7 @@ def admin():
         items=items,
         votes=len(decisions),
         setting_closed=setting_closed,
+        setting_stop_queue=setting_stop_queue,
         flags=flags,
         flag_count=len(flags)
     )
@@ -167,12 +169,14 @@ def queue_shutdown():
     annotators = Annotator.query.order_by(Annotator.id).all()
     if action == 'queue':
         for an in annotators:
-            an.stop_next = True
+            if an.active:
+                an.stop_next = True
         Setting.set(SETTING_STOP_QUEUE, True)
         db.session.commit()
     elif action == 'dequeue':
         for an in annotators:
-            an.stop_next = False
+            if an.stop_next:
+                an.stop_next = False
         Setting.set(SETTING_STOP_QUEUE, False)
         db.session.commit()
 
