@@ -68,7 +68,7 @@
             <th class="admin-head-project">Project Name<a></a></th>
             <th class="admin-head-project">Project Location<a></a></th>
             <th class="admin-head-standard">Reason<a></a></th>
-            <th class="no-sort">Actions</th>
+            <th class="admin-head-standard no-sort">Actions</th>
           </tr>
           </thead>
           <tbody id="reports-body">
@@ -112,13 +112,13 @@
               </label>
             </th>
             <th class="sort-default admin-head-id">Id<a></a></th>
-            <th>Name<a></a></th>
-            <th>Email<a></a></th>
-            <th>Description<a></a></th>
-            <th>Votes<a></a></th>
-            <th>Next (Id)<a></a></th>
-            <th>Prev. (Id)<a></a></th>
-            <th>Updated<a></a></th>
+            <th class="admin-head-project">Name<a></a></th>
+            <th class="admin-head-project">Email<a></a></th>
+            <th class="admin-head-double">Description<a></a></th>
+            <th class="admin-head-standard">Votes<a></a></th>
+            <th class="admin-head-standard">Next (Id)<a></a></th>
+            <th class="admin-head-standard">Prev. (Id)<a></a></th>
+            <th class="admin-head-standard">Updated<a></a></th>
             <th class="no-sort admin-head-standard">Actions<a></a></th>
           </tr>
           </thead>
@@ -157,6 +157,22 @@
     {#    let checkbox = document.getElementById('fs');
         let c = "{{ setting_closed }}";
         c === "True" ? checkbox.checked = false : checkbox.checked = true;#}
+
+    let responseInterval = function () {
+      let response = refresh("{{ csrf_token() }}");
+    };
+
+    let intervalid = window.setInterval(responseInterval, 5000);
+    let livereload = true;
+    let currentTab = "reports";
+
+    function toggleAutoRefresh() {
+      livereload = !livereload;
+      !livereload ? window.clearInterval(intervalid) : intervalid = window.setInterval(responseInterval, 5000);
+      let rel = document.getElementById("live");
+      rel.classList = livereload ? ['live-active'] : ['live-inactive'];
+    }
+
     $('#judges').tablesorter({
       cssAsc: 'up',
       cssDesc: 'down',
