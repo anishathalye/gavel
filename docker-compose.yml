@@ -6,17 +6,17 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     environment:
-      - POSTGRES_DB=gavel
-      - POSTGRES_USER=gavel
-      - POSTGRES_PASSWORD=gavel
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
     restart: on-failure
     ports:
-      - 1234:5432
+      - 5432:5432
   redis:
     image: redis:5.0-alpine
     restart: on-failure
     ports:
-      - 1235:6379
+      - 6379:6379
 
 #  gavel:
 #    environment:
