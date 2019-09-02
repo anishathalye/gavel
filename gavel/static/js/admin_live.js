@@ -226,20 +226,6 @@ async function refresh(token) {
 * END REFRESH FUNCTION
 * */
 
-function openJudge(i) {
-    const annotator = currentAnnotators[i];
-    const editJudge = document.getElementById('annotatorframe');
-    editJudge.src = `/admin/annotator/${annotator.id}/`;
-    openModal('edit-judge');
-}
-
-function openProject(i) {
-    const item = currentItems[i];
-    const editProject = document.getElementById('itemframe');
-    editProject.src = `/admin/item/${item.id}/`;
-    openModal('edit-project');
-}
-
 function toggleSelector() {
     const selectorModal = document.getElementById("selector");
     selectorModal.style.display = selectorModal.style.display === "block" ? "none" : "block";

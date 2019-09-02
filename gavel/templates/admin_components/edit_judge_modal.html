@@ -22,5 +22,12 @@
       document.getElementById(id).height= (newheight) + "px";
       document.getElementById(id).width= (newwidth) + "px";
     }
+
+    function openJudge(i) {
+      const annotator = currentAnnotators[i];
+      const editJudge = document.getElementById('annotatorframe');
+      editJudge.src = `/admin/annotator/${annotator.id}/`;
+      openModal('edit-judge');
+    }
   </script>
 {% endblock %}
