@@ -2,6 +2,11 @@ from celery.utils.serialization import jsonify
 
 from gavel import app
 from gavel.models import *
+from gavel.schemas.annotator import AnnotatorSchema
+from gavel.schemas.decision import DecisionSchema
+from gavel.schemas.flag import FlagSchema
+from gavel.schemas.item import ItemSchema
+from gavel.schemas.setting import SettingSchema
 from gavel.constants import *
 import gavel.settings as settings
 import gavel.utils as utils
@@ -18,7 +23,7 @@ except ImportError:
     import urllib3
 import xlrd
 
-ALLOWED_EXTENSIONS = set(['csv', 'xlsx', 'xls'])
+ALLOWED_EXTENSIONS = {'csv', 'xlsx', 'xls'}
 
 
 @app.route('/legacy/')
@@ -102,6 +107,78 @@ def admin():
         flag_count=len(flags)
     )
 
+@app.route('/admin/live')
+@utils.requires_auth
+def admin_live():
+    annotators = Annotator.query.order_by(Annotator.id).all()
+    items = Item.query.order_by(Item.id).all()
+    flags = Flag.query.order_by(Flag.id).all()
+    decisions = Decision.query.all()
+    counts = {}
+    item_counts = {}
+    for d in decisions:
+        a = d.annotator_id
+        w = d.winner_id
+        l = d.loser_id
+        counts[a] = counts.get(a, 0) + 1
+        item_counts[w] = item_counts.get(w, 0) + 1
+        item_counts[l] = item_counts.get(l, 0) + 1
+    viewed = {i.id: {a.id for a in i.viewed} for i in items}
+    skipped = {}
+    for a in annotators:
+        for i in a.ignore:
+            if a.id not in viewed[i.id]:
+                skipped[i.id] = skipped.get(i.id, 0) + 1
+    # settings
+    setting_closed = Setting.value_of(SETTING_CLOSED) == SETTING_TRUE
+    setting_stop_queue = Setting.value_of(SETTING_STOP_QUEUE) == SETTING_TRUE
+
+    item_count = len(items)
+    votes = len(decisions)
+    flag_count = len(flags)
+
+    # Calculate average sigma
+    holder = 0.0
+    for it in items:
+        holder += it.sigma_sq
+    try:
+        average_sigma = holder/len(items)
+    except:
+        average_sigma = 0.0
+
+    # Calculate average seen
+    holder = 0
+    for an in annotators:
+        seen = Item.query.filter(Item.viewed.contains(an)).all()
+        holder += len(seen)
+    try:
+        average_seen = holder/len(annotators)
+    except:
+        average_seen = 0
+
+    dump_data = {
+        "annotators": [AnnotatorSchema().dump(an) if an else {'null', 'null'} for an in annotators],
+        "counts": counts,
+        "item_counts": item_counts,
+        "item_count": item_count,
+        "skipped": skipped,
+        "items": [ItemSchema().dump(it) if it else {'null': 'null'} for it in items],
+        "votes": votes,
+        "setting_closed": setting_closed,
+        "setting_stop_queue": setting_stop_queue,
+        "flags": [FlagSchema().dump(fl) if fl else {'null': 'null'} for fl in flags],
+        "flag_count": flag_count,
+        "average_sigma": average_sigma,
+        "average_seen": average_seen
+    }
+
+    response = app.response_class(
+        response=json.dumps(dump_data),
+        status=200,
+        mimetype='application/json'
+    )
+
+    return response
 
 @app.route('/admin/item', methods=['POST'])
 @utils.requires_auth
@@ -378,133 +455,6 @@ def annotator_detail(annotator_id):
             seen=seen,
             skipped=skipped
         )
-
-
-@app.route('/admin/live')
-@utils.requires_auth
-def admin_live():
-    annotators = Annotator.query.order_by(Annotator.id).all()
-    items = Item.query.order_by(Item.id).all()
-    flags = Flag.query.order_by(Flag.id).all()
-    decisions = Decision.query.all()
-    counts = {}
-    item_counts = {}
-    for d in decisions:
-        a = d.annotator_id
-        w = d.winner_id
-        l = d.loser_id
-        counts[a] = counts.get(a, 0) + 1
-        item_counts[w] = item_counts.get(w, 0) + 1
-        item_counts[l] = item_counts.get(l, 0) + 1
-    viewed = {i.id: {a.id for a in i.viewed} for i in items}
-    skipped = {}
-    for a in annotators:
-        for i in a.ignore:
-            if a.id not in viewed[i.id]:
-                skipped[i.id] = skipped.get(i.id, 0) + 1
-    # settings
-    setting_closed = Setting.value_of(SETTING_CLOSED) == SETTING_TRUE
-
-    annotators_padded = []
-    max_annotator_id = 0
-    for an in annotators:
-        annotators_padded.insert(int(an.id), an)
-        max_annotator_id = an.id if an.id > max_annotator_id else max_annotator_id
-
-    annotators_padded_final = []
-    for i in range(max_annotator_id):
-        annotators_padded_final.append(None)
-    for an in annotators:
-        try:
-            annotators_padded_final.insert(int(an.id), an)
-        except:
-            annotators_padded_final.append(None)
-
-    items_padded = []
-    viewed_built = []
-    max_item_id = 0
-    for it in items:
-        items_padded.insert(int(it.id), it)
-        max_item_id = it.id if it.id > max_item_id else max_item_id
-
-    items_padded_final = []
-    for i in range(max_item_id):
-        items_padded_final.append(None)
-    for it in items:
-        try:
-            items_padded_final.insert(int(it.id), it)
-            viewed_built.insert(int(it.id), len(it.viewed))
-        except:
-            items_padded_final.append(None)
-            viewed_built.append(None)
-
-    max_flag_id = 0
-    flags_padded = []
-    for fl in flags:
-        flags_padded.insert(int(fl.id), fl)
-        max_flag_id = fl.id if fl.id > max_flag_id else max_flag_id
-
-    flags_padded_final = []
-    # TODO: Use index object to track current index in flags_padded
-    for i in range(max_flag_id):
-        flags_padded_final.append(None)
-    for fl in flags:
-        try:
-            flags_padded_final.insert(int(fl.id), fl)
-        except:
-            flags_padded_final.append(None)
-
-    # Calculate average sigma
-    holder = 0.0
-    for it in items:
-        holder += it.sigma_sq
-    try:
-        average_sigma = holder/len(items)
-    except:
-        average_sigma = 0.0
-
-    # Calculate average seen
-    holder = 0
-    for an in annotators:
-        seen = Item.query.filter(Item.viewed.contains(an)).all()
-        holder += len(seen)
-    try:
-        average_seen = holder/len(annotators)
-    except:
-        average_seen = 0
-
-    ret = {"annotators": [an.to_dict() if an else {'null': 'null'} for an in annotators_padded_final],
-           "counts": counts,
-           "item_counts": item_counts,
-           "item_count": len(items),
-           "skipped": [sk for sk in skipped],
-           "items": [it.to_dict() if it else {'null': 'null'} for it in items_padded_final],
-           "viewed": viewed_built,
-           "votes": len(decisions),
-           "setting_closed": setting_closed,
-           "flags": [fl.to_dict() if fl else {'null': 'null'} for fl in flags_padded_final],
-           "flag_count": len(flags),
-           "average_sigma": average_sigma,
-           "average_seen": average_seen
-           }
-
-    response = app.response_class(
-        response=json.dumps(ret),
-        status=200,
-        mimetype='application/json'
-    )
-    return response
-
-    # annotators = annotators,
-    # counts = counts,
-    # item_counts = item_counts,
-    # item_count = len(items),
-    # skipped = skipped,
-    # items = items,
-    # votes = len(decisions),
-    # setting_closed = setting_closed,
-    # flags = flags,
-    # flag_count = len(flags)
 
 
 def annotator_link(annotator):

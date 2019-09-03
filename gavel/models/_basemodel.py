@@ -3,7 +3,8 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm.attributes import QueryableAttribute
 from gavel import app
 
-from gavel.models import db
+from gavel.models import db, ma
+
 
 class BaseModel(db.Model):
     __abstract__ = True

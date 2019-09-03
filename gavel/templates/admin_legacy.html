@@ -38,8 +38,8 @@
         <tr class="{{ 'open' if not flag.resolved else 'resolved' }}">
           <td>{{ flag.id | safe }}</td>
           <td>{{ flag.annotator.name | safe }}</td>
-          <td>{{ flag.project.name | safe }}</td>
-          <td>{{ flag.project.location | safe }}</td>
+          <td>{{ flag.item.name | safe }}</td>
+          <td>{{ flag.item.location | safe }}</td>
           <td>{{ flag.reason | safe }}</td>
           <td class="compact" data-sort="{{ not flag.resolved }}">
             <form action="/admin/report" method="post">
