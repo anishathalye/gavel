@@ -6,7 +6,7 @@ let currentItems;
 * */
 async function refresh(token) {
     const data = await $.ajax({
-        url: "/admin/live_2",
+        url: "/admin/live",
         type: "get",
         dataType: "json",
         error: function (error) {
