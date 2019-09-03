@@ -2,6 +2,11 @@ from celery.utils.serialization import jsonify
 
 from gavel import app
 from gavel.models import *
+from gavel.schemas.annotator import AnnotatorSchema
+from gavel.schemas.decision import DecisionSchema
+from gavel.schemas.flag import FlagSchema
+from gavel.schemas.item import ItemSchema
+from gavel.schemas.setting import SettingSchema
 from gavel.constants import *
 import gavel.settings as settings
 import gavel.utils as utils
@@ -18,7 +23,7 @@ except ImportError:
     import urllib3
 import xlrd
 
-ALLOWED_EXTENSIONS = set(['csv', 'xlsx', 'xls'])
+ALLOWED_EXTENSIONS = {'csv', 'xlsx', 'xls'}
 
 
 @app.route('/legacy/')
@@ -102,6 +107,57 @@ def admin():
         flag_count=len(flags)
     )
 
+@app.route('/admin/live_2')
+@utils.requires_auth
+def admin_live2():
+    annotators = Annotator.query.order_by(Annotator.id).all()
+    items = Item.query.order_by(Item.id).all()
+    flags = Flag.query.order_by(Flag.id).all()
+    decisions = Decision.query.all()
+    counts = {}
+    item_counts = {}
+    for d in decisions:
+        a = d.annotator_id
+        w = d.winner_id
+        l = d.loser_id
+        counts[a] = counts.get(a, 0) + 1
+        item_counts[w] = item_counts.get(w, 0) + 1
+        item_counts[l] = item_counts.get(l, 0) + 1
+    viewed = {i.id: {a.id for a in i.viewed} for i in items}
+    skipped = {}
+    for a in annotators:
+        for i in a.ignore:
+            if a.id not in viewed[i.id]:
+                skipped[i.id] = skipped.get(i.id, 0) + 1
+    # settings
+    setting_closed = Setting.value_of(SETTING_CLOSED) == SETTING_TRUE
+    setting_stop_queue = Setting.value_of(SETTING_STOP_QUEUE) == SETTING_TRUE
+
+    item_count = len(items)
+    votes = len(decisions)
+    flag_count = len(flags)
+
+    dump_data = {
+        "annotators": [AnnotatorSchema().dump(an) if an else {'null', 'null'} for an in annotators],
+        "counts": counts,
+        "item_counts": item_counts,
+        "item_count": item_count,
+        "skipped": skipped,
+        "items": [ItemSchema().dump(it) if it else {'null': 'null'} for it in items],
+        "votes": votes,
+        "setting_closed": setting_closed,
+        "setting_stop_queue": setting_stop_queue,
+        "flags": [FlagSchema().dump(fl) if fl else {'null': 'null'} for fl in flags],
+        "flag_count": flag_count
+    }
+
+    response = app.response_class(
+        response=json.dumps(dump_data),
+        status=200,
+        mimetype='application/json'
+    )
+
+    return response
 
 @app.route('/admin/item', methods=['POST'])
 @utils.requires_auth
