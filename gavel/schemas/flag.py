@@ -6,7 +6,7 @@ from gavel.models import Flag, Annotator, Item
 
 class FlagSchema(ModelSchema):
     annotator = fields.Nested('AnnotatorSchema')
-    project = fields.Nested('ItemSchema')
+    item = fields.Nested('ItemSchema')
 
     class Meta:
         model = Flag
