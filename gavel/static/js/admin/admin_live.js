@@ -31,8 +31,6 @@ async function refresh(token) {
     const sigma = data.average_sigma;
     const seen = data.average_seen;
 
-    console.log(data);
-
     // Populate vote count
     let vote_count = document.getElementById("total-votes");
     vote_count.innerText = votes;
@@ -52,7 +50,6 @@ async function refresh(token) {
     let reports_table = document.getElementById("reports-body");
     reports_table.innerHTML = "";
 
-    console.log(flags);
     for (let i = 0; i < flags.length; i++) {
 
         try {
