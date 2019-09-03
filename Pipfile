@@ -41,6 +41,8 @@ PyYAML = "==3.13"
 SQLAlchemy = "==1.2.15"
 Werkzeug = "==0.14.1"
 python-dotenv = "*"
+flask-marshmallow = "*"
+marshmallow-sqlalchemy = "*"
 
 [requires]
 python_version = "3.7"

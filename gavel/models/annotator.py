@@ -1,4 +1,5 @@
-from gavel.models import db
+from gavel.models import db, ma
+from marshmallow_sqlalchemy import ModelSchema, TableSchema
 import gavel.utils as utils
 import gavel.crowd_bt as crowd_bt
 from sqlalchemy.orm.exc import NoResultFound
@@ -42,6 +43,8 @@ class Annotator(BaseModel):
                        "ignore",
                        "updated"]
     _secret_fields = ["secret"]
+
+    relations_keys = ("next", "prev", "ignore")
 
     def __init__(self, name, email, description):
         self.name = name

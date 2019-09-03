@@ -25,6 +25,8 @@ class Item(BaseModel):
 
     _default_fields = ["name", "location", "description", "active", "seen", "prioritized", "mu", "sigma_sq"]
 
+    relations_keys = ("viewed", "flags")
+
     def __init__(self, name, location, description):
         self.name = name
         self.location = location

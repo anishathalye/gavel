@@ -17,6 +17,8 @@ class Flag(BaseModel):
 
     _default_fields = ["annotator_id","project_id","reason","resolved","time"]
 
+    relations_keys = ("project", "annotator")
+
     def __init__(self, annotator, project, reason):
         self.annotator = annotator
         self.project = project
