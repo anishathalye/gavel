@@ -137,6 +137,25 @@ def admin_live2():
     votes = len(decisions)
     flag_count = len(flags)
 
+    # Calculate average sigma
+    holder = 0.0
+    for it in items:
+        holder += it.sigma_sq
+    try:
+        average_sigma = holder/len(items)
+    except:
+        average_sigma = 0.0
+
+    # Calculate average seen
+    holder = 0
+    for an in annotators:
+        seen = Item.query.filter(Item.viewed.contains(an)).all()
+        holder += len(seen)
+    try:
+        average_seen = holder/len(annotators)
+    except:
+        average_seen = 0
+
     dump_data = {
         "annotators": [AnnotatorSchema().dump(an) if an else {'null', 'null'} for an in annotators],
         "counts": counts,
@@ -148,7 +167,9 @@ def admin_live2():
         "setting_closed": setting_closed,
         "setting_stop_queue": setting_stop_queue,
         "flags": [FlagSchema().dump(fl) if fl else {'null': 'null'} for fl in flags],
-        "flag_count": flag_count
+        "flag_count": flag_count,
+        "average_sigma": average_sigma,
+        "average_seen": average_seen
     }
 
     response = app.response_class(

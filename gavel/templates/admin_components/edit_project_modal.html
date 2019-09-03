@@ -23,10 +23,9 @@
       document.getElementById(id).width= (newwidth) + "px";
     }
 
-    function openProject(i) {
-      const item = currentItems[i];
+    function openProject(id) {
       const editProject = document.getElementById('itemframe');
-      editProject.src = `/admin/item/${item.id}/`;
+      editProject.src = `/admin/item/${id}/`;
       openModal('edit-project');
     }
   </script>

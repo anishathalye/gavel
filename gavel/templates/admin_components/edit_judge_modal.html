@@ -23,10 +23,9 @@
       document.getElementById(id).width= (newwidth) + "px";
     }
 
-    function openJudge(i) {
-      const annotator = currentAnnotators[i];
+    function openJudge(id) {
       const editJudge = document.getElementById('annotatorframe');
-      editJudge.src = `/admin/annotator/${annotator.id}/`;
+      editJudge.src = `/admin/annotator/${id}/`;
       openModal('edit-judge');
     }
   </script>

@@ -6,7 +6,7 @@ let currentItems;
 * */
 async function refresh(token) {
     const data = await $.ajax({
-        url: "/admin/live",
+        url: "/admin/live_2",
         type: "get",
         dataType: "json",
         error: function (error) {
@@ -24,11 +24,14 @@ async function refresh(token) {
     const item_count = data.item_count;
     const items = data.items;
     const setting_closed = data.setting_closed;
+    const setting_stop_queue = data.setting_stop_queue;
     const skipped = data.skipped;
     const votes = data.votes;
     const viewed = data.viewed;
     const sigma = data.average_sigma;
     const seen = data.average_seen;
+
+    console.log(data);
 
     // Populate vote count
     let vote_count = document.getElementById("total-votes");
@@ -52,18 +55,16 @@ async function refresh(token) {
 
         try {
             const flag = flags[i];
-            const annotator = await annotators[flag.annotator_id];
-            const item = await items[flag.project_id];
 
             if (!flag.id)
                 continue;
             const reports_template = `
             <tr class="${flag.resolved ? "open" : "resolve"}">
-              <td><input id="${flag.id}" type="checkbox" name="item" value="${item.id}" class="admin-check"/></td>
+              <td><input id="${flag.id}" type="checkbox" name="item" value="${flag.item.id}" class="admin-check"/></td>
               <td>${flag.id}</td>
-              <td><a onclick="openJudge(${annotator.id})" href="#" class="colored">${annotator.name}</a></td>
-              <td><a onclick="openProject(${item.id})" href="#" class="colored">${item.name}</a></td>
-              <td>${item.location}</td>
+              <td><a onclick="openJudge(${flag.annotator.id})" href="#" class="colored">${flag.annotator.name}</a></td>
+              <td><a onclick="openProject(${flag.item.id})" href="#" class="colored">${flag.item.name}</a></td>
+              <td>${flag.item.location}</td>
               <td>${flag.reason}</td>
               <td>
                 <form action="/admin/report" method="post" class="inline-block">
@@ -102,14 +103,14 @@ async function refresh(token) {
             const items_template = `
             <tr class="${(item.active ? item.prioritized ? 'prioritized' : '' : 'disabled')}">
               <td id="project-check-container"><input id="${item.id}" type="checkbox" name="item" value="${item.id}" class="admin-check"/></td>
-              <td><a onclick="openProject(${item.id})" class="colored">${i}</a></td>
+              <td><a onclick="openProject(${item.id})" class="colored">${item.id}</a></td>
               <td>${item.name}</td>
               <td>${item.location}</td>
               <td class="preserve-formatting">${item.description}</td>
               <td>${item.mu.toFixed(4)}</td>
               <td>${item.sigma_sq.toFixed(4)}</td>
               <td>${item_counts[item.id]}</td>
-              <td>${viewed[item.id]}</td>
+              <td>${item.viewed.length}</td>
               <td>${skipped[item.id]}</td>
               <td data-sort="${item.prioritized}">
                 <span onclick="openProject(${item.id})" class="inline-block tooltip">
@@ -168,7 +169,7 @@ async function refresh(token) {
             const annotator_template = `
             <tr class=${annotator.active ? '' : 'disabled'}>
               <td id="judge-check-container"><input id="${annotator.id}" type="checkbox" name="annotator" value="${annotator.id}" class="admin-check"/></td>
-              <td><a onclick="openJudge(${annotator.id})" class="colored">${i}</a></td>
+              <td><a onclick="openJudge(${annotator.id})" class="colored">${annotator.id}</a></td>
               <td>${annotator.name}</td>
               <td>${annotator.email}</td>
               <td class="preserve-formatting">${annotator.description}</td>

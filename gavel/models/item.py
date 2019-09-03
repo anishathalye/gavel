@@ -18,7 +18,7 @@ class Item(BaseModel):
     active = db.Column(db.Boolean, default=True, nullable=False)
     viewed = db.relationship('Annotator', secondary=view_table)
     prioritized = db.Column(db.Boolean, default=False, nullable=False)
-    flags = db.relationship('Flag', back_populates="project")
+    flags = db.relationship('Flag', back_populates="item")
 
     mu = db.Column(db.Float)
     sigma_sq = db.Column(db.Float)

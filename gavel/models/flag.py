@@ -9,19 +9,19 @@ class Flag(BaseModel):
     id = db.Column(db.Integer, primary_key=True, nullable=False)
     annotator_id = db.Column(db.Integer, db.ForeignKey('annotator.id'))
     annotator = db.relationship('Annotator', foreign_keys=[annotator_id], uselist=False)
-    project_id = db.Column(db.Integer, db.ForeignKey('item.id'))
-    project = db.relationship('Item', foreign_keys=[project_id], uselist=False)
+    item_id = db.Column(db.Integer, db.ForeignKey('item.id'))
+    item = db.relationship('Item', foreign_keys=[item_id], uselist=False)
     reason = db.Column(db.Text, nullable=False)
     resolved = db.Column(db.Boolean, default=False, nullable=False)
     time = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
 
-    _default_fields = ["annotator_id","project_id","reason","resolved","time"]
+    _default_fields = ["annotator_id","item_id","reason","resolved","time"]
 
-    relations_keys = ("project", "annotator")
+    relations_keys = ("item", "annotator")
 
-    def __init__(self, annotator, project, reason):
+    def __init__(self, annotator, item, reason):
         self.annotator = annotator
-        self.project = project
+        self.item = item
         self.reason = reason
 
     def __repr__(self):
