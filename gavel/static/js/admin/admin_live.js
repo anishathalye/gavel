@@ -176,7 +176,7 @@ async function refresh(token) {
               <td>${(counts[annotator.id] || 0)}</td>
               <td>${(annotator.next_id || 'None')}</td>
               <td>${(annotator.prev_id || 'None')}</td>
-              <td>${(annotator.updated ? (((Date.parse(annotator.updated) - new Date())/60)/1000).toFixed(0) + " min ago" : "Undefined")}</td>
+              <td>${(annotator.updated ? (((new Date() - (Date.parse(annotator.updated) - new Date().getTimezoneOffset()*60*1000))/60)/1000).toFixed(0) + " min ago" : "Undefined")}</td>
               <td data-sort="${annotator.active}">
                 <span onclick="openJudge(${annotator.id})" class="inline-block tooltip">
                   <button class="nobackgroundnoborder">
