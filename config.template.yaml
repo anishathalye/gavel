@@ -55,7 +55,7 @@ broker_uri: null
 port: null
 
 # can also be specified as the 'MIN_VIEWS' environment variable
-# defaults to '2'
+# defaults to '4'
 #
 # this is the minimum number of times each item needs to be seen before
 # switching to more sophisticated item selection strategies.

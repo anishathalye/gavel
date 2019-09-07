@@ -5,7 +5,10 @@
 import os
 
 from flask import Flask
+from flask_minify import minify
+
 app = Flask(__name__)
+minify(app=app)
 app.config['DEBUG'] = os.environ.get('DEBUG', False)
 
 import gavel.settings as settings
