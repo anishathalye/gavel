@@ -4,29 +4,30 @@
       <div class="admin-modal-content edit-modal">
         <div class="admin-close-button" onclick="openModal('close')"></div>
         <div>
-          <iframe onload="autoResize('annotatorframe')" width=100% height="400px" src="/admin/annotator/1/" scrolling="no" id="annotatorframe" sandbox="allow-top-navigation allow-scripts allow-forms"></iframe>
+          <iframe onload="autoResizeJudge('annotatorframe')" width=100% height="400px" src="/admin/annotator/1/" scrolling="no" id="annotatorframe" sandbox="allow-top-navigation allow-scripts allow-forms allow-same-origin"></iframe>
         </div>
       </div>
     </div>
   </div>
   <script>
-    function autoResize(id){
-      var newheight;
-      var newwidth;
-
-      if(document.getElementById){
-        newheight=document.getElementById(id).contentWindow.document .body.scrollHeight;
-        newwidth=document.getElementById(id).contentWindow.document .body.scrollWidth;
-      }
-
-      document.getElementById(id).height= (newheight) + "px";
-      document.getElementById(id).width= (newwidth) + "px";
-    }
-
     function openJudge(id) {
       const editJudge = document.getElementById('annotatorframe');
       editJudge.src = `/admin/annotator/${id}/`;
+      autoResizeJudge('annotatorframe');
       openModal('edit-judge');
+    }
+
+    function autoResizeJudge(id){
+      let newheight;
+      let newwidth;
+
+      if(document.getElementById){
+        newheight=document.getElementById(id).contentWindow.document .getElementById("content").scrollHeight;
+        newwidth=document.getElementById(id).contentWindow.document .getElementById("content").scrollWidth;
+      }
+
+      document.getElementById(id).height= (newheight/2 + "px");
+      document.getElementById(id).width= ((newwidth < 350) ? 350 : newwidth) + "px";
     }
   </script>
 {% endblock %}

@@ -4,28 +4,29 @@
       <div class="admin-modal-content edit-modal">
         <div class="admin-close-button" onclick="openModal('close')"></div>
         <div>
-          <iframe onload="autoResize('itemframe')" height="400px" src="/admin/item/1/" scrolling="no" id="itemframe" sandbox="allow-top-navigation allow-scripts allow-forms"></iframe>
+          <iframe onload="autoResizeProject('itemframe')" height="400px" src="/admin/item/1/" scrolling="yes" id="itemframe" sandbox="allow-top-navigation allow-scripts allow-forms"></iframe>
         </div>
       </div>
     </div>
   </div>
   <script>
-    function autoResize(id){
-      var newheight;
-      var newwidth;
+    function autoResizeProject(id){
+      let newheight;
+      let newwidth;
 
       if(document.getElementById){
-        newheight=document.getElementById(id).contentWindow.document .body.scrollHeight;
-        newwidth=document.getElementById(id).contentWindow.document .body.scrollWidth;
+        newheight=document.getElementById(id).contentWindow.document .getElementById("content").scrollHeight;
+        newwidth=document.getElementById(id).contentWindow.document .getElementById("content").scrollWidth;
       }
 
-      document.getElementById(id).height= (newheight) + "px";
-      document.getElementById(id).width= (newwidth) + "px";
+      document.getElementById(id).height= (newheight/2 + "px");
+      document.getElementById(id).width= ((newwidth < 380) ? 380 : newwidth) + "px";
     }
 
     function openProject(id) {
       const editProject = document.getElementById('itemframe');
       editProject.src = `/admin/item/${id}/`;
+      autoResizeProject('itemframe');
       openModal('edit-project');
     }
   </script>

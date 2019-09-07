@@ -37,7 +37,7 @@
       <span class="bold-14">Description:</span>
       <br>
       <span>
-        <textarea name="description" form="description_form">{{ item.description | safe }}</textarea>
+        <textarea name="description" form="description_form" style="max-width: 100%;">{{ item.description | safe }}</textarea>
           <form action="/admin/item_patch" method="post" id="description_form" class="form-inline">
             <input type="hidden" name="item_id" value="{{ item.id }}">
             <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">

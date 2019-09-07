@@ -19,7 +19,7 @@
       <p class="normal-14"><span class="bold-14">Description: </span><span
         id="description">{{ annotator.description | safe }}</span></p>
       <p class="normal-14"><span class="bold-14">Login URL: </span><span id="login"><a
-        href="{{ login_link }}" target="_parent" class="normal-purple-14" style="overflow: hidden;">{{ login_link }}</a></span></p>
+        href="{{ login_link }}" target="_parent" class="normal-purple-14" style="overflow: hidden;">LOGIN ID:{{ annotator.id }}</a></span></p>
       <p class="normal-14"><span class="bold-14">Total Votes: </span>
         <span id="votes">
             {{ seen | length }}
