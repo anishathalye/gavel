@@ -6,11 +6,11 @@
     "formation": {
         "web": {
             "quantity": 1,
-            "size": "free"
+            "size": "hobby"
         },
         "worker": {
             "quantity": 1,
-            "size": "free"
+            "size": "hobby"
         }
     },
     "description": "An awesome judging system for hackathons",
