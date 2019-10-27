@@ -16,7 +16,7 @@ import xlrd
 
 ALLOWED_EXTENSIONS = set(['csv', 'xlsx', 'xls'])
 TRACKS = [
-    "Education", "Health and Wellness", "Education", "Best Beginner Hack"
+    "Education", "Health and Wellness", "Sustainability", "Best Beginner Hack"
 ]
 pattern = re.compile(r"What it does\s+(.*)\s+")
 
