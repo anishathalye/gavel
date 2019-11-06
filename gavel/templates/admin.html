@@ -12,7 +12,10 @@
     <h2>Stats</h2>
   </div>
   <div class="info">
-    <p><strong>Votes: </strong>{{ votes }}</p>
+    <p><strong>Total votes: </strong>{{ stats["votes"] }}</p>
+    <p><strong>Average votes per judge: </strong>{{ stats["avg_votes"]|round(3) }}</p>
+    <p><strong>Average votes per project: </strong>{{ stats["avg_judges"]|round(3) }}</p>
+    <p><strong>Average time per project: </strong>{{ stats["avg_time"] }}</p>
   </div>
 </div>
 
@@ -30,6 +33,7 @@
           <th data-sort-method="caseInsensitiveSort">Description</th>
           <th class="sort-default" data-sort-method="number" data-sort-order="desc">Mu</th>
           <th data-sort-method="number">Sigma Squared</th>
+          <th data-sort-method="number">Avg Time</th>
           <th data-sort-method="number">Votes</th>
           <th data-sort-method="number">Seen</th>
           <th data-sort-method="number" data-sort-order="desc">Skipped</th>
@@ -47,6 +51,7 @@
           <td class="preserve-formatting">{{ item.description | safe }}</td>
           <td>{{ item.mu | round(4) }}</td>
           <td>{{ item.sigma_sq | round(4) }}</td>
+          <td>{{ times['project'][item.id] }}</td>
           <td>{{ item_counts.get(item.id, 0) }}</td>
           <td>{{ item.viewed | length }}</td>
           <td>{{ skipped.get(item.id, 0) }}</td>
@@ -93,6 +98,7 @@
           <th data-sort-method="number">Votes</th>
           <th data-sort-method="number">Next (Id)</th>
           <th data-sort-method="number">Previous (Id)</th>
+          <th data-sort-method="number">Avg Time</th>
           <th data-sort-method="number" data-sort-order="desc">Updated</th>
           <th class="no-sort">Email</th>
           <th data-sort-method="caseInsensitiveSort">Active</th>
@@ -109,6 +115,7 @@
           <td>{{ counts.get(annotator.id, 0) }}</td>
           <td data-sort="{{ annotator.next_id or -1 }}">{{ annotator.next_id }}</td>
           <td data-sort="{{ annotator.prev_id or -1 }}">{{ annotator.prev_id }}</td>
+          <td>{{ times['judge'][annotator.id] }}</td>
           <td data-sort="{{ annotator.updated | utcdatetime_epoch }}">{{ annotator.updated | utcdatetime_local }}</td>
           <td class="compact">
             <form action="/admin/annotator" method="post">
