@@ -13,12 +13,11 @@
   </div>
   <div class="info">
     <p><strong>Total votes: </strong>{{ stats["votes"] }}</p>
-    <p><strong>Average votes per judge: </strong>{{ stats["avg_votes"]|round(3) }}</p>
-    <p><strong>Average votes per project: </strong>{{ stats["avg_judges"]|round(3) }}</p>
-    <p><strong>Average time per project: </strong>{{ stats["avg_time"] }}</p>
+    <p><strong>Average votes per judge: </strong>{{ stats["avg_votes"] | round(3) }}</p>
+    <p><strong>Average votes per project: </strong>{{ stats["avg_judges"] | round(3) }}</p>
+    <p><strong>Average time per project: </strong>{{ stats["avg_time"] | timedelta_legible }}</p>
   </div>
 </div>
-
 <div class="item">
   <div class="banner">
     <h2>Projects</h2>
