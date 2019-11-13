@@ -135,13 +135,21 @@ def annotator():
                     return utils.user_error('Bad data: row %d has %d elements (expecting 3)' % (index + 1, len(row)))
             for row in data:
                 annotator = Annotator(*row)
+                # SET ALL ANNOTATORS INITIALLY TO INACTIVE
+                annotator.active = False
                 added.append(annotator)
                 db.session.add(annotator)
             db.session.commit()
-            try:
-                email_invite_links(added)
-            except Exception as e:
-                return utils.server_error(str(e))
+    elif action == 'Mass Email':
+        try:
+            rows = Annotator.query.all()
+            email_invite_links(rows)
+        except Exception as e:
+            return utils.server_error(str(e))
+    elif action == 'Start Judging':
+        rows = Annotator.query.all()
+        activate_judging(rows)
+        db.session.commit()
     elif action == 'Email':
         annotator_id = request.form['annotator_id']
         try:
@@ -234,5 +242,13 @@ def email_invite_links(annotators):
         raw_body = settings.EMAIL_BODY.format(name=annotator.name, link=link)
         body = '\n\n'.join(utils.get_paragraphs(raw_body))
         emails.append((annotator.email, settings.EMAIL_SUBJECT, body))
-
+        
     utils.send_emails.delay(emails)
+    # utils.send_emails(emails) # originally in jamiefu/start_judging branch
+
+def activate_judging(annotators):
+    if not isinstance(annotators, list):
+        annotators = [annotators]
+    
+    for annotator in annotators:
+        annotator.active = True
