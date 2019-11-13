@@ -11,6 +11,7 @@ from flask import (
 )
 import urllib.parse
 import xlrd
+import datetime
 
 ALLOWED_EXTENSIONS = set(['csv', 'xlsx', 'xls'])
 
@@ -20,8 +21,13 @@ def admin():
     annotators = Annotator.query.order_by(Annotator.id).all()
     items = Item.query.order_by(Item.id).all()
     decisions = Decision.query.all()
+    
     counts = {}
     item_counts = {}
+
+    judge_times = {} # maps annotator_id to list of tuples of (time, set(winner, loser))
+    average = lambda collection, start=0: sum(collection, start) / len(collection) if len(collection) != 0 else 0
+
     for d in decisions:
         a = d.annotator_id
         w = d.winner_id
@@ -29,14 +35,56 @@ def admin():
         counts[a] = counts.get(a, 0) + 1
         item_counts[w] = item_counts.get(w, 0) + 1
         item_counts[l] = item_counts.get(l, 0) + 1
+
+        time = d.time
+        judge_times.setdefault(a, []).append((time, frozenset({w, l})))
+
     viewed = {i.id: {a.id for a in i.viewed} for i in items}
     skipped = {}
+    project_times = {} # maps project id to list of times
+    judge_avgs = {}
+
     for a in annotators:
+
         for i in a.ignore:
             if a.id not in viewed[i.id]:
                 skipped[i.id] = skipped.get(i.id, 0) + 1
+        
+        this_times = judge_times.get(a.id, [])
+        this_times.sort(key=lambda elem: elem[0])
+        this_deltas = []
+
+        for prev_comp, next_comp in zip(this_times[:-1], this_times[1:]):
+            const = prev_comp[1] & next_comp[1]
+            project, = const
+            p_delta = next_comp[0] - prev_comp[0]
+
+            this_deltas.append(p_delta)
+            project_times.setdefault(project, []).append(p_delta)
+        judge_avg = average(this_deltas, datetime.timedelta(0))
+        judge_avgs[a.id] = judge_avg
+    
+    proj_avgs = {}
+    for proj_key, time_list in project_times.items():
+        proj_avgs[proj_key] = average(time_list, datetime.timedelta(0))
+
+    times = {'judge': judge_avgs, 'project': proj_avgs}
     # settings
     setting_closed = Setting.value_of(SETTING_CLOSED) == SETTING_TRUE
+
+    #store stats in a dictioanry
+    stats = {}
+
+    #calculate some stats:
+    stats['votes'] = len(decisions)
+
+    average_votes = average(counts.values())
+    stats['avg_votes'] = average_votes
+    average_judges = average(item_counts.values())
+    stats['avg_judges'] = average_judges
+
+    stats['avg_time'] = average(sum(project_times.values(), []), datetime.timedelta(0))
+
     return render_template(
         'admin.html',
         annotators=annotators,
@@ -44,7 +92,8 @@ def admin():
         item_counts=item_counts,
         skipped=skipped,
         items=items,
-        votes=len(decisions),
+        stats=stats,
+        times=times,
         setting_closed=setting_closed,
     )
 
