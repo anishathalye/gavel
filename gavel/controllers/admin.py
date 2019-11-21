@@ -44,9 +44,8 @@ def admin():
     project_times = {} # maps project id to list of times
     judge_avgs = {}
 
-    start_time = Setting.by_key("start_time")
-    print("hi")
-    print(start_time)
+    #time when judging was started, used as start time for first comparison
+    start_time = Setting.by_key("start_time").value
 
     for a in annotators:
 
@@ -58,15 +57,21 @@ def admin():
         this_times.sort(key=lambda elem: elem[0])
         this_deltas = []
 
-        #this_deltas.append()
+        if len(this_times) > 1:
+            const = this_times[0] & this_times[1]
+            project, = this_times[0] - const
+            init_delta = this_times[0] - start_time
 
-        for prev_comp, next_comp in zip(this_times[:-1], this_times[1:]):
-            const = prev_comp[1] & next_comp[1]
-            project, = const
-            p_delta = next_comp[0] - prev_comp[0]
+            this_deltas.append(init_delta)
+            project_times.setdefault(project, []).append(init_delta)
 
-            this_deltas.append(p_delta)
-            project_times.setdefault(project, []).append(p_delta)
+            for prev_comp, next_comp in zip(this_times[:-1], this_times[1:]):
+                const = prev_comp[1] & next_comp[1]
+                project, = const
+                p_delta = next_comp[0] - prev_comp[0]
+
+                this_deltas.append(p_delta)
+                project_times.setdefault(project, []).append(p_delta)
         judge_avg = average(this_deltas, datetime.timedelta(0))
         judge_avgs[a.id] = judge_avg
     
