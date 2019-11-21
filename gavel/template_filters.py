@@ -16,7 +16,6 @@ def _jinja2_filter_datetime_epoch(datetime):
 
 @app.template_filter('timedelta_legible')
 def _jinja2_filter_timedelta_legible(tdelta):
-	print("{}, {}".format(type(tdelta), tdelta))
 	if type(tdelta) == timedelta:
 		days = tdelta.days
 		tot_seconds = tdelta.seconds

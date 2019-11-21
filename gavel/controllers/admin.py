@@ -44,6 +44,10 @@ def admin():
     project_times = {} # maps project id to list of times
     judge_avgs = {}
 
+    start_time = Setting.by_key("start_time")
+    print("hi")
+    print(start_time)
+
     for a in annotators:
 
         for i in a.ignore:
@@ -53,6 +57,8 @@ def admin():
         this_times = judge_times.get(a.id, [])
         this_times.sort(key=lambda elem: elem[0])
         this_deltas = []
+
+        #this_deltas.append()
 
         for prev_comp, next_comp in zip(this_times[:-1], this_times[1:]):
             const = prev_comp[1] & next_comp[1]
@@ -198,9 +204,11 @@ def annotator():
     elif action == 'Start Judging':
         rows = Annotator.query.all()
         activate_judging(rows)
-        exists = db.session.query(User.id).filter_by(name='start_time').scalar() is not None
+        exists = Setting.by_key('start_time') is not None
+        #exists = db.session.query(User.id).filter_by(name='start_time').scalar() is not None
         if exists:
-            db.session.query(User.id).filter_by(name='start_time').update(dict(value=datetime.datetime.now()))
+            Setting.set('start_time', datetime.datetime.now())
+            #db.session.query(User.id).filter_by(name='start_time').update(dict(value=datetime.datetime.now()))
         else:
             starter = Setting(key = "start_time", value = datetime.datetime.now())
             db.session.add(starter)
