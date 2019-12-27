@@ -1,5 +1,6 @@
 ANNOTATOR_ID = 'annotator_id'
 TELEMETRY_URL = 'https://telemetry.anish.io/api/v1/submit'
+SENDGRID_URL = "https://api.sendgrid.com/v3/mail/send"
 
 # Setting
 # keys
