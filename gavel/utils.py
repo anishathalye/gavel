@@ -132,18 +132,6 @@ def user_error(message):
 def server_error(message):
     return render_template('error.html', message=message), 500
 
-def send_telemetry(identifier, data):
-    if not settings.SEND_STATS:
-        return
-    try:
-        requests.post(
-            constants.TELEMETRY_URL,
-            json={'identifier': identifier, 'data': data},
-            timeout=5
-        )
-    except Exception:
-        pass # don't want this to break anything else
-
 def cast_row(row):
     '''
     Convert workbook sheet cells into integers if they are equal to integer

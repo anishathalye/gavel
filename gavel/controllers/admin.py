@@ -3,6 +3,7 @@ from gavel.models import *
 from gavel.constants import *
 import gavel.settings as settings
 import gavel.utils as utils
+import gavel.stats as stats
 from flask import (
     redirect,
     render_template,
@@ -17,6 +18,7 @@ ALLOWED_EXTENSIONS = set(['csv', 'xlsx', 'xls'])
 @app.route('/admin/')
 @utils.requires_auth
 def admin():
+    stats.check_send_telemetry()
     annotators = Annotator.query.order_by(Annotator.id).all()
     items = Item.query.order_by(Item.id).all()
     decisions = Decision.query.all()
