@@ -77,9 +77,15 @@ that Gavel does not preserve database schema compatibility between versions.**
 
 In order to send emails, you'll need to install Redis.
 
-When testing, you can run the app with `python runserver.py`. In production,
-you should use something like [Gunicorn][gunicorn] to serve this. You can run
-the app with `gunicorn -b :<PORT> -w <number of workers> gavel:app`.
+When testing, you can run the app with `python runserver.py`.
+
+In production, you should use something like [Gunicorn][gunicorn] to serve
+this. You can run the app with `gunicorn -b :<PORT> -w <number of workers>
+gavel:app`. This is sufficient if you want to serve Gavel under its own domain
+(e.g. `judging.example.com`). If you are serving Gavel under a subpath, e.g.
+`example.com/judging`, you need to set the `SCRIPT_NAME` environment variable
+(e.g. by passing `-e SCRIPT_NAME=/judging` to Gunicorn). If you are running
+Gavel behind a proxy server, be sure to set `PROXY=true` in Gavel's settings.
 
 For sending emails, you'll also need to start a celery worker with `celery -A
 gavel:celery worker`.
