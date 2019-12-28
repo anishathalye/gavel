@@ -164,6 +164,15 @@ hr {
   padding-right: 1rem;
 }
 
+.api-link {
+  text-align: center;
+  margin-top: 1rem;
+  font-size: 1.2rem;
+  a {
+    color: $link-color;
+  }
+}
+
 .compact {
   padding: 0 0;
 }
