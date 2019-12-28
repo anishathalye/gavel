@@ -60,7 +60,7 @@ def index():
             )
         if not annotator.read_welcome:
             return redirect(url_for('welcome'))
-        maybe_init_annotator(annotator)
+        maybe_init_annotator()
         if annotator.next is None:
             return render_template(
                 'wait.html',
@@ -75,41 +75,45 @@ def index():
 @requires_open(redirect_to='index')
 @requires_active_annotator(redirect_to='index')
 def vote():
-    annotator = get_current_annotator()
-    if annotator.prev.id == int(request.form['prev_id']) and annotator.next.id == int(request.form['next_id']):
-        if request.form['action'] == 'Skip':
-            annotator.ignore.append(annotator.next)
-        else:
-            # ignore things that were deactivated in the middle of judging
-            if annotator.prev.active and annotator.next.active:
-                if request.form['action'] == 'Previous':
-                    perform_vote(annotator, next_won=False)
-                    decision = Decision(annotator, winner=annotator.prev, loser=annotator.next)
-                elif request.form['action'] == 'Current':
-                    perform_vote(annotator, next_won=True)
-                    decision = Decision(annotator, winner=annotator.next, loser=annotator.prev)
-                db.session.add(decision)
-            annotator.next.viewed.append(annotator) # counted as viewed even if deactivated
-            annotator.prev = annotator.next
-            annotator.ignore.append(annotator.prev)
-        annotator.update_next(choose_next(annotator))
-        db.session.commit()
+    def tx():
+        annotator = get_current_annotator()
+        if annotator.prev.id == int(request.form['prev_id']) and annotator.next.id == int(request.form['next_id']):
+            if request.form['action'] == 'Skip':
+                annotator.ignore.append(annotator.next)
+            else:
+                # ignore things that were deactivated in the middle of judging
+                if annotator.prev.active and annotator.next.active:
+                    if request.form['action'] == 'Previous':
+                        perform_vote(annotator, next_won=False)
+                        decision = Decision(annotator, winner=annotator.prev, loser=annotator.next)
+                    elif request.form['action'] == 'Current':
+                        perform_vote(annotator, next_won=True)
+                        decision = Decision(annotator, winner=annotator.next, loser=annotator.prev)
+                    db.session.add(decision)
+                annotator.next.viewed.append(annotator) # counted as viewed even if deactivated
+                annotator.prev = annotator.next
+                annotator.ignore.append(annotator.prev)
+            annotator.update_next(choose_next(annotator))
+            db.session.commit()
+    with_retries(tx)
     return redirect(url_for('index'))
 
 @app.route('/begin', methods=['POST'])
 @requires_open(redirect_to='index')
 @requires_active_annotator(redirect_to='index')
 def begin():
-    annotator = get_current_annotator()
-    if annotator.next.id == int(request.form['item_id']):
-        annotator.ignore.append(annotator.next)
-        if request.form['action'] == 'Done':
-            annotator.next.viewed.append(annotator)
-            annotator.prev = annotator.next
-            annotator.update_next(choose_next(annotator))
-        elif request.form['action'] == 'Skip':
-            annotator.next = None # will be reset in index
-        db.session.commit()
+    def tx():
+        annotator = get_current_annotator()
+        if annotator.next.id == int(request.form['item_id']):
+            annotator.ignore.append(annotator.next)
+            if request.form['action'] == 'Done':
+                annotator.next.viewed.append(annotator)
+                annotator.prev = annotator.next
+                annotator.update_next(choose_next(annotator))
+            elif request.form['action'] == 'Skip':
+                annotator.next = None # will be reset in index
+            db.session.commit()
+    with_retries(tx)
     return redirect(url_for('index'))
 
 @app.route('/logout')
@@ -140,10 +144,12 @@ def welcome():
 @requires_open(redirect_to='index')
 @requires_active_annotator(redirect_to='index')
 def welcome_done():
-    annotator = get_current_annotator()
-    if request.form['action'] == 'Done':
-        annotator.read_welcome = True
-    db.session.commit()
+    def tx():
+        annotator = get_current_annotator()
+        if request.form['action'] == 'Done':
+            annotator.read_welcome = True
+        db.session.commit()
+    with_retries(tx)
     return redirect(url_for('index'))
 
 def get_current_annotator():
@@ -182,12 +188,15 @@ def preferred_items(annotator):
 
     return less_seen if less_seen else preferred
 
-def maybe_init_annotator(annotator):
-    if annotator.next is None:
-        items = preferred_items(annotator)
-        if items:
-            annotator.update_next(choice(items))
-            db.session.commit()
+def maybe_init_annotator():
+    def tx():
+        annotator = get_current_annotator()
+        if annotator.next is None:
+            items = preferred_items(annotator)
+            if items:
+                annotator.update_next(choice(items))
+                db.session.commit()
+    with_retries(tx)
 
 def choose_next(annotator):
     items = preferred_items(annotator)
