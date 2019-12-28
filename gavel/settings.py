@@ -5,6 +5,8 @@ import yaml
 BASE_DIR = os.path.dirname(__file__)
 CONFIG_FILE = os.path.join(BASE_DIR, '..', 'config.yaml')
 
+NONE_SENTINEL = object()  # because default may be None
+
 class Config(object):
 
     def __init__(self, config_file):
@@ -16,7 +18,7 @@ class Config(object):
 
     # checks for an environment variable first, then an entry in the config file,
     # and then falls back to default
-    def get(self, name, env_names=None, default=None):
+    def get(self, name, env_names=None, default=NONE_SENTINEL):
         setting = None
         if env_names is not None:
             if not isinstance(env_names, list):
@@ -28,7 +30,7 @@ class Config(object):
         if setting is None:
             setting = self._config.get(name, None)
         if setting is None:
-            if default is not None:
+            if default is not NONE_SENTINEL:
                 return default
             else:
                 raise LookupError('Cannot find value for setting %s' % name)
@@ -55,12 +57,12 @@ c = Config(CONFIG_FILE)
 
 # note: this should be kept in sync with 'config.template.yaml' and
 # 'config.vagrant.yaml'
-BASE_URL =            c.get('base_url',        'BASE_URL')
+SERVER_NAME =         c.get('server_name',     'SERVER_NAME',              default=None)
+PROXY =         _bool(c.get('proxy',           'PROXY',                    default=False))
 ADMIN_PASSWORD =      c.get('admin_password',  'ADMIN_PASSWORD')
 DB_URI =              c.get('db_uri',          ['DATABASE_URL', 'DB_URI'], default='postgresql://localhost/gavel')
 BROKER_URI =          c.get('broker_uri',      ['REDIS_URL', 'BROKER_URI'], default='redis://localhost:6379/0')
 SECRET_KEY =          c.get('secret_key',      'SECRET_KEY')
-PORT =            int(c.get('port',            'PORT',                     default=5000))
 MIN_VIEWS =       int(c.get('min_views',       'MIN_VIEWS',                default=2))
 TIMEOUT =       float(c.get('timeout',         'TIMEOUT',                  default=5.0)) # in minutes
 WELCOME_MESSAGE =     c.get('welcome_message',                             default=constants.DEFAULT_WELCOME_MESSAGE)

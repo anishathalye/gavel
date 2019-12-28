@@ -28,7 +28,7 @@
     <h1>Vote</h1>
   </div>
   <div class="info">
-    <form action="/vote" method="post">
+    <form action="{{ url_for('vote') }}" method="post">
       <p class="center">Which one is better?</p>
       <input type="submit" name="action" value="Previous" id="vote-previous" class="button-left">
       <input type="submit" name="action" value="Current" id="vote-current" class="button-right">

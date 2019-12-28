@@ -12,7 +12,7 @@
 
 <div class="item">
   <div class="info">
-    <form action="/welcome/done" method="post">
+    <form action="{{ url_for('welcome_done') }}" method="post">
       <input type="submit" name="action" value="Done" class="button-full button-gap positive">
       <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
     </form>

@@ -220,7 +220,7 @@ def annotator_detail(annotator_id):
         )
 
 def annotator_link(annotator):
-        return urllib.parse.urljoin(settings.BASE_URL, url_for('login', secret=annotator.secret))
+        return url_for('login', secret=annotator.secret, _external=True)
 
 def email_invite_links(annotators):
     if settings.DISABLE_EMAIL or annotators is None:

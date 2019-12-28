@@ -12,7 +12,7 @@
 
 <div class="item">
   <div class="info">
-    <form action="/begin" method="post">
+    <form action="{{ url_for('begin') }}" method="post">
       <input type="submit" name="action" value="Skip" id="vote-skip" class="button-full">
       <input type="submit" name="action" value="Done" id="vote-done" class="button-full button-gap">
       <input type="hidden" name="item_id" value="{{ item.id }}">
