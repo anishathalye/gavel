@@ -90,7 +90,10 @@ def item():
                 db.session.commit()
             with_retries(tx)
         except IntegrityError as e:
-            return utils.server_error(str(e))
+            if isinstance(e.orig, psycopg2.errors.ForeignKeyViolation):
+                return utils.server_error("Projects can't be deleted once they have been voted on by a judge. You can use the 'disable' functionality instead, which has a similar effect, preventing the project from being shown to judges.")
+            else:
+                return utils.server_error(str(e))
     return redirect(url_for('admin'))
 
 
@@ -178,7 +181,10 @@ def annotator():
                 db.session.commit()
             with_retries(tx)
         except IntegrityError as e:
-            return utils.server_error(str(e))
+            if isinstance(e.orig, psycopg2.errors.ForeignKeyViolation):
+                return utils.server_error("Judges can't be deleted once they have voted on a project. You can use the 'disable' functionality instead, which has a similar effect, locking out the judge and preventing them from voting on any other projects.")
+            else:
+                return utils.server_error(str(e))
     return redirect(url_for('admin'))
 
 @app.route('/admin/setting', methods=['POST'])
