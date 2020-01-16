@@ -33,6 +33,10 @@
           <th data-sort-method="number">Votes</th>
           <th data-sort-method="number">Seen</th>
           <th data-sort-method="number" data-sort-order="desc">Skipped</th>
+          <th data-sort-method="caseInsensitiveSort">Education</th>
+          <th data-sort-method="caseInsensitiveSort">Health and Wellness</th>
+          <th data-sort-method="caseInsensitiveSort">Sustainability</th>
+          <th data-sort-method="caseInsensitiveSort">Beginner</th>
           <th data-sort-method="caseInsensitiveSort" data-sort-order="desc">Prioritize</th>
           <th data-sort-method="caseInsensitiveSort">Active</th>
           <th class="no-sort">Delete</th>
@@ -50,6 +54,26 @@
           <td>{{ item_counts.get(item.id, 0) }}</td>
           <td>{{ item.viewed | length }}</td>
           <td>{{ skipped.get(item.id, 0) }}</td>
+          {% if item.track_education %}
+            <td>X</td>
+          {% else %}
+            <td></td>
+          {% endif %}
+          {% if item.track_health %}
+            <td>X</td>
+          {% else %}
+            <td></td>
+          {% endif %}
+          {% if item.track_sustainability %}
+            <td>X</td>
+          {% else %}
+            <td></td>
+          {% endif %}
+          {% if item.track_beginner %}
+            <td>X</td>
+          {% else %}
+            <td></td>
+          {% endif %}
           <td class="compact" data-sort="{{ item.prioritized }}">
             <form action="{{ url_for('item') }}" method="post">
               <input type="submit" name="action" value="{{ 'Prioritize' if not item.prioritized else 'Cancel' }}" class="{{ 'positive' if not item.prioritized else 'negative' }}">

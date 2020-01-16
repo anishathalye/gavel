@@ -1,5 +1,5 @@
 <div class="info">
   <h2>{{ item.name | safe }}</h2>
-  <p class="preserve-formatting">{{ item.description | safe }}</p>
+  <p class="preserve-formatting"><a href={{ item.description }} target="_blank"> {{ item.description | safe }}</a></p>
   <p><strong>Location: </strong>{{ item.location | safe }}</p>
 </div>

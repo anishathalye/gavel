@@ -10,10 +10,16 @@ from flask import (
     request,
     url_for,
 )
+import re
 import urllib.parse
 import xlrd
 
 ALLOWED_EXTENSIONS = set(['csv', 'xlsx', 'xls'])
+TRACKS = [
+    "Education", "Health and Wellness", "Education", "Best Beginner Hack"
+]
+pattern = re.compile(r"What it does\s+(.*)\s+")
+
 
 @app.route('/admin/')
 @utils.requires_auth
@@ -50,6 +56,7 @@ def admin():
         setting_closed=setting_closed,
     )
 
+
 @app.route('/admin/item', methods=['POST'])
 @utils.requires_auth
 def item():
@@ -59,14 +66,19 @@ def item():
         if data:
             # validate data
             for index, row in enumerate(data):
-                if len(row) != 3:
-                    return utils.user_error('Bad data: row %d has %d elements (expecting 3)' % (index + 1, len(row)))
+                if len(row) != 4:
+                    return utils.user_error(
+                        'Bad data: row %d has %d elements (expecting 4)' %
+                        (index + 1, len(row))
+                    )
+
             def tx():
                 for row in data:
                     _item = Item(*row)
                     db.session.add(_item)
                 db.session.commit()
             with_retries(tx)
+
     elif action == 'Prioritize' or action == 'Cancel':
         item_id = request.form['item_id']
         target_state = action == 'Prioritize'
@@ -136,6 +148,7 @@ def item_patch():
     with_retries(tx)
     return redirect(url_for('item_detail', item_id=item.id))
 
+
 @app.route('/admin/annotator', methods=['POST'])
 @utils.requires_auth
 def annotator():
@@ -187,6 +200,7 @@ def annotator():
                 return utils.server_error(str(e))
     return redirect(url_for('admin'))
 
+
 @app.route('/admin/setting', methods=['POST'])
 @utils.requires_auth
 def setting():
@@ -197,6 +211,7 @@ def setting():
         Setting.set(SETTING_CLOSED, new_value)
         db.session.commit()
     return redirect(url_for('admin'))
+
 
 @app.route('/admin/item/<item_id>/')
 @utils.requires_auth
@@ -219,6 +234,7 @@ def item_detail(item_id):
             assigned=assigned,
             skipped=skipped
         )
+
 
 @app.route('/admin/annotator/<annotator_id>/')
 @utils.requires_auth
@@ -243,8 +259,10 @@ def annotator_detail(annotator_id):
             skipped=skipped
         )
 
+
 def annotator_link(annotator):
         return url_for('login', secret=annotator.secret, _external=True)
+
 
 def email_invite_links(annotators):
     if settings.DISABLE_EMAIL or annotators is None:
