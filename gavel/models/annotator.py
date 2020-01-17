@@ -4,10 +4,12 @@ import gavel.crowd_bt as crowd_bt
 from sqlalchemy.orm.exc import NoResultFound
 from datetime import datetime
 
-ignore_table = db.Table('ignore',
+ignore_table = db.Table(
+    'ignore',
     db.Column('annotator_id', db.Integer, db.ForeignKey('annotator.id')),
     db.Column('item_id', db.Integer, db.ForeignKey('item.id'))
 )
+
 
 class Annotator(db.Model):
     id = db.Column(db.Integer, primary_key=True, nullable=False)
@@ -37,7 +39,8 @@ class Annotator(db.Model):
 
     def update_next(self, new_next):
         if new_next is not None:
-            new_next.prioritized = False # it's now assigned, so cancel the prioritization
+            # it's now assigned, so cancel the prioritization
+            new_next.prioritized = False
             # it could happen that the judge skips the project, but that
             # doesn't re-prioritize the project
             self.updated = datetime.utcnow()

@@ -15,6 +15,7 @@ from numpy.random import choice, random, shuffle
 from functools import wraps
 from datetime import datetime
 
+
 def requires_open(redirect_to):
     def decorator(f):
         @wraps(f)
@@ -25,6 +26,7 @@ def requires_open(redirect_to):
                 return f(*args, **kwargs)
         return decorated
     return decorator
+
 
 def requires_active_annotator(redirect_to):
     def decorator(f):
@@ -71,6 +73,7 @@ def index():
         else:
             return render_template('vote.html', prev=annotator.prev, next=annotator.next)
 
+
 @app.route('/vote', methods=['POST'])
 @requires_open(redirect_to='index')
 @requires_active_annotator(redirect_to='index')
@@ -98,6 +101,7 @@ def vote():
     with_retries(tx)
     return redirect(url_for('index'))
 
+
 @app.route('/begin', methods=['POST'])
 @requires_open(redirect_to='index')
 @requires_active_annotator(redirect_to='index')
@@ -116,10 +120,12 @@ def begin():
     with_retries(tx)
     return redirect(url_for('index'))
 
+
 @app.route('/logout')
 def logout():
     session.pop(ANNOTATOR_ID, None)
     return redirect(url_for('index'))
+
 
 @app.route('/login/<secret>/')
 def login(secret):
@@ -131,6 +137,7 @@ def login(secret):
         session[ANNOTATOR_ID] = annotator.id
     return redirect(url_for('index'))
 
+
 @app.route('/welcome/')
 @requires_open(redirect_to='index')
 @requires_active_annotator(redirect_to='index')
@@ -139,6 +146,7 @@ def welcome():
         'welcome.html',
         content=utils.render_markdown(settings.WELCOME_MESSAGE)
     )
+
 
 @app.route('/welcome/done', methods=['POST'])
 @requires_open(redirect_to='index')
@@ -152,8 +160,10 @@ def welcome_done():
     with_retries(tx)
     return redirect(url_for('index'))
 
+
 def get_current_annotator():
     return Annotator.by_id(session.get(ANNOTATOR_ID, None))
+
 
 def preferred_items(annotator):
     '''
@@ -179,14 +189,16 @@ def preferred_items(annotator):
     annotators = Annotator.query.filter(
         (Annotator.active == True) & (Annotator.next != None) & (Annotator.updated != None)
     ).all()
-    busy = {i.next.id for i in annotators if \
-        (datetime.utcnow() - i.updated).total_seconds() < settings.TIMEOUT * 60}
+    busy = {i.next.id for i in annotators if
+            (datetime.utcnow() - i.updated).total_seconds() <
+            settings.TIMEOUT * 60}
     nonbusy = [i for i in items if i.id not in busy]
     preferred = nonbusy if nonbusy else items
 
     less_seen = [i for i in preferred if len(i.viewed) < settings.MIN_VIEWS]
 
     return less_seen if less_seen else preferred
+
 
 def maybe_init_annotator():
     def tx():
@@ -198,23 +210,28 @@ def maybe_init_annotator():
                 db.session.commit()
     with_retries(tx)
 
+
 def choose_next(annotator):
     items = preferred_items(annotator)
 
-    shuffle(items) # useful for argmax case as well in the case of ties
+    shuffle(items)  # useful for argmax case as well in the case of ties
     if items:
         if random() < crowd_bt.EPSILON:
             return items[0]
         else:
-            return crowd_bt.argmax(lambda i: crowd_bt.expected_information_gain(
-                annotator.alpha,
-                annotator.beta,
-                annotator.prev.mu,
-                annotator.prev.sigma_sq,
-                i.mu,
-                i.sigma_sq), items)
+            return crowd_bt.argmax(
+                lambda i: crowd_bt.expected_information_gain(
+                    annotator.alpha,
+                    annotator.beta,
+                    annotator.prev.mu,
+                    annotator.prev.sigma_sq,
+                    i.mu,
+                    i.sigma_sq
+                ), items
+            )
     else:
         return None
+
 
 def perform_vote(annotator, next_won):
     if next_won:
@@ -223,14 +240,15 @@ def perform_vote(annotator, next_won):
     else:
         winner = annotator.prev
         loser = annotator.next
-    u_alpha, u_beta, u_winner_mu, u_winner_sigma_sq, u_loser_mu, u_loser_sigma_sq = crowd_bt.update(
-        annotator.alpha,
-        annotator.beta,
-        winner.mu,
-        winner.sigma_sq,
-        loser.mu,
-        loser.sigma_sq
-    )
+    u_alpha, u_beta, u_winner_mu, u_winner_sigma_sq, u_loser_mu, \
+        u_loser_sigma_sq = crowd_bt.update(
+            annotator.alpha,
+            annotator.beta,
+            winner.mu,
+            winner.sigma_sq,
+            loser.mu,
+            loser.sigma_sq
+        )
     annotator.alpha = u_alpha
     annotator.beta = u_beta
     winner.mu = u_winner_mu

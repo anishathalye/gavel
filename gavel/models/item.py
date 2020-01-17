@@ -2,7 +2,14 @@ from gavel.models import db
 import gavel.crowd_bt as crowd_bt
 from sqlalchemy.orm.exc import NoResultFound
 
-view_table = db.Table('view',
+view_table = db.Table(
+    'view',
+    db.Column('item_id', db.Integer, db.ForeignKey('item.id')),
+    db.Column('annotator_id', db.Integer, db.ForeignKey('annotator.id'))
+)
+
+absent_table = db.Table(
+    'absent',
     db.Column('item_id', db.Integer, db.ForeignKey('item.id')),
     db.Column('annotator_id', db.Integer, db.ForeignKey('annotator.id'))
 )
@@ -16,6 +23,7 @@ class Item(db.Model):
     active = db.Column(db.Boolean, default=True, nullable=False)
     viewed = db.relationship('Annotator', secondary=view_table)
     prioritized = db.Column(db.Boolean, default=False, nullable=False)
+    absent = db.relationship('Annotator', secondary=absent_table)
 
     # tracks
     track_education = db.Column(db.Boolean, default=False, nullable=False)
@@ -27,7 +35,8 @@ class Item(db.Model):
     sigma_sq = db.Column(db.Float)
 
     def __init__(self, name, location, description, track_education=False,
-                 track_health=False, track_sustainability=False, track_beginner=False):
+                 track_health=False, track_sustainability=False,
+                 track_beginner=False):
         self.name = name
         self.location = location
         self.description = description
