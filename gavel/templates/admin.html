@@ -31,8 +31,9 @@
           <th class="sort-default" data-sort-method="number" data-sort-order="desc">Mu</th>
           <th data-sort-method="number">Sigma Squared</th>
           <th data-sort-method="number">Votes</th>
-          <th data-sort-method="number">Seen</th>
+          <th data-sort-method="number">Seen</th> 
           <th data-sort-method="number" data-sort-order="desc">Skipped</th>
+          <th data-sort-method="number" data-sort-order="desc">Absent</th> 
           <th data-sort-method="caseInsensitiveSort">Education</th>
           <th data-sort-method="caseInsensitiveSort">Health and Wellness</th>
           <th data-sort-method="caseInsensitiveSort">Sustainability</th>
@@ -54,6 +55,7 @@
           <td>{{ item_counts.get(item.id, 0) }}</td>
           <td>{{ item.viewed | length }}</td>
           <td>{{ skipped.get(item.id, 0) }}</td>
+          <td>{{ absent.get(item.id, 0) }}</td>
           {% if item.track_education %}
             <td>X</td>
           {% else %}

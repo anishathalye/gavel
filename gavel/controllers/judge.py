@@ -83,6 +83,8 @@ def vote():
         if annotator.prev.id == int(request.form['prev_id']) and annotator.next.id == int(request.form['next_id']):
             if request.form['action'] == 'Skip':
                 annotator.ignore.append(annotator.next)
+            elif request.form['action'] == 'Absent':
+                annotator.next.absent.append(annotator)
             else:
                 # ignore things that were deactivated in the middle of judging
                 if annotator.prev.active and annotator.next.active:
@@ -116,6 +118,9 @@ def begin():
                 annotator.update_next(choose_next(annotator))
             elif request.form['action'] == 'Skip':
                 annotator.next = None # will be reset in index
+            elif request.form['action'] == 'Absent' :
+                annotator.next.absent.append(annotator)
+                annotator.next = None
             db.session.commit()
     with_retries(tx)
     return redirect(url_for('index'))
