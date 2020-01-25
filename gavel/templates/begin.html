@@ -14,7 +14,8 @@
   <div class="info">
     <form action="{{ url_for('begin') }}" method="post">
       <input type="submit" name="action" value="Skip" id="vote-skip" class="button-full">
-      <input type="submit" name="action" value="Done" id="vote-done" class="button-full button-gap">
+      <input type="submit" name="action" value="Done" id="vote-done" class="button-left button-gap">
+      <input type="submit" name="action" value="Absent" id="vote-absent" class="button-right button-gap">
       <input type="hidden" name="item_id" value="{{ item.id }}">
       <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
     </form>

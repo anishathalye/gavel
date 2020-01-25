@@ -14,7 +14,7 @@ def _jinja2_filter_datetime_local(datetime):
 def _jinja2_filter_datetime_epoch(datetime):
     if datetime is None:
         return 0
-    return datetime.strftime('%s')
+    return datetime.strftime('%S')
 
 def utc_to_local(utc_dt):
     return utc_dt.replace(tzinfo=timezone.utc).astimezone(tz=None)
