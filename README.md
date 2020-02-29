@@ -1,4 +1,4 @@
-<img src="https://raw.githubusercontent.com/anishathalye/gavel/docs/banner.png" width="450" height="150" alt="Gavel banner">
+<img src="https://raw.githubusercontent.com/anishathalye/gavel/docs/banner.png" width="450" alt="Gavel banner">
 
 **Gavel** is a project expo judging system.
 
@@ -15,7 +15,7 @@ keep us going <3**
 
 <p align="center">
     <a href="http://www.anishathalye.com/2016/09/19/gavel-an-expo-judging-system/">
-        <img src="https://raw.githubusercontent.com/anishathalye/gavel/docs/screenshot.png" width="320" height="568" alt="Gavel screenshot">
+        <img src="https://raw.githubusercontent.com/anishathalye/gavel/docs/screenshot.png" width="320" alt="Gavel screenshot">
     </a>
 </p>
 
