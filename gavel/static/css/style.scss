@@ -124,7 +124,8 @@ table th.sort-down::after {
 }
 
 textarea,
-input[type=text] {
+input[type=text],
+input[type=url] {
   font-weight: normal;
   width: 100%;
   margin-top: 0.25rem;
