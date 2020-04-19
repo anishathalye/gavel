@@ -134,7 +134,7 @@ def item_patch():
             item.description = request.form['description']
         db.session.commit()
     with_retries(tx)
-    return redirect(url_for('item_detail', item_id=item.id))
+    return redirect(url_for('admin'))
 
 @app.route('/admin/annotator', methods=['POST'])
 @utils.requires_auth
