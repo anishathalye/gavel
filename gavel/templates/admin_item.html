@@ -23,10 +23,10 @@
         </td>
       </tr>
       <tr>
-        <th>Location</th>
+        <th>URL</th>
         <td>
           <form action="{{ url_for('item_patch') }}" method="post">
-            <input type="text" name="location" value="{{ item.location | safe }}">
+            <input type="url" name="location" value="{{ item.location | safe }}" placeholder="https://example.com" pattern="https?://.+\..+">
             <input type="submit" name="action" value="Update" class="neutral">
             <input type="hidden" name="item_id" value="{{ item.id }}">
             <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
