@@ -1,5 +1,5 @@
 <div class="info">
   <h2>{{ item.name | safe }}</h2>
   <p class="preserve-formatting">{{ item.description | safe }}</p>
-  <p><strong>Location: </strong>{{ item.location | safe }}</p>
+  <p><strong>URL <i class="material-icons md-18">open_in_new</i>: </strong>{{ item.location | safe | urlize(target="_blank") }}</p>
 </div>
