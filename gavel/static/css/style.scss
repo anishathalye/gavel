@@ -316,3 +316,11 @@ input[type=submit].neutral {
     text-align: center;
   }
 }
+
+/* Rules for sizing the material-icons */
+.material-icons {
+  &.md-18 { font-size: 18px; }
+  &.md-24 { font-size: 24px; }
+  &.md-36 { font-size: 36px; }
+  &.md-48 { font-size: 48px; }
+}
