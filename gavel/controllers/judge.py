@@ -106,7 +106,7 @@ def begin():
         annotator = get_current_annotator()
         if annotator.next.id == int(request.form['item_id']):
             annotator.ignore.append(annotator.next)
-            if request.form['action'] == 'Done':
+            if request.form['action'] == 'Continue':
                 annotator.next.viewed.append(annotator)
                 annotator.prev = annotator.next
                 annotator.update_next(choose_next(annotator))
@@ -146,7 +146,7 @@ def welcome():
 def welcome_done():
     def tx():
         annotator = get_current_annotator()
-        if request.form['action'] == 'Done':
+        if request.form['action'] == 'Continue':
             annotator.read_welcome = True
         db.session.commit()
     with_retries(tx)
