@@ -21,7 +21,7 @@ numpy==1.18.0
 psycopg2==2.8.4
 pyScss==1.3.7
 pytz==2019.3
-PyYAML==5.2
+PyYAML==5.4
 redis==3.3.11
 requests==2.22.0
 scipy==1.4.1
