@@ -1,5 +1,4 @@
 # settings optimized for development in a Vagrant VM
-base_url: http://localhost:5000/
 admin_password: admin
 secret_key: gavel
 db_uri: postgresql://localhost/gavel

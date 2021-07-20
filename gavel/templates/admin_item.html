@@ -3,7 +3,7 @@
 {% block content %}
 <div class="item">
   <div class="banner" id="admin-header">
-    <a href="{{ url_for('admin') }}"><h1>Item</h1></a>
+    <a href="{{ url_for('admin') }}"><h1>Project</h1></a>
   </div>
   <div class="info">
     <table>
@@ -14,7 +14,7 @@
       <tr>
         <th>Name</th>
         <td>
-          <form action="/admin/item_patch" method="post">
+          <form action="{{ url_for('item_patch') }}" method="post">
             <input type="text" name="name" value="{{ item.name | safe }}">
             <input type="submit" name="action" value="Update" class="neutral">
             <input type="hidden" name="item_id" value="{{ item.id }}">
@@ -25,7 +25,7 @@
       <tr>
         <th>Location</th>
         <td>
-          <form action="/admin/item_patch" method="post">
+          <form action="{{ url_for('item_patch') }}" method="post">
             <input type="text" name="location" value="{{ item.location | safe }}">
             <input type="submit" name="action" value="Update" class="neutral">
             <input type="hidden" name="item_id" value="{{ item.id }}">
@@ -37,7 +37,7 @@
         <th>Description</th>
         <td>
           <textarea name="description" form="description_form">{{ item.description | safe }}</textarea>
-          <form action="/admin/item_patch" method="post" id="description_form">
+          <form action="{{ url_for('item_patch') }}" method="post" id="description_form">
             <input type="submit" name="action" value="Update" class="neutral">
             <input type="hidden" name="item_id" value="{{ item.id }}">
             <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">

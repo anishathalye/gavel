@@ -18,7 +18,6 @@
         "ADMIN_PASSWORD": "change-this-before-deploying",
         "SECRET_KEY": "randomly-generate-this-before-deploying",
         "DISABLE_EMAIL": "true",
-        "BASE_URL": "https://example.com/",
         "EMAIL_FROM": "_unused_",
         "EMAIL_USER": "_unused_",
         "EMAIL_PASSWORD": "_unused_",

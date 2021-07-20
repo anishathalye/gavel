@@ -5,14 +5,6 @@
 # can also be specified as the 'ADMIN_PASSWORD' environment variable
 admin_password: null
 
-# can also be specified as the 'BASE_URL' environment variable
-#
-# this is the base url of the judging app, e.g. 'https://judging.example.com/'.
-# make sure to have a trailing slash. this must be set for emailed links to
-# work properly. if you are setting DISABLE_EMAIL, you can set this setting to
-# '_unused_' (or anything else).
-base_url: null
-
 # can also be specified as the 'EMAIL_FROM' environment variable
 #
 # if you are setting DISABLE_EMAIL, you can set this setting to '_unused_' (or
@@ -42,6 +34,25 @@ secret_key: null
 # Optional Settings #
 #####################
 
+# can also be specified as the 'SERVER_NAME' environment variable
+# defaults to 'None'
+#
+# this can usually be inferred automatically. this is the name and port number
+# of the server hosting the judging app, e.g. 'judging.example.com'. if you are
+# serving gavel under a subpath, e.g. https://example.com:1337/judging, this
+# should NOT include that subpath (in this example it would just be set to
+# 'example.com:1337'). this setting is used for emailed links. if you are
+# setting DISABLE_EMAIL, you can omit this setting or set it to null.
+server_name: null
+
+# can also be specified as the 'PROXY' environment variable
+# defaults to 'False'
+#
+# this specifies whether the flask app is running behind a proxy, e.g. a TLS
+# termination proxy. this setting needs to be correct to produce correct links
+# in emails.
+proxy: null
+
 # can also be specified as the 'DATABASE_URL' or 'DB_URI' environment variable
 # defaults to 'postgresql://localhost/gavel'
 db_uri: null
@@ -50,9 +61,16 @@ db_uri: null
 # defaults to 'redis://localhost:6379/0'
 broker_uri: null
 
-# can also be specified as the 'PORT' environment variable
-# defaults to '5000'
-port: null
+# can also be specified as the 'USE_SENDGRID' environment variable
+# defaults to 'False'
+#
+# this enables sending emails via sendgrid. if you enable this, you should also
+# set SENDGRID_API_KEY.
+use_sendgrid: null
+
+# can also be specified as the 'SENDGRID_API_KEY' environment variable
+# defaults to 'None'
+sendgrid_api_key: null
 
 # can also be specified as the 'MIN_VIEWS' environment variable
 # defaults to '2'

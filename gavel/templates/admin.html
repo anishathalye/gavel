@@ -51,21 +51,21 @@
           <td>{{ item.viewed | length }}</td>
           <td>{{ skipped.get(item.id, 0) }}</td>
           <td class="compact" data-sort="{{ item.prioritized }}">
-            <form action="/admin/item" method="post">
+            <form action="{{ url_for('item') }}" method="post">
               <input type="submit" name="action" value="{{ 'Prioritize' if not item.prioritized else 'Cancel' }}" class="{{ 'positive' if not item.prioritized else 'negative' }}">
               <input type="hidden" name="item_id" value="{{ item.id }}">
               <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
             </form>
           </td>
           <td class="compact" data-sort="{{ item.active }}">
-            <form action="/admin/item" method="post">
+            <form action="{{ url_for('item') }}" method="post">
               <input type="submit" name="action" value="{{ 'Disable' if item.active else 'Enable' }}" class="{{ 'negative' if item.active else 'positive' }}">
               <input type="hidden" name="item_id" value="{{ item.id }}">
               <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
             </form>
           </td>
           <td class="compact">
-            <form action="/admin/item" method="post">
+            <form action="{{ url_for('item') }}" method="post">
               <input type="submit" name="action" value="Delete" class="negative">
               <input type="hidden" name="item_id" value="{{ item.id }}">
               <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
@@ -75,6 +75,9 @@
         {% endfor %}
       </tbody>
     </table>
+  </div>
+  <div class="api-link">
+    <a href="{{ url_for('item_dump') }}">Download CSV</a>
   </div>
 </div>
 
@@ -111,21 +114,21 @@
           <td data-sort="{{ annotator.prev_id or -1 }}">{{ annotator.prev_id }}</td>
           <td data-sort="{{ annotator.updated | utcdatetime_epoch }}">{{ annotator.updated | utcdatetime_local }}</td>
           <td class="compact">
-            <form action="/admin/annotator" method="post">
+            <form action="{{ url_for('annotator') }}" method="post">
               <input type="submit" name="action" value="Email" class="neutral">
               <input type="hidden" name="annotator_id" value="{{ annotator.id }}">
               <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
             </form>
           </td>
           <td class="compact" data-sort="{{ annotator.active }}">
-            <form action="/admin/annotator" method="post">
+            <form action="{{ url_for('annotator') }}" method="post">
               <input type="submit" name="action" value="{{ 'Disable' if annotator.active else 'Enable' }}" class="{{ 'negative' if annotator.active else 'positive' }}">
               <input type="hidden" name="annotator_id" value="{{ annotator.id }}">
               <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
             </form>
           </td>
           <td class="compact">
-            <form action="/admin/annotator" method="post">
+            <form action="{{ url_for('annotator') }}" method="post">
               <input type="submit" name="action" value="Delete" class="negative">
               <input type="hidden" name="annotator_id" value="{{ annotator.id }}">
               <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
@@ -136,6 +139,9 @@
       </tbody>
     </table>
   </div>
+  <div class="api-link">
+    <a href="{{ url_for('annotator_dump') }}">Download CSV</a>
+  </div>
 </div>
 
 <div class="item">
@@ -145,7 +151,7 @@
   <div class="info">
     <p>Add name, location, description (CSV format)</p>
     <textarea name="data" form="item_form"></textarea>
-    <form action="/admin/item" method="post" id="item_form" enctype="multipart/form-data">
+    <form action="{{ url_for('item') }}" method="post" id="item_form" enctype="multipart/form-data">
       <div class="upload-container">
         <span class="field">Or upload a file here:</span>
         <input type="file" name="file" accept=".csv,.xls,.xlsx">
@@ -162,7 +168,7 @@
   <div class="info">
     <p>Add name, email, description (CSV format)</p>
     <textarea name="data" form="annotator_form"></textarea>
-    <form action="/admin/annotator" method="post" id="annotator_form" enctype="multipart/form-data">
+    <form action="{{ url_for('annotator') }}" method="post" id="annotator_form" enctype="multipart/form-data">
       <div class="upload-container">
         <span class="field">Or upload a file here:</span>
         <input type="file" name="file" accept=".csv,.xls,.xlsx">
@@ -191,7 +197,7 @@
           <td>Closed</td>
           <td>{{ 'Closed' if setting_closed else 'Open' }}</td>
           <td class="compact">
-            <form action="/admin/setting" method="post">
+            <form action="{{ url_for('setting') }}" method="post">
               <input type="submit" name="action" value="{{ 'Open' if setting_closed else 'Close' }}" class="{{ 'positive' if setting_closed else 'negative' }}">
               <input type="hidden" name="key" value="closed">
               <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">

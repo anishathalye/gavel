@@ -15,6 +15,7 @@ import smtplib
 import email
 import email.mime.multipart
 import email.mime.text
+import json
 
 def gen_secret(length):
     return base64.b32encode(os.urandom(length))[:length].decode('utf8').lower()
@@ -95,6 +96,33 @@ def send_emails(emails):
     if exceptions:
         raise Exception('Error sending some emails: %s' % exceptions)
 
+def send_sendgrid_emails(emails):
+    exceptions = []
+    for e in emails:
+        to_address, subject, body = e
+        response = sendgrid_send_email(to_address, subject, body)
+        if not (response.status_code == requests.codes.ok or response.status_code == requests.codes.accepted):
+            all_errors = [error_obj['message'] for error_obj in response.json()['errors']]
+            error_msg = '%s (error %s)' % (to_address, str(all_errors))
+            exceptions.append(error_msg)
+    if exceptions:
+        raise Exception('Error sending some emails: %s' % exceptions)
+
+def sendgrid_send_email(to_address, subject, body):
+    payload = {
+        'personalizations': [{'to': [{'email': to_address}], 'subject': subject}],
+        'from': {'email': settings.EMAIL_FROM},
+        'subject': subject,
+        'content': [{'type': 'text/plain', 'value': body}]
+    }
+    headers = {
+        'authorization': 'Bearer %s' % settings.SENDGRID_API_KEY,
+        'content-type': 'application/json',
+    }
+
+    response = requests.request('POST', constants.SENDGRID_URL, data=json.dumps(payload), headers=headers)
+    return response
+
 def render_markdown(content):
     return Markup(markdown.markdown(content))
 
@@ -103,18 +131,6 @@ def user_error(message):
 
 def server_error(message):
     return render_template('error.html', message=message), 500
-
-def send_telemetry(identifier, data):
-    if not settings.SEND_STATS:
-        return
-    try:
-        requests.post(
-            constants.TELEMETRY_URL,
-            json={'identifier': identifier, 'data': data},
-            timeout=5
-        )
-    except Exception:
-        pass # don't want this to break anything else
 
 def cast_row(row):
     '''

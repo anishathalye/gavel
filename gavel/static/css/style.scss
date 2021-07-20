@@ -164,6 +164,15 @@ hr {
   padding-right: 1rem;
 }
 
+.api-link {
+  text-align: center;
+  margin-top: 1rem;
+  font-size: 1.2rem;
+  a {
+    color: $link-color;
+  }
+}
+
 .compact {
   padding: 0 0;
 }
@@ -221,7 +230,7 @@ hr {
 input[type=submit] {
   color: $light;
   background-color: $dark;
-  border: 1px solid $dark;
+  border: 2px solid $dark;
   font-size: 1.2rem;
   text-transform: uppercase;
   text-align: center;
@@ -254,19 +263,57 @@ input[type=submit] {
 
 #vote-previous {
   background-color: $previous-color;
+  border: 3px solid $previous-color;
 }
 
 #vote-current {
   background-color: $current-color;
+  border: 3px solid $current-color;
+}
+
+#vote-continue {
+  background-color: $current-color;
+  border: 3px solid $current-color;
 }
 
 #vote-skip {
   background-color: $vote-skip-color;
-  color: $dark;
+  border: 3px solid $vote-skip-color;
 }
 
-#vote-done {
-  background-color: $vote-done-color;
+#vote-submit {
+  background-color: $vote-submit-color;
+}
+
+#vote-submit:disabled {
+  background-color: $light-grey;
+  border: none;
+}
+
+.radio-button {
+  display: inline-block;
+}
+
+.radio-button > input {
+  opacity: 0;
+  position: fixed;
+  width: 0;
+}
+
+.radio-button > label {
+  display: inline-block;
+  padding: 10px 20px;
+  width: 100%;
+  color: $light;
+  font-size: 1.2rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  text-align: center;
+}
+
+.radio-button > input:not(:checked) + label {
+  background-color: white;
+  color: $dark;
 }
 
 input[type=submit].positive {

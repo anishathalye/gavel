@@ -1,6 +1,6 @@
 Vagrant.configure(2) do |config|
 
-  config.vm.box = 'debian/jessie64'
+  config.vm.box = 'debian/buster64'
 
   # synced folder
   config.vm.synced_folder '.', '/gavel', type: 'rsync',
@@ -14,21 +14,21 @@ Vagrant.configure(2) do |config|
   config.vm.network 'forwarded_port', guest: 5000, host: 5000
 
   # install packages
+
   config.vm.provision 'shell', inline: <<-EOS
     apt-get -y update
 
     apt-get install -y \
-      postgresql-9.4 postgresql-server-dev-9.4 \
+      postgresql-11 postgresql-server-dev-11 \
       redis-server \
       python3-dev python3-pip
 
-    pip3 install --upgrade pip
     pip3 install virtualenv
   EOS
 
   # database setup
   config.vm.provision 'shell', inline: <<-EOS
-    pg_auth_file="/etc/postgresql/9.4/main/pg_hba.conf"
+    pg_auth_file="/etc/postgresql/11/main/pg_hba.conf"
     echo "local all   postgres              peer"  >  "$pg_auth_file"
     echo "local all   all                   peer"  >> "$pg_auth_file"
     echo "host  gavel vagrant  ::1/128      trust" >> "$pg_auth_file"
