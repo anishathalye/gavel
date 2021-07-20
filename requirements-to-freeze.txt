@@ -1,0 +1,15 @@
+Flask
+Flask-Assets
+Flask-SQLAlchemy
+Markdown
+PyYAML
+celery
+gunicorn
+humanize
+numpy
+psycopg2
+pyScss
+redis
+requests
+scipy
+xlrd

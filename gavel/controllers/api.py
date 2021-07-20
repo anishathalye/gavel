@@ -4,6 +4,7 @@ import gavel.utils as utils
 from flask import Response
 
 @app.route('/api/items.csv')
+@app.route('/api/projects.csv')
 @utils.requires_auth
 def item_dump():
     items = Item.query.order_by(desc(Item.mu)).all()
@@ -19,6 +20,7 @@ def item_dump():
     return Response(utils.data_to_csv_string(data), mimetype='text/csv')
 
 @app.route('/api/annotators.csv')
+@app.route('/api/judges.csv')
 @utils.requires_auth
 def annotator_dump():
     annotators = Annotator.query.all()

@@ -1,4 +1,4 @@
-# Copyright (c) 2015-2019 Anish Athalye (me@anishathalye.com)
+# Copyright (c) 2015-2021 Anish Athalye (me@anishathalye.com)
 #
 # This software is released under AGPLv3. See the included LICENSE.txt for
 # details.
@@ -10,11 +10,15 @@ import gavel.settings as settings
 app.config['SQLALCHEMY_DATABASE_URI'] = settings.DB_URI
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = settings.SECRET_KEY
+app.config['SERVER_NAME'] = settings.SERVER_NAME
+
+if settings.PROXY:
+    from werkzeug.middleware.proxy_fix import ProxyFix
+    app.wsgi_app = ProxyFix(app.wsgi_app)
 
 from flask_assets import Environment, Bundle
 assets = Environment(app)
 assets.config['pyscss_style'] = 'expanded'
-assets.url = app.static_url_path
 scss = Bundle(
     'css/style.scss',
     depends='**/*.scss',
@@ -35,12 +39,3 @@ db.init_app(app)
 import gavel.template_filters # registers template filters
 
 import gavel.controllers # registers controllers
-
-# send usage stats
-import gavel.utils
-gavel.utils.send_telemetry('gavel-boot', {
-    'base-url': settings.BASE_URL or '',
-    'min-views': settings.MIN_VIEWS,
-    'timeout': settings.TIMEOUT,
-    'disable-email': settings.DISABLE_EMAIL
-})

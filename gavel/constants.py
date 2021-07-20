@@ -1,9 +1,12 @@
 ANNOTATOR_ID = 'annotator_id'
 TELEMETRY_URL = 'https://telemetry.anish.io/api/v1/submit'
+TELEMETRY_DELTA = 20 * 60 # seconds
+SENDGRID_URL = "https://api.sendgrid.com/v3/mail/send"
 
 # Setting
 # keys
 SETTING_CLOSED = 'closed' # boolean
+SETTING_TELEMETRY_LAST_SENT = 'telemetry_sent_time' # integer
 # values
 SETTING_TRUE = 'true'
 SETTING_FALSE = 'false'
