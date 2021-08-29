@@ -42,9 +42,9 @@
         {% for item in items %}
         <tr class="{{ 'disabled' if not item.active else 'prioritized' if item.prioritized else '' }}">
           <td><a href="{{ url_for('item_detail', item_id=item.id) }}" class="colored">{{ item.id }}</a></td>
-          <td>{{ item.name | safe }}</td>
-          <td>{{ item.location | safe }}</td>
-          <td class="preserve-formatting">{{ item.description | safe }}</td>
+          <td>{{ item.name }}</td>
+          <td>{{ item.location }}</td>
+          <td class="preserve-formatting">{{ item.description }}</td>
           <td>{{ item.mu | round(4) }}</td>
           <td>{{ item.sigma_sq | round(4) }}</td>
           <td>{{ item_counts.get(item.id, 0) }}</td>
@@ -106,9 +106,9 @@
         {% for annotator in annotators %}
         <tr class="{{ 'disabled' if not annotator.active else '' }}">
           <td><a href="{{ url_for('annotator_detail', annotator_id=annotator.id) }}" class="colored">{{ annotator.id }}</a></td>
-          <td>{{ annotator.name | safe }}</td>
-          <td>{{ annotator.email | safe }}</td>
-          <td>{{ annotator.description | safe }}</td>
+          <td>{{ annotator.name }}</td>
+          <td>{{ annotator.email }}</td>
+          <td>{{ annotator.description }}</td>
           <td>{{ counts.get(annotator.id, 0) }}</td>
           <td data-sort="{{ annotator.next_id or -1 }}">{{ annotator.next_id }}</td>
           <td data-sort="{{ annotator.prev_id or -1 }}">{{ annotator.prev_id }}</td>

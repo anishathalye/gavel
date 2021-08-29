@@ -13,15 +13,15 @@
       </tr>
       <tr>
         <th>Name</th>
-        <td>{{ annotator.name | safe }}</td>
+        <td>{{ annotator.name }}</td>
       </tr>
       <tr>
         <th>Email</th>
-        <td>{{ annotator.email | safe }}</td>
+        <td>{{ annotator.email }}</td>
       </tr>
       <tr>
         <th>Description</th>
-        <td>{{ annotator.description | safe }}</td>
+        <td>{{ annotator.description }}</td>
       </tr>
       <tr>
         <th>Login URL</th>
@@ -30,7 +30,7 @@
       <tr>
         <th>Next</th>
         {% if annotator.next %}
-        <td><a href="{{ url_for('item_detail', item_id=annotator.next.id) }}" class="colored">{{ annotator.next.name | safe }} [{{ annotator.next_id }}]</a></td>
+        <td><a href="{{ url_for('item_detail', item_id=annotator.next.id) }}" class="colored">{{ annotator.next.name }} [{{ annotator.next_id }}]</a></td>
         {% else %}
         <td>None</td>
         {% endif %}
@@ -38,7 +38,7 @@
       <tr>
         <th>Previous</th>
         {% if annotator.prev %}
-        <td><a href="{{ url_for('item_detail', item_id=annotator.prev.id) }}" class="colored">{{ annotator.prev.name | safe }} [{{ annotator.prev_id }}]</a></td>
+        <td><a href="{{ url_for('item_detail', item_id=annotator.prev.id) }}" class="colored">{{ annotator.prev.name }} [{{ annotator.prev_id }}]</a></td>
         {% else %}
         <td>None</td>
         {% endif %}
@@ -60,7 +60,7 @@
         <td>
           <ul>
             {% for item in seen %}
-            <li><a href="{{ url_for('item_detail', item_id=item.id) }}" class="colored">{{ item.name | safe }} [{{ item.id }}]</a></li>
+            <li><a href="{{ url_for('item_detail', item_id=item.id) }}" class="colored">{{ item.name }} [{{ item.id }}]</a></li>
             {% endfor %}
           </ul>
         </td>
@@ -70,7 +70,7 @@
         <td>
           <ul>
             {% for item in skipped %}
-            <li><a href="{{ url_for('item_detail', item_id=item.id) }}" class="colored">{{ item.name | safe }} [{{ item.id }}]</a></li>
+            <li><a href="{{ url_for('item_detail', item_id=item.id) }}" class="colored">{{ item.name }} [{{ item.id }}]</a></li>
             {% endfor %}
           </ul>
         </td>
