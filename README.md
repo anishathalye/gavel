@@ -9,8 +9,6 @@ been used by [dozens][users] of other events since then.
 It only takes a minute, and knowing that Gavel is helping real events helps
 keep us going <3**
 
-[![Join the chat at https://gitter.im/anishathalye/gavel](https://badges.gitter.im/anishathalye/gavel.svg)](https://gitter.im/anishathalye/gavel?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-
 ## Demo
 
 <p align="center">
