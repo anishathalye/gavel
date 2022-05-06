@@ -1,4 +1,4 @@
-<img src="https://raw.githubusercontent.com/anishathalye/gavel/docs/banner.png" width="450" alt="Gavel banner">
+<img src="https://raw.githubusercontent.com/anishathalye/assets/master/gavel/banner.png" width="450" alt="Gavel banner">
 
 **Gavel** is a project expo judging system.
 
@@ -9,13 +9,11 @@ been used by [dozens][users] of other events since then.
 It only takes a minute, and knowing that Gavel is helping real events helps
 keep us going <3**
 
-[![Join the chat at https://gitter.im/anishathalye/gavel](https://badges.gitter.im/anishathalye/gavel.svg)](https://gitter.im/anishathalye/gavel?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-
 ## Demo
 
 <p align="center">
     <a href="http://www.anishathalye.com/2016/09/19/gavel-an-expo-judging-system/">
-        <img src="https://raw.githubusercontent.com/anishathalye/gavel/docs/screenshot.png" width="320" alt="Gavel screenshot">
+        <img src="https://raw.githubusercontent.com/anishathalye/assets/master/gavel/screenshot.png" width="320" alt="Gavel screenshot">
     </a>
 </p>
 
