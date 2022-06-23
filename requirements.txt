@@ -29,7 +29,7 @@ pytz==2021.1
 PyYAML==5.4.1
 redis==3.5.3
 requests==2.25.1
-scipy==1.7.0
+scipy==1.7.3
 six==1.16.0
 SQLAlchemy==1.4.20
 typing-extensions==3.10.0.0
