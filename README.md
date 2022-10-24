@@ -166,7 +166,6 @@ If you use Gavel in any way in academic work, please cite the following:
   title = {Gavel},
   year = {2016},
   howpublished = {\url{https://github.com/anishathalye/gavel}},
-  note = {commit xxxxxxx}
 }
 ```
 
