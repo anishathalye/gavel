@@ -1,16 +1,13 @@
 {
-    "addons": [
-        "heroku-postgresql:hobby-dev",
-        "heroku-redis:hobby-dev"
-    ],
+    "addons": ["heroku-postgresql:hobby-dev", "heroku-redis:hobby-dev"],
     "formation": {
         "web": {
             "quantity": 1,
-            "size": "free"
+            "size": "eco"
         },
         "worker": {
             "quantity": 1,
-            "size": "free"
+            "size": "eco"
         }
     },
     "description": "An awesome judging system for hackathons",
@@ -23,10 +20,6 @@
         "EMAIL_PASSWORD": "_unused_",
         "IGNORE_CONFIG_FILE": "true"
     },
-    "keywords": [
-        "gavel",
-        "python",
-        "flask"
-    ],
+    "keywords": ["gavel", "python", "flask"],
     "name": "Gavel Judging System"
 }
