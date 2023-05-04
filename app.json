@@ -1,5 +1,5 @@
 {
-    "addons": ["heroku-postgresql:hobby-dev", "heroku-redis:hobby-dev"],
+    "addons": ["heroku-postgresql:mini", "heroku-redis:mini"],
     "formation": {
         "web": {
             "quantity": 1,
