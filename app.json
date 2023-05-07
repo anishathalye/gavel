@@ -1,16 +1,16 @@
 {
     "addons": [
-        "heroku-postgresql:hobby-dev",
-        "heroku-redis:hobby-dev"
+        "heroku-postgresql:mini",
+        "heroku-redis:mini"
     ],
     "formation": {
         "web": {
             "quantity": 1,
-            "size": "free"
+            "size": "Basic"
         },
         "worker": {
             "quantity": 1,
-            "size": "free"
+            "size": "Basic"
         }
     },
     "description": "An awesome judging system for hackathons",
