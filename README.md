@@ -160,7 +160,7 @@ Do you have a feature request, bug report, or patch? Great! See
 
 If you use Gavel in any way in academic work, please cite the following:
 
-```
+```bibtex
 @misc{athalye2016gavel,
   author = {Anish Athalye},
   title = {Gavel},
