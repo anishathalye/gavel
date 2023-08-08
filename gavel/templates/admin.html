@@ -27,7 +27,7 @@
           <th data-sort-method="number">Id</th>
           <th data-sort-method="caseInsensitiveSort">Name</th>
           <th data-sort-method="caseInsensitiveSort">Location</th>
-          <th data-sort-method="caseInsensitiveSort">Description</th>
+          <th data-sort-method="caseInsensitiveSort">Video Url</th>
           <th class="sort-default" data-sort-method="number" data-sort-order="desc">Mu</th>
           <th data-sort-method="number">Sigma Squared</th>
           <th data-sort-method="number">Votes</th>
@@ -149,7 +149,7 @@
     <h2>Add Projects</h2>
   </div>
   <div class="info">
-    <p>Add name, location, description (CSV format)</p>
+    <p>Add name, location, video url (CSV format)</p>
     <textarea name="data" form="item_form"></textarea>
     <form action="{{ url_for('item') }}" method="post" id="item_form" enctype="multipart/form-data">
       <div class="upload-container">
