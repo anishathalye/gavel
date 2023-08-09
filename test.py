@@ -17,11 +17,11 @@ try:
         try:
             server.sendmail(sent_from, to, email_text)
             print ('Email sent!')
-        except:
-            print('Could not send mail')
+        except Exception as error:
+            print('Could not send mail', error)
             server.close()            
-    except:
-        print('Could not login into to gmail')    
+    except Exception as error:
+        print('Could not login into to gmail ', error)    
 except:
     print('Could not connect to smtp.gmail.com')
 
