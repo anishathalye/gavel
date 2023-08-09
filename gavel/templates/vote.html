@@ -1,29 +1,33 @@
 {% extends "layout.html" %}
 {% block title %}Vote{% endblock %}
 {% block content %}
-<div class="item">
-  <div class="banner-tight" id="previous-header">
-    <h1>Previous</h1>
-  </div>
-  <div id="previous-body">
-    {% with item=prev %}
-    {% include "_item.html" %}
-    {% endwith %}
-  </div>
-</div>
 
-<div class="item">
-  <div class="banner-tight" id="current-header">
-    <h1>Current</h1>
+<div class="item-container">
+  <div class="item">
+    <div class="banner-tight" id="previous-header">
+      <h1>Left</h1>
+    </div>
+    <div id="previous-body">
+      {% with item=prev %}
+      {% include "_item.html" %}
+      {% endwith %}
+    </div>
   </div>
-  <div id="current-body">
-    {% with item=next %}
-    {% include "_item.html" %}
-    {% endwith %}
-  </div>
-</div>
 
-<div class="item">
+
+  <div class="item">
+    <div class="banner-tight" id="current-header">
+      <h1>Right</h1>
+    </div>
+    <div id="current-body">
+      {% with item=next %}
+      {% include "_item.html" %}
+      {% endwith %}
+    </div>
+  </div>
+
+</div class="vote">
+<div >
   <div class="banner" id="vote-header">
     <h1>Vote</h1>
   </div>
@@ -33,12 +37,12 @@
       <p class="center">Which one is better?</p>
       <div id="vote-previous" class="radio-button button-left">
         <input type="radio" name="action" id="vote-previous-radio" value="Previous">
-        <label for="vote-previous-radio">Previous</label>
+        <label for="vote-previous-radio">Left</label>
       </div>
 
       <div id="vote-current" class="radio-button button-right">
         <input type="radio" name="action" id="vote-current-radio" value="Current">
-        <label for="vote-current-radio">Current</label>
+        <label for="vote-current-radio">Right</label>
       </div>
 
       <div id="vote-skip" class="radio-button button-full button-gap">

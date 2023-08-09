@@ -34,7 +34,7 @@
         </td>
       </tr>
       <tr>
-        <th>Description</th>
+        <th>Video Url</th> <!-- added Video, behind the scenes is still called description-->
         <td>
           <textarea name="description" form="description_form">{{ item.description }}</textarea>
           <form action="{{ url_for('item_patch') }}" method="post" id="description_form">

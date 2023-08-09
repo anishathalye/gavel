@@ -1,7 +1,7 @@
 from gavel.models import db
 import gavel.crowd_bt as crowd_bt
 from sqlalchemy.orm.exc import NoResultFound
-
+import re
 view_table = db.Table('view',
     db.Column('item_id', db.Integer, db.ForeignKey('item.id')),
     db.Column('annotator_id', db.Integer, db.ForeignKey('annotator.id'))
@@ -22,7 +22,8 @@ class Item(db.Model):
     def __init__(self, name, location, description):
         self.name = name
         self.location = location
-        self.description = description
+        embeded_url = "https://www.youtube.com/embed/" + description.split('watch?v=')[-1]
+        self.description = embeded_url
         self.mu = crowd_bt.MU_PRIOR
         self.sigma_sq = crowd_bt.SIGMA_SQ_PRIOR
 
