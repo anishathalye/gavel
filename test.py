@@ -11,10 +11,17 @@ body = 'This is a test email sent from Heroku'
 try:
     server_ssl = smtplib.SMTP_SSL('smtp.gmail.com', 465)
     server_ssl.ehlo()   # optional
+except:
+    print('Could not connect to smtp.gmail.com')
+try:
     server.login(gmail_user, gmail_password)
+    print ('Logged In to Gmail')
+except:
+    print('Could not login into to gmail')
+try:
     server.sendmail(sent_from, to, email_text)
-    server.close()
-
     print ('Email sent!')
 except:
-    print('Something went wrong...')
+    print('Could not send mail')
+    server.close()
+
