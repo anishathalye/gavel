@@ -1,0 +1,186 @@
+#####################
+# Required Settings #
+#####################
+
+# can also be specified as the 'ADMIN_PASSWORD' environment variable
+admin_password: null
+
+# can also be specified as the 'EMAIL_FROM' environment variable
+#
+# if you are setting DISABLE_EMAIL, you can set this setting to '_unused_' (or
+# anything else).
+email_from: null
+
+# can also be specified as the 'EMAIL_USER' environment variable
+#
+# this is the username that'll be used for SMTP authentication. if you are
+# setting DISABLE_EMAIL, you can set this setting to '_unused_' (or anything
+# else).
+email_user: null
+
+# can also be specified as the 'EMAIL_PASSWORD' environment variable
+#
+# if you are setting DISABLE_EMAIL, you can set this setting to '_unused_' (or
+# anything else).
+email_password: null
+
+# can also be specified as the 'SECRET_KEY' environment variable
+#
+# this is used to prevent tampering with sessions. this should be some
+# reasonably long random string.
+secret_key: null
+
+#####################
+# Optional Settings #
+#####################
+
+# can also be specified as the 'SERVER_NAME' environment variable
+# defaults to 'None'
+#
+# this can usually be inferred automatically. this is the name and port number
+# of the server hosting the judging app, e.g. 'judging.example.com'. if you are
+# serving gavel under a subpath, e.g. https://example.com:1337/judging, this
+# should NOT include that subpath (in this example it would just be set to
+# 'example.com:1337'). this setting is used for emailed links. if you are
+# setting DISABLE_EMAIL, you can omit this setting or set it to null.
+server_name: null
+
+# can also be specified as the 'PROXY' environment variable
+# defaults to 'False'
+#
+# this specifies whether the flask app is running behind a proxy, e.g. a TLS
+# termination proxy. this setting needs to be correct to produce correct links
+# in emails.
+proxy: null
+
+# can also be specified as the 'DATABASE_URL' or 'DB_URI' environment variable
+# defaults to 'postgresql://localhost/gavel'
+db_uri: null
+
+# can also be specified as the 'REDIS_URL' or 'BROKER_URI' environment variable
+# defaults to 'redis://localhost:6379/0'
+broker_uri: null
+
+# can also be specified as the 'USE_SENDGRID' environment variable
+# defaults to 'False'
+#
+# this enables sending emails via sendgrid. if you enable this, you should also
+# set SENDGRID_API_KEY.
+use_sendgrid: null
+
+# can also be specified as the 'SENDGRID_API_KEY' environment variable
+# defaults to 'None'
+sendgrid_api_key: null
+
+# can also be specified as the 'MIN_VIEWS' environment variable
+# defaults to '2'
+#
+# this is the minimum number of times each item needs to be seen before
+# switching to more sophisticated item selection strategies.
+min_views: null
+
+# can also be specified as the 'TIMEOUT' environment variable
+# defaults to '5.0'
+#
+# this is the maximum amount of time (in minutes) a judge will have a project
+# to themselves before other judges can also be assigned to the same project.
+# having a timeout can be useful in situations where judges disappear.
+timeout: null
+
+# can't be specified via environment variable
+# defaults to gavel.constants.DEFAULT_WELCOME_MESSAGE
+#
+# this is the welcome message that's shown to judges before they can start
+# using the system. the message is rendered as Markdown.
+welcome_message: null
+
+# can't be specified via environment variable
+# defaults to gavel.constants.DEFAULT_CLOSED_MESSAGE
+#
+# this is the message that's shown to judges when the judging system is closed.
+# the message is rendered as Markdown.
+closed_message: null
+
+# can't be specified via environment variable
+# defaults to gavel.constants.DEFAULT_DISABLED_MESSAGE
+#
+# this is the message that's shown to judges when their account is disabled.
+# the message is rendered as Markdown.
+disabled_message: null
+
+# can't be specified via environment variable
+# defaults to gavel.constants.DEFAULT_LOGGED_OUT_MESSAGE
+#
+# this is the message that's shown to judges when they are logged out. the
+# message is rendered as Markdown.
+logged_out_message: null
+
+# can't be specified via environment variable
+# defaults to gavel.constants.DEFAULT_WAIT_MESSAGE
+#
+# this is the message that's shown to judges when they don't have any pending
+# assignments (and can reload the page to check again). the message is rendered
+# as Markdown.
+wait_message: null
+
+# can also be specified as the 'DISABLE_EMAIL' environment variable
+# defaults to 'False'
+#
+# setting this to true disables email functionality.
+disable_email: null
+
+# can also be specified as the 'EMAIl_AUTH_MODE' environment variable
+# defaults to 'tls'
+#
+# can either be 'tls', 'ssl' or 'none'. if you are setting DISABLE_EMAIL, you can set
+# this setting to '_unused_' (or anything else).
+email_auth_mode: null
+
+# can also be specified as the 'EMAIL_HOST' environment variable
+# defaults to 'smtp.gmail.com'
+#
+# when using gmail, you must turn on access for less secure apps via this link:
+# https://www.google.com/settings/security/lesssecureapps. if at any point,
+# your account gets locked, visiting this link may help:
+# http://www.google.com/accounts/DisplayUnlockCaptcha.
+#
+# see the troubleshooting guide for more help:
+# https://github.com/anishathalye/gavel/wiki/Troubleshooting
+email_host: null
+
+# can also be specified as the 'EMAIL_PORT' environment variable
+# defaults to '587'
+email_port: null
+
+# can also be specified as the 'EMAIL_CC' environment variable
+# defaults to '[]'
+#
+# this is the single email address (or YAML list of email addresses) to CC when
+# sending invitation emails.
+email_cc: null
+
+# can't be specified via environment variable
+# defaults to gavel.constants.DEFAULT_EMAIL_SUBJECT
+#
+# this is the subject line of the email that's sent to judges.
+email_subject: null
+
+# can't be specified via environment variable
+# defaults to gavel.constants.DEFAULT_EMAIL_BODY
+#
+# this is the body of the email that's sent to judges when they're signed up
+# for the system. when the text is processed, '{name}' and '{link}' are
+# replaced with the relevant content, single newlines are converted into
+# spaces, and text separated by two or more newlines is converted into separate
+# paragraphs. it's recommended to use the YAML multiline string syntax when
+# overriding this.
+email_body: null
+
+# can also be specified as the 'SEND_STATS' environment variable
+# defaults to 'True'
+#
+# this setting determines whether usage stats are reported. if you can, please
+# leave this enabled. if you absolutely need to disable this, please add your
+# event to this list (https://github.com/anishathalye/gavel/wiki/Users), at the
+# very least.
+send_stats: null
