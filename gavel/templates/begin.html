@@ -17,17 +17,18 @@
 
   <div class="info">
     <form action="{{ url_for('begin') }}" method="post">
-      <p class="center">Comparison voting begins after you see your first project. Please click <b>CONTINUE</b> after seeing this project or <b>SKIP</b> if you cannot find this project.</p>
+      <p class="center">Comparison voting begins after you see your first project. Please click <b>CONTINUE</b> after viewing this project.</p>
       <div id="vote-continue" class="radio-button button-full button-gap">
         <input type="radio" name="action" id="vote-continue-radio" value="Continue">
         <label for="vote-continue-radio">Continue</label>
       </div>
 
+      <!--
       <div id="vote-skip" class="radio-button button-full button-gap">
         <input type="radio" name="action" id="vote-skip-radio" value="Skip" checked>
         <label for="vote-skip-radio">Skip</label>
       </div>
-
+      -->
       <input type="submit" name="action" value="Submit" id="vote-submit" class="button-full button-gap">
 
       <input type="hidden" name="item_id" value="{{ item.id }}">
