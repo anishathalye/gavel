@@ -16,9 +16,10 @@ Subject: %s
 %s
 """ % (sent_from, ", ".join(to), subject, body)
 
+
 try:
-    server_ssl = smtplib.SMTP_SSL('smtp.gmail.com', 465)
-    server_ssl.ehlo()   # optional
+    server = smtplib.SMTP_SSL('smtp.gmail.com', 465)
+    server.ehlo()   # optional
     try:
         server.login(gmail_user, gmail_password)
         print ('Logged In to Gmail')
@@ -32,5 +33,4 @@ try:
         print('Could not login into to gmail ', error)    
 except:
     print('Could not connect to smtp.gmail.com')
-
 
