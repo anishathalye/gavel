@@ -8,6 +8,14 @@ to = ['shane.stevens@rtx.com']
 subject = 'Test Email From Heroku'
 body = 'This is a test email sent from Heroku'
 
+email_text = """\
+From: %s
+To: %s
+Subject: %s
+
+%s
+""" % (sent_from, ", ".join(to), subject, body)
+
 try:
     server_ssl = smtplib.SMTP_SSL('smtp.gmail.com', 465)
     server_ssl.ehlo()   # optional
