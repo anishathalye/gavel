@@ -22,10 +22,15 @@ class Item(db.Model):
     def __init__(self, name, location, description):
         self.name = name
         self.location = location
-        embeded_url = "https://www.youtube.com/embed/" + description.split('watch?v=')[-1]
-        self.description = embeded_url
         self.mu = crowd_bt.MU_PRIOR
         self.sigma_sq = crowd_bt.SIGMA_SQ_PRIOR
+
+        if "watch?v=" in description:
+            embeded_url = "https://www.youtube.com/embed/" + description.split('watch?v=')[-1]
+            self.description = embeded_url
+        elif "youtu.be" in description:
+            embeded_url = "https://www.youtube.com/embed/" + description.split('youtu.be/')[-1]
+            self.description = embeded_url
 
     @classmethod
     def by_id(cls, uid):
