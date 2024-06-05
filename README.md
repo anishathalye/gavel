@@ -160,19 +160,18 @@ Do you have a feature request, bug report, or patch? Great! See
 
 If you use Gavel in any way in academic work, please cite the following:
 
-```
+```bibtex
 @misc{athalye2016gavel,
   author = {Anish Athalye},
   title = {Gavel},
   year = {2016},
   howpublished = {\url{https://github.com/anishathalye/gavel}},
-  note = {commit xxxxxxx}
 }
 ```
 
 ## License
 
-Copyright (c) 2015-2021 Anish Athalye. Released under AGPLv3. See
+Copyright (c) Anish Athalye. Released under AGPLv3. See
 [LICENSE.txt][license] for details.
 
 [blog-1]: http://www.anishathalye.com/2015/03/07/designing-a-better-judging-system/
