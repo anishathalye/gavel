@@ -2,7 +2,7 @@ amqp==5.0.6
 billiard==3.6.4.0
 cached-property==1.5.2
 celery==5.1.2
-certifi==2021.5.30
+certifi==2024.7.4
 chardet==4.0.0
 click==7.1.2
 click-didyoumean==0.0.3
