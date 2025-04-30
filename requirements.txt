@@ -18,7 +18,7 @@ idna==2.10
 importlib-metadata==4.6.0
 itsdangerous==2.0.1
 Jinja2==3.0.1
-kombu==5.1.0
+kombu==5.2.2
 Markdown==3.3.4
 MarkupSafe==2.0.1
 numpy==1.21.0
