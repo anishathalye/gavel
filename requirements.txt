@@ -1,11 +1,11 @@
-amqp==5.0.6
+amqp==5.0.9
 billiard==3.6.4.0
 cached-property==1.5.2
 celery==5.2.1
 certifi==2021.5.30
 chardet==4.0.0
-click==7.1.2
-click-didyoumean==0.0.3
+click==8.0.3
+click-didyoumean==0.3.0
 click-plugins==1.1.1
 click-repl==0.2.0
 Flask==2.0.1
@@ -18,7 +18,7 @@ idna==2.10
 importlib-metadata==4.6.0
 itsdangerous==2.0.1
 Jinja2==3.0.1
-kombu==5.2.2
+kombu==5.2.3
 Markdown==3.3.4
 MarkupSafe==2.0.1
 numpy==1.21.0
