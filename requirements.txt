@@ -1,7 +1,7 @@
 amqp==5.0.6
 billiard==3.6.4.0
 cached-property==1.5.2
-celery==5.1.2
+celery==5.2.1
 certifi==2021.5.30
 chardet==4.0.0
 click==7.1.2
