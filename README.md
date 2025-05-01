@@ -101,20 +101,9 @@ set the environment variable `IGNORE_CONFIG_FILE=true`.
 
 ### Google Site Verification (Heroku/SEO)
 
-If you need to verify your site with Google Search Console (e.g., [to avoid Chrome labeling your site as "dangerous" when deploying to Heroku](https://stackoverflow.com/questions/78442495/why-do-i-get-dangerous-site-warning-for-my-heroku-app-even-after-i-registered)), follow the instructions at https://support.google.com/webmasters/answer/9008080?hl=en. Use the "HTML file upload" method which directs you to https://search.google.com/search-console/not-verified?original_url=/search-console/ownership&original_resource_id. You can use "URL Prefix" (e.g., `https://<my-app-name>-<app-id>.herokuapp.com`) method rather than the domain option, which just means it doesn't cover other domains like http://my-heroku-app-name-a1b2c3.herokuapp.com (note the `http` rather than `https`). A custom domain can be set via the app's Heroku settings, but that is not covered here.
+If you need to verify your site with Google Search Console (e.g., [to avoid Chrome labeling your site as "dangerous" when deploying to Heroku](https://stackoverflow.com/questions/78442495/why-do-i-get-dangerous-site-warning-for-my-heroku-app-even-after-i-registered)), follow [Google's instructions](https://support.google.com/webmasters/answer/9008080?hl=en). Use the "HTML file upload" method which directs you to the [Google Search Console](https://search.google.com/search-console/not-verified?original_url=/search-console/ownership&original_resource_id). You can use the "URL Prefix" (e.g., `https://<my-app-name>-<app-id>.herokuapp.com`) method rather than the domain verification option, which just means it doesn't cover other domains like m://my-heroku-app-name-a1b2c3.herokuapp.com (note the `m` rather than `https`). A custom domain can be set via the app's Heroku settings, but that is not covered here.
 
-Once you download the file, you can use the `GOOGLE_SITE_VERIFICATION_FILENAME` environment variable. When set (for example, to `googlea1b2c3d4e5.html`), the app will automatically serve a file at the root path with the correct content for Google verification. You only need the filename; the file will be automatically generated based on the filename environment variable (i.e., after this step you can ignore the file you manually downloaded).
-
-**How to use:**
-
-1. Set the environment variable `GOOGLE_SITE_VERIFICATION_FILENAME` (in Heroku, or in your local environment).
-2. Deploy or restart your app.
-3. Visit `https://<my-app-name>-<app-id>.herokuapp.com/<filename>` (replace with your app name, ID, and the site verification filename) and you should see:
-   ```
-   google-site-verification: googlea1b2c3d4e5.html
-   ```
-
-This is compatible with the Heroku deploy button and works with Google Search Console. NOTE: The site verification process may take a few days.
+Once you download the file, you can use the `GOOGLE_SITE_VERIFICATION_FILENAME` environment variable. When set (for example, to `googlea1b2c3d4e5.html`), the app will automatically serve a file at the root path with the correct content for Google verification. You only need the filename; the file will be automatically generated based on the filename environment variable (i.e., after this step you can ignore the file you manually downloaded). Back in the Google Search Console, you will need to click "Verify". NOTE: The site verification process may take a few days.
 
 ## Troubleshooting
 
