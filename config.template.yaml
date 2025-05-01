@@ -34,6 +34,11 @@ secret_key: null
 # Optional Settings #
 #####################
 
+# can also be specified as the 'GOOGLE_SITE_VERIFICATION_FILENAME' environment variable
+# If set, the app will serve a static file at the root with this filename and content
+# of the form: 'google-site-verification: <filename>'
+google_site_verification_filename: null
+
 # can also be specified as the 'SERVER_NAME' environment variable
 # defaults to 'None'
 #
