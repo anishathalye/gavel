@@ -33,7 +33,7 @@ scipy==1.7.0
 six==1.16.0
 SQLAlchemy==1.4.20
 typing-extensions==3.10.0.0
-urllib3==1.26.6
+urllib3==2.5.0
 vine==5.0.0
 wcwidth==0.2.5
 webassets==2.0
