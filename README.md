@@ -90,7 +90,7 @@ gavel:celery worker`.
 
 ## Configuration
 
-Before starting the app, copy `config.template.yaml` to `config.yaml` and set
+Before starting the app, copy [`config.template.yaml`](./config.template.yaml) to `config.yaml` and set
 all the required settings (the ones that don't have default values).
 
 Most settings can either be set in `config.yaml` or set as environment
