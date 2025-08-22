@@ -21,7 +21,8 @@
         "EMAIL_FROM": "_unused_",
         "EMAIL_USER": "_unused_",
         "EMAIL_PASSWORD": "_unused_",
-        "IGNORE_CONFIG_FILE": "true"
+        "IGNORE_CONFIG_FILE": "true",
+        "GOOGLE_SITE_VERIFICATION_FILENAME": "googlef35248ef2387dad8.html"
     },
     "keywords": [
         "gavel",
