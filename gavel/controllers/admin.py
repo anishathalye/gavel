@@ -4,6 +4,7 @@ from gavel.constants import *
 import gavel.settings as settings
 import gavel.utils as utils
 import gavel.stats as stats
+import gavel.analytics as analytics
 from gavel.firebase_session_auth import hackpsu_admin_required
 from gavel.project_sync import sync_projects_from_api
 from flask import (
@@ -42,6 +43,11 @@ def admin():
                 skipped[i.id] = skipped.get(i.id, 0) + 1
     # settings
     setting_closed = Setting.value_of(SETTING_CLOSED) == SETTING_TRUE
+
+    # Graph visualization data
+    G = analytics.build_comparison_graph()
+    graph_data = analytics.generate_graph_data_for_visualization(G)
+
     return render_template(
         'admin.html',
         annotators=annotators,
@@ -51,6 +57,7 @@ def admin():
         items=items,
         votes=len(decisions),
         setting_closed=setting_closed,
+        graph_data=graph_data
     )
 
 @app.route('/admin/item', methods=['POST'])

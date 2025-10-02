@@ -12,14 +12,6 @@ AUTH_SERVER_URL = os.environ.get('AUTH_SERVER_URL', 'http://localhost:3000/api/s
 MIN_JUDGE_ROLE = 2  # Only users with role >= 2 can judge
 MIN_ADMIN_ROLE = 4  # Only users with role >= 4 can access admin panel
 
-"""
-Role Levels (from HackPSU NestJS backend):
-0 = NONE (no access)
-1 = HACKER (participant)
-2 = ORGANIZER (can judge) ← Minimum for Gavel access
-3 = EXECUTIVE (can judge + more admin features)
-4 = ADMIN (full access) ← Minimum for /admin panel
-"""
 
 def decode_session_token(token_string):
     """Decode Firebase session JWT token without verification"""

@@ -33,6 +33,7 @@ flask-cors==3.0.10
 pyjwt==2.8.0
 APScheduler==3.10.1
 scipy==1.7.0
+networkx==2.6.3
 six==1.16.0
 SQLAlchemy==1.4.20
 typing-extensions==3.10.0.0

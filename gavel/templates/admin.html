@@ -1,5 +1,65 @@
 {% extends "layout.html" %}
 {% block title %}Admin{% endblock %}
+{% block head %}
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<style>
+.graph-container {
+  width: 100%;
+  height: 600px;
+  border: 1px solid #e4e4e4;
+  border-radius: 4px;
+  background: #ffffff;
+  position: relative;
+  overflow: hidden;
+}
+.graph-tooltip {
+  position: absolute;
+  padding: 8px 12px;
+  background: rgba(0, 0, 0, 0.85);
+  color: white;
+  border-radius: 4px;
+  font-size: 12px;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s;
+  z-index: 1000;
+}
+.node {
+  cursor: pointer;
+  stroke: #173753;
+  stroke-width: 1.5px;
+}
+.link {
+  stroke: #999;
+  stroke-opacity: 0.6;
+}
+
+/* Table overflow handling */
+.info {
+  overflow-x: auto;
+  width: 100%;
+}
+
+table {
+  min-width: 100%;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .graph-container {
+    height: 400px;
+  }
+
+  table {
+    font-size: 14px;
+  }
+
+  td, th {
+    padding: 0.5rem;
+  }
+}
+</style>
+{% endblock %}
 {% block content %}
 <div class="item">
   <div class="banner" id="admin-header">
@@ -150,6 +210,19 @@
 
 <div class="item">
   <div class="banner">
+    <h2>Comparison Network</h2>
+  </div>
+  <div class="info">
+    <div class="graph-container" id="comparison-graph"></div>
+    <div class="graph-tooltip" id="graph-tooltip"></div>
+    <p style="margin-top: 1rem; color: #666; font-size: 0.9rem;">
+      Node size represents project score (μ). Links show win relationships. Drag nodes to explore.
+    </p>
+  </div>
+</div>
+
+<div class="item">
+  <div class="banner">
     <h2>Sync Projects from API</h2>
   </div>
   <div class="info">
@@ -237,5 +310,137 @@ var tables = [
 for (var i = 0; i < tables.length; i++) {
   new Tablesort(tables[i]);
 }
+
+// D3.js Force-Directed Graph
+(function() {
+  const graphData = {{ graph_data | tojson }};
+  const container = document.getElementById('comparison-graph');
+  const tooltip = document.getElementById('graph-tooltip');
+
+  if (!graphData.nodes.length) {
+    container.innerHTML = '<div style="display: flex; align-items: center; justify-content: center; height: 100%; color: #666;">No comparison data available yet.</div>';
+    return;
+  }
+
+  const width = container.clientWidth;
+  const height = container.clientHeight;
+
+  const svg = d3.select('#comparison-graph')
+    .append('svg')
+    .attr('width', width)
+    .attr('height', height);
+
+  // Color scale based on mu score
+  const muValues = graphData.nodes.map(d => d.mu);
+  const colorScale = d3.scaleSequential(d3.interpolateRdYlGn)
+    .domain([Math.min(...muValues), Math.max(...muValues)]);
+
+  // Create force simulation
+  const simulation = d3.forceSimulation(graphData.nodes)
+    .force('link', d3.forceLink(graphData.links)
+      .id(d => d.id)
+      .distance(100)
+      .strength(0.5))
+    .force('charge', d3.forceManyBody().strength(-300))
+    .force('center', d3.forceCenter(width / 2, height / 2))
+    .force('collision', d3.forceCollide().radius(d => d.size + 5));
+
+  // Create links
+  const link = svg.append('g')
+    .selectAll('line')
+    .data(graphData.links)
+    .enter()
+    .append('line')
+    .attr('class', 'link')
+    .attr('stroke-width', d => Math.sqrt(d.weight));
+
+  // Create arrow markers
+  svg.append('defs').selectAll('marker')
+    .data(['arrow'])
+    .enter()
+    .append('marker')
+    .attr('id', 'arrow')
+    .attr('viewBox', '0 -5 10 10')
+    .attr('refX', 20)
+    .attr('refY', 0)
+    .attr('markerWidth', 6)
+    .attr('markerHeight', 6)
+    .attr('orient', 'auto')
+    .append('path')
+    .attr('d', 'M0,-5L10,0L0,5')
+    .attr('fill', '#999');
+
+  link.attr('marker-end', 'url(#arrow)');
+
+  // Create nodes
+  const node = svg.append('g')
+    .selectAll('circle')
+    .data(graphData.nodes)
+    .enter()
+    .append('circle')
+    .attr('class', 'node')
+    .attr('r', d => d.size)
+    .attr('fill', d => colorScale(d.mu))
+    .call(d3.drag()
+      .on('start', dragstarted)
+      .on('drag', dragged)
+      .on('end', dragended))
+    .on('mouseover', function(event, d) {
+      d3.select(this)
+        .transition()
+        .duration(200)
+        .attr('r', d.size * 1.3);
+
+      tooltip.style.opacity = 1;
+      tooltip.innerHTML = `
+        <strong>${d.name}</strong><br/>
+        μ: ${d.mu.toFixed(4)}<br/>
+        σ²: ${d.sigma_sq.toFixed(4)}
+      `;
+    })
+    .on('mousemove', function(event) {
+      tooltip.style.left = (event.pageX + 10) + 'px';
+      tooltip.style.top = (event.pageY - 10) + 'px';
+    })
+    .on('mouseout', function(event, d) {
+      d3.select(this)
+        .transition()
+        .duration(200)
+        .attr('r', d.size);
+
+      tooltip.style.opacity = 0;
+    });
+
+  // Update positions on simulation tick
+  simulation.on('tick', () => {
+    link
+      .attr('x1', d => d.source.x)
+      .attr('y1', d => d.source.y)
+      .attr('x2', d => d.target.x)
+      .attr('y2', d => d.target.y);
+
+    node
+      .attr('cx', d => Math.max(d.size, Math.min(width - d.size, d.x)))
+      .attr('cy', d => Math.max(d.size, Math.min(height - d.size, d.y)));
+  });
+
+  // Drag functions
+  function dragstarted(event, d) {
+    if (!event.active) simulation.alphaTarget(0.3).restart();
+    d.fx = d.x;
+    d.fy = d.y;
+  }
+
+  function dragged(event, d) {
+    d.fx = event.x;
+    d.fy = event.y;
+  }
+
+  function dragended(event, d) {
+    if (!event.active) simulation.alphaTarget(0);
+    d.fx = null;
+    d.fy = null;
+  }
+})();
 </script>
 {% endblock %}

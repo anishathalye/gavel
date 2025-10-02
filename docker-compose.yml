@@ -71,7 +71,7 @@ services:
       # Other settings
       PROXY: "false"
       SEND_STATS: "false"
-      MIN_VIEWS: 2
+      MIN_VIEWS: 0
       TIMEOUT: 5.0
 
       # Project sync from HackPSU API
