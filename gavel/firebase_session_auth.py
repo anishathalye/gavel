@@ -114,13 +114,6 @@ def hackpsu_auth_required(f):
     def decorated(*args, **kwargs):
         print(f"[DEBUG] Auth required for route: {request.path}")
 
-        # Check if already authenticated in this request
-        if 'annotator_id' in session:
-            annotator = Annotator.by_id(session['annotator_id'])
-            if annotator and annotator.active:
-                print(f"[DEBUG] User already authenticated: {annotator.email}")
-                return f(*args, **kwargs)
-
         # Verify with auth server
         print("[DEBUG] Verifying with auth server...")
         user_data = verify_hackpsu_session()
