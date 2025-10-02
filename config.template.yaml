@@ -2,6 +2,20 @@
 # Required Settings #
 #####################
 
+# HackPSU Firebase Authentication Settings
+# can also be specified as the 'AUTH_ENVIRONMENT' environment variable
+# should be 'production' or 'staging' - determines which Firebase custom claim to check
+auth_environment: production
+
+# Minimum role level required for judging access (default: 2)
+# can also be specified as the 'MIN_JUDGE_ROLE' environment variable
+min_judge_role: 2
+
+# Minimum role level required for admin access (default: 4)
+# can also be specified as the 'MIN_ADMIN_ROLE' environment variable
+min_admin_role: 4
+
+# DEPRECATED: Old admin password (no longer used with Firebase auth)
 # can also be specified as the 'ADMIN_PASSWORD' environment variable
 admin_password: null
 

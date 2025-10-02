@@ -4,6 +4,7 @@ from gavel.constants import *
 import gavel.settings as settings
 import gavel.utils as utils
 import gavel.crowd_bt as crowd_bt
+from gavel.firebase_session_auth import hackpsu_auth_required
 from flask import (
     redirect,
     render_template,
@@ -26,54 +27,42 @@ def requires_open(redirect_to):
         return decorated
     return decorator
 
-def requires_active_annotator(redirect_to):
-    def decorator(f):
-        @wraps(f)
-        def decorated(*args, **kwargs):
-            annotator = get_current_annotator()
-            if annotator is None or not annotator.active:
-                return redirect(url_for(redirect_to))
-            else:
-                return f(*args, **kwargs)
-        return decorated
-    return decorator
 
+@app.route('/health')
+def health():
+    """Health check endpoint - no auth required"""
+    return {'status': 'ok', 'service': 'gavel'}, 200
 
 @app.route('/')
+@hackpsu_auth_required
 def index():
     annotator = get_current_annotator()
-    if annotator is None:
+    if Setting.value_of(SETTING_CLOSED) == SETTING_TRUE:
         return render_template(
-            'logged_out.html',
-            content=utils.render_markdown(settings.LOGGED_OUT_MESSAGE)
+            'closed.html',
+            content=utils.render_markdown(settings.CLOSED_MESSAGE)
         )
+    if not annotator.active:
+        return render_template(
+            'disabled.html',
+            content=utils.render_markdown(settings.DISABLED_MESSAGE)
+        )
+    if not annotator.read_welcome:
+        return redirect(url_for('welcome'))
+    maybe_init_annotator()
+    if annotator.next is None:
+        return render_template(
+            'wait.html',
+            content=utils.render_markdown(settings.WAIT_MESSAGE)
+        )
+    elif annotator.prev is None:
+        return render_template('begin.html', item=annotator.next)
     else:
-        if Setting.value_of(SETTING_CLOSED) == SETTING_TRUE:
-            return render_template(
-                'closed.html',
-                content=utils.render_markdown(settings.CLOSED_MESSAGE)
-            )
-        if not annotator.active:
-            return render_template(
-                'disabled.html',
-                content=utils.render_markdown(settings.DISABLED_MESSAGE)
-            )
-        if not annotator.read_welcome:
-            return redirect(url_for('welcome'))
-        maybe_init_annotator()
-        if annotator.next is None:
-            return render_template(
-                'wait.html',
-                content=utils.render_markdown(settings.WAIT_MESSAGE)
-            )
-        elif annotator.prev is None:
-            return render_template('begin.html', item=annotator.next)
-        else:
-            return render_template('vote.html', prev=annotator.prev, next=annotator.next)
+        return render_template('vote.html', prev=annotator.prev, next=annotator.next)
 
 @app.route('/vote', methods=['POST'])
 @requires_open(redirect_to='index')
-@requires_active_annotator(redirect_to='index')
+@hackpsu_auth_required
 def vote():
     def tx():
         annotator = get_current_annotator()
@@ -100,7 +89,7 @@ def vote():
 
 @app.route('/begin', methods=['POST'])
 @requires_open(redirect_to='index')
-@requires_active_annotator(redirect_to='index')
+@hackpsu_auth_required
 def begin():
     def tx():
         annotator = get_current_annotator()
@@ -118,22 +107,27 @@ def begin():
 
 @app.route('/logout')
 def logout():
+    import os
     session.pop(ANNOTATOR_ID, None)
-    return redirect(url_for('index'))
+    # Redirect to HackPSU auth server logout
+    auth_logout_url = os.environ.get('AUTH_LOGOUT_URL', 'http://localhost:3000/api/sessionLogout')
+    gavel_url = os.environ.get('GAVEL_URL', 'http://localhost:5000')
+    return redirect(f'{auth_logout_url}?redirect={gavel_url}')
 
-@app.route('/login/<secret>/')
-def login(secret):
-    annotator = Annotator.by_secret(secret)
-    if annotator is None:
-        session.pop(ANNOTATOR_ID, None)
-        session.modified = True
-    else:
-        session[ANNOTATOR_ID] = annotator.id
-    return redirect(url_for('index'))
+# Old secret-based login removed - using HackPSU Firebase auth instead
+# @app.route('/login/<secret>/')
+# def login(secret):
+#     annotator = Annotator.by_secret(secret)
+#     if annotator is None:
+#         session.pop(ANNOTATOR_ID, None)
+#         session.modified = True
+#     else:
+#         session[ANNOTATOR_ID] = annotator.id
+#     return redirect(url_for('index'))
 
 @app.route('/welcome/')
 @requires_open(redirect_to='index')
-@requires_active_annotator(redirect_to='index')
+@hackpsu_auth_required
 def welcome():
     return render_template(
         'welcome.html',
@@ -142,7 +136,7 @@ def welcome():
 
 @app.route('/welcome/done', methods=['POST'])
 @requires_open(redirect_to='index')
-@requires_active_annotator(redirect_to='index')
+@hackpsu_auth_required
 def welcome_done():
     def tx():
         annotator = get_current_annotator()

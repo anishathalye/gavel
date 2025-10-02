@@ -29,6 +29,9 @@ pytz==2021.1
 PyYAML==5.4.1
 redis==3.5.3
 requests==2.25.1
+flask-cors==3.0.10
+pyjwt==2.8.0
+APScheduler==3.10.1
 scipy==1.7.0
 six==1.16.0
 SQLAlchemy==1.4.20

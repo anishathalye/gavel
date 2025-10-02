@@ -146,7 +146,20 @@
 
 <div class="item">
   <div class="banner">
-    <h2>Add Projects</h2>
+    <h2>Sync Projects from API</h2>
+  </div>
+  <div class="info">
+    <p>Automatically sync projects from HackPSU API (runs every 5 minutes)</p>
+    <form action="{{ url_for('sync_projects') }}" method="post">
+      <input type="submit" value="Sync Now" class="button-full positive">
+      <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+    </form>
+  </div>
+</div>
+
+<div class="item">
+  <div class="banner">
+    <h2>Add Projects Manually</h2>
   </div>
   <div class="info">
     <p>Add name, location, description (CSV format)</p>
