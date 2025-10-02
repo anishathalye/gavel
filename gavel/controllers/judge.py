@@ -67,6 +67,7 @@ def vote():
     def tx():
         annotator = get_current_annotator()
         if annotator.prev.id == int(request.form['prev_id']) and annotator.next.id == int(request.form['next_id']):
+            notes = request.form.get('notes', '').strip() or None
             if request.form['action'] == 'Skip':
                 annotator.ignore.append(annotator.next)
             else:
@@ -74,10 +75,10 @@ def vote():
                 if annotator.prev.active and annotator.next.active:
                     if request.form['action'] == 'Previous':
                         perform_vote(annotator, next_won=False)
-                        decision = Decision(annotator, winner=annotator.prev, loser=annotator.next)
+                        decision = Decision(annotator, winner=annotator.prev, loser=annotator.next, notes=notes)
                     elif request.form['action'] == 'Current':
                         perform_vote(annotator, next_won=True)
-                        decision = Decision(annotator, winner=annotator.next, loser=annotator.prev)
+                        decision = Decision(annotator, winner=annotator.next, loser=annotator.prev, notes=notes)
                     db.session.add(decision)
                 annotator.next.viewed.append(annotator) # counted as viewed even if deactivated
                 annotator.prev = annotator.next
