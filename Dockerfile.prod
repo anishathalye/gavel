@@ -79,44 +79,8 @@ stdout_logfile_maxbytes=0\n\
 stderr_logfile=/dev/stderr\n\
 stderr_logfile_maxbytes=0' > /etc/supervisor/conf.d/supervisord.conf
 
-# Create startup script
-RUN echo '#!/bin/bash\n\
-set -e\n\
-\n\
-# Initialize PostgreSQL if needed\n\
-if [ ! -f /var/lib/postgresql/data/PG_VERSION ]; then\n\
-  echo "Initializing PostgreSQL database..."\n\
-  su - postgres -c "/usr/lib/postgresql/*/bin/initdb -D /var/lib/postgresql/data"\n\
-  \n\
-  # Start PostgreSQL temporarily\n\
-  su - postgres -c "/usr/lib/postgresql/*/bin/pg_ctl -D /var/lib/postgresql/data -l /tmp/postgresql.log start"\n\
-  \n\
-  # Wait for PostgreSQL to start\n\
-  sleep 3\n\
-  \n\
-  # Create user and database\n\
-  su - postgres -c "psql -c \"CREATE USER gavel WITH PASSWORD '\'gavel_prod_pass\'';\"\n\
-  su - postgres -c "psql -c \"CREATE DATABASE gavel OWNER gavel;\"\n\
-  \n\
-  # Stop PostgreSQL\n\
-  su - postgres -c "/usr/lib/postgresql/*/bin/pg_ctl -D /var/lib/postgresql/data stop"\n\
-  \n\
-  echo "PostgreSQL initialized"\n\
-fi\n\
-\n\
-# Start PostgreSQL\n\
-su - postgres -c "/usr/lib/postgresql/*/bin/pg_ctl -D /var/lib/postgresql/data -l /tmp/postgresql.log start"\n\
-\n\
-# Wait for PostgreSQL\n\
-sleep 3\n\
-\n\
-# Initialize Gavel database\n\
-echo "Initializing Gavel database..."\n\
-python initialize.py || true\n\
-\n\
-# Start supervisor\n\
-exec /usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.conf' > /app/start.sh
-
+# Copy startup script
+COPY start.sh /app/start.sh
 RUN chmod +x /app/start.sh
 
 # Expose port
