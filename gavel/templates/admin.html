@@ -94,6 +94,8 @@
           <th data-sort-method="caseInsensitiveSort">Email</th>
           <th data-sort-method="caseInsensitiveSort">Description</th>
           <th data-sort-method="number">Votes</th>
+          <th data-sort-method="number">Alpha</th>
+          <th data-sort-method="number">Beta</th>
           <th data-sort-method="number">Next (Id)</th>
           <th data-sort-method="number">Previous (Id)</th>
           <th data-sort-method="number" data-sort-order="desc">Updated</th>
@@ -110,6 +112,8 @@
           <td>{{ annotator.email }}</td>
           <td>{{ annotator.description }}</td>
           <td>{{ counts.get(annotator.id, 0) }}</td>
+          <td>{{ annotator.alpha | round(4) }}</td>
+          <td>{{ annotator.beta | round(4) }}</td>
           <td data-sort="{{ annotator.next_id or -1 }}">{{ annotator.next_id }}</td>
           <td data-sort="{{ annotator.prev_id or -1 }}">{{ annotator.prev_id }}</td>
           <td data-sort="{{ annotator.updated | utcdatetime_epoch }}">{{ annotator.updated | utcdatetime_local }}</td>
