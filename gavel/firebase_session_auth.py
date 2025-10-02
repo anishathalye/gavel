@@ -2,9 +2,10 @@
 # This module replaces Gavel's built-in authentication with HackPSU's Firebase-based session auth
 
 import requests
-from flask import request, session, redirect, abort, render_template
+from flask import request, session, redirect, abort, render_template, g
 from functools import wraps
 from gavel.models import Annotator, db
+from gavel import app
 import os
 import jwt
 
@@ -213,4 +214,23 @@ def sync_annotator_from_auth_server(user_data):
         annotator.active = privilege >= min_role
         db.session.commit()
 
-    return annotator if annotator.active else None
+    return annotator
+
+
+@app.context_processor
+def inject_user_data():
+    """Make user data available to all templates for PostHog identification"""
+    session_token = request.cookies.get('__session')
+    if session_token:
+        try:
+            user_data = decode_session_token(session_token)
+            return {
+                'user_uid': user_data.get('user_id') or user_data.get('sub'),
+                'user_email': user_data.get('email')
+            }
+        except Exception:
+            pass
+    return {
+        'user_uid': None,
+        'user_email': None
+    }
