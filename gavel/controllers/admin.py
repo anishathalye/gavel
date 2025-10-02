@@ -257,7 +257,9 @@ def annotator_detail(annotator_id):
         )
 
 def annotator_link(annotator):
-        return url_for('login', secret=annotator.secret, _external=True)
+        import os
+        gavel_url = os.environ.get('GAVEL_URL', 'http://localhost:5000')
+        return gavel_url
 
 def email_invite_links(annotators):
     if settings.DISABLE_EMAIL or annotators is None:
