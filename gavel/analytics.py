@@ -168,10 +168,10 @@ def get_coverage_matrix():
 # 4. VOTING ACTIVITY TIMELINE
 # ========================================
 
-def get_voting_timeline(hours=24):
+def get_voting_timeline(hours=2):
     """
     Get voting activity over time.
-    Returns hourly vote counts for the last N hours.
+    Returns vote counts in 15-second buckets for the last N hours.
     """
     from gavel import db
 
@@ -179,11 +179,11 @@ def get_voting_timeline(hours=24):
 
     if not decisions:
         return {
-            'hourly_data': [],
+            'timeline_data': [],
             'total_votes': 0,
-            'votes_last_hour': 0,
-            'peak_hour': None,
-            'avg_votes_per_hour': 0
+            'votes_last_minute': 0,
+            'peak_time': None,
+            'avg_votes_per_minute': 0
         }
 
     # Get time range
@@ -193,37 +193,49 @@ def get_voting_timeline(hours=24):
     # Filter decisions in time range
     recent_decisions = [d for d in decisions if d.time >= start_time]
 
-    # Create hourly buckets
-    hourly_counts = defaultdict(int)
+    # Create 15-second buckets
+    bucket_counts = defaultdict(int)
     for dec in recent_decisions:
-        hour_bucket = dec.time.replace(minute=0, second=0, microsecond=0)
-        hourly_counts[hour_bucket] += 1
+        # Round down to nearest 15 seconds
+        bucket_time = dec.time.replace(microsecond=0)
+        second = (bucket_time.second // 15) * 15
+        bucket_time = bucket_time.replace(second=second)
+        bucket_counts[bucket_time] += 1
 
-    # Fill in missing hours with 0
-    hourly_data = []
-    current = start_time.replace(minute=0, second=0, microsecond=0)
+    # Fill in missing buckets with 0
+    timeline_data = []
+    current = start_time.replace(microsecond=0)
+    current = current.replace(second=(current.second // 15) * 15)
+
     while current <= now:
-        count = hourly_counts.get(current, 0)
-        hourly_data.append({
+        count = bucket_counts.get(current, 0)
+        timeline_data.append({
             'time': current.isoformat(),
-            'hour': current.strftime('%Y-%m-%d %H:%M'),
+            'timestamp': int(current.timestamp() * 1000),  # milliseconds for JS
+            'display_time': current.strftime('%H:%M:%S'),
             'count': count
         })
-        current += timedelta(hours=1)
+        current += timedelta(seconds=15)
 
     # Calculate statistics
     total_votes = len(decisions)
-    votes_last_hour = hourly_counts.get(now.replace(minute=0, second=0, microsecond=0), 0)
-    peak_hour_data = max(hourly_data, key=lambda x: x['count']) if hourly_data else None
-    peak_hour = peak_hour_data['hour'] if peak_hour_data else None
-    avg_votes_per_hour = sum(h['count'] for h in hourly_data) / len(hourly_data) if hourly_data else 0
+
+    # Votes in last minute (4 buckets of 15 seconds)
+    votes_last_minute = sum(bucket_counts.get(now.replace(microsecond=0).replace(second=(now.second // 15) * 15) - timedelta(seconds=15*i), 0) for i in range(4))
+
+    peak_bucket = max(timeline_data, key=lambda x: x['count']) if timeline_data else None
+    peak_time = peak_bucket['display_time'] if peak_bucket else None
+
+    # Average votes per minute
+    total_minutes = hours * 60
+    avg_votes_per_minute = len(recent_decisions) / total_minutes if total_minutes > 0 else 0
 
     return {
-        'hourly_data': hourly_data,
+        'timeline_data': timeline_data,
         'total_votes': total_votes,
-        'votes_last_hour': votes_last_hour,
-        'peak_hour': peak_hour,
-        'avg_votes_per_hour': avg_votes_per_hour
+        'votes_last_minute': votes_last_minute,
+        'peak_time': peak_time,
+        'avg_votes_per_minute': avg_votes_per_minute
     }
 
 

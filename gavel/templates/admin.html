@@ -78,24 +78,40 @@ table {
     <p><strong>Completion:</strong> {{ statistical_summary.completion_percentage }}%</p>
     <p><strong>Convergence Status:</strong> {{ statistical_summary.convergence_status }} (Avg σ²: {{ statistical_summary.avg_uncertainty }})</p>
     <p><strong>Estimated Votes Needed:</strong> {{ statistical_summary.estimated_votes_needed }} to converge</p>
+    <p><strong>Coverage:</strong> {{ coverage_matrix.coverage_percentage | round(1) }}% of possible pairs compared</p>
+    <p><strong>Avg Comparisons per Pair:</strong> {{ coverage_matrix.avg_comparisons_per_pair | round(1) }}</p>
+    <p><strong>Votes Last Minute:</strong> {{ voting_timeline.votes_last_minute }}</p>
+    <p><strong>Peak Activity:</strong> {{ voting_timeline.peak_time or 'N/A' }}</p>
+    <p><strong>Avg Votes/Minute:</strong> {{ voting_timeline.avg_votes_per_minute | round(2) }}</p>
     {% if statistical_summary.high_uncertainty_projects %}
-    <p><strong>⚠️ High Uncertainty Projects:</strong></p>
+    <p><strong>High Uncertainty Projects:</strong></p>
     <ul>
       {% for project_name, sigma_sq in statistical_summary.high_uncertainty_projects %}
       <li>{{ project_name }} (σ²: {{ sigma_sq | round(3) }})</li>
       {% endfor %}
     </ul>
     {% endif %}
+    {% if coverage_matrix.under_compared_pairs %}
+    <details>
+      <summary style="cursor: pointer; font-weight: bold; color: #dc3545;">Under-Compared Project Pairs</summary>
+      <ul style="margin-top: 10px;">
+        {% for pair in coverage_matrix.under_compared_pairs %}
+        <li>{{ pair.project_a }} ↔ {{ pair.project_b }} ({{ pair.comparisons }} comparisons)</li>
+        {% endfor %}
+      </ul>
+    </details>
+    {% endif %}
   </div>
 </div>
 
 <div class="item">
   <div class="banner">
-    <h2>Voting Activity (Last 2 Hours)</h2>
+    <h2>Voting Activity Timeline (15s intervals, Last 2 Hours)</h2>
   </div>
   <div class="info">
-    <p><strong>Last Hour:</strong> {{ voting_timeline.votes_last_hour }} votes | <strong>Peak Hour:</strong> {{ voting_timeline.peak_hour or 'N/A' }} | <strong>Avg/Hour:</strong> {{ voting_timeline.avg_votes_per_hour | round(1) }}</p>
-    <canvas id="votingTimelineChart" style="max-height: 300px;"></canvas>
+    <div style="width: 100%; height: 400px;">
+      <canvas id="votingTimelineChart"></canvas>
+    </div>
   </div>
 </div>
 
@@ -133,29 +149,6 @@ table {
         </table>
       </div>
     </details>
-  </div>
-</div>
-
-<div class="item">
-  <div class="banner">
-    <h2>Project Coverage Heatmap</h2>
-  </div>
-  <div class="info">
-    <p><strong>Coverage:</strong> {{ coverage_matrix.coverage_percentage | round(1) }}% of possible pairs compared</p>
-    <p><strong>Avg Comparisons per Pair:</strong> {{ coverage_matrix.avg_comparisons_per_pair | round(1) }}</p>
-    {% if coverage_matrix.under_compared_pairs %}
-    <details>
-      <summary style="cursor: pointer; font-weight: bold; color: #dc3545;">Under-Compared Project Pairs</summary>
-      <ul style="margin-top: 10px;">
-        {% for pair in coverage_matrix.under_compared_pairs %}
-        <li>{{ pair.project_a }} ↔ {{ pair.project_b }} ({{ pair.comparisons }} comparisons)</li>
-        {% endfor %}
-      </ul>
-    </details>
-    {% endif %}
-    <div style="overflow-x: auto; margin-top: 15px;">
-      <canvas id="coverageHeatmap"></canvas>
-    </div>
   </div>
 </div>
 
@@ -389,9 +382,12 @@ table {
 var tables = [
   document.getElementById('items'),
   document.getElementById('annotators'),
+  document.getElementById('decisions'),
 ];
 for (var i = 0; i < tables.length; i++) {
-  new Tablesort(tables[i]);
+  if (tables[i]) {
+    new Tablesort(tables[i]);
+  }
 }
 
 // D3.js Force-Directed Graph
@@ -530,41 +526,104 @@ for (var i = 0; i < tables.length; i++) {
 })();
 
 // ========================================
-// VOTING TIMELINE CHART
+// VOTING TIMELINE CHART (Line Chart with Area Fill)
 // ========================================
 (() => {
-  const votingData = {{ voting_timeline.hourly_data | tojson }};
+  const votingData = {{ voting_timeline.timeline_data | tojson }};
   const canvas = document.getElementById('votingTimelineChart');
   if (!canvas) return;
 
   const ctx = canvas.getContext('2d');
-  const width = canvas.parentElement.clientWidth;
-  const height = 300;
+  const container = canvas.parentElement;
+  const width = container.clientWidth;
+  const height = container.clientHeight || 400;
   canvas.width = width;
   canvas.height = height;
 
-  const padding = {top: 20, right: 20, bottom: 60, left: 50};
+  const padding = {top: 30, right: 40, bottom: 50, left: 60};
   const chartWidth = width - padding.left - padding.right;
   const chartHeight = height - padding.top - padding.bottom;
 
+  if (votingData.length === 0) {
+    ctx.fillStyle = '#666';
+    ctx.font = '14px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('No voting data available', width / 2, height / 2);
+    return;
+  }
+
   const maxCount = Math.max(...votingData.map(d => d.count), 1);
-  const barWidth = chartWidth / votingData.length;
+  const pointSpacing = chartWidth / (votingData.length - 1 || 1);
 
-  // Draw bars
+  // Draw grid lines
+  ctx.strokeStyle = '#e0e0e0';
+  ctx.lineWidth = 1;
+  const numGridLines = 5;
+  for (let i = 0; i <= numGridLines; i++) {
+    const y = padding.top + (chartHeight / numGridLines) * i;
+    ctx.beginPath();
+    ctx.moveTo(padding.left, y);
+    ctx.lineTo(width - padding.right, y);
+    ctx.stroke();
+
+    // Y-axis labels
+    const value = Math.round(maxCount * (1 - i / numGridLines));
+    ctx.fillStyle = '#666';
+    ctx.font = '11px sans-serif';
+    ctx.textAlign = 'right';
+    ctx.fillText(value, padding.left - 10, y + 4);
+  }
+
+  // Create gradient for area fill
+  const gradient = ctx.createLinearGradient(0, padding.top, 0, height - padding.bottom);
+  gradient.addColorStop(0, 'rgba(0, 123, 255, 0.3)');
+  gradient.addColorStop(1, 'rgba(0, 123, 255, 0.05)');
+
+  // Draw area fill
+  ctx.beginPath();
+  ctx.moveTo(padding.left, height - padding.bottom);
   votingData.forEach((d, i) => {
-    const barHeight = (d.count / maxCount) * chartHeight;
-    const x = padding.left + i * barWidth;
-    const y = height - padding.bottom - barHeight;
+    const x = padding.left + i * pointSpacing;
+    const y = height - padding.bottom - (d.count / maxCount) * chartHeight;
+    if (i === 0) {
+      ctx.lineTo(x, y);
+    } else {
+      ctx.lineTo(x, y);
+    }
+  });
+  ctx.lineTo(width - padding.right, height - padding.bottom);
+  ctx.closePath();
+  ctx.fillStyle = gradient;
+  ctx.fill();
 
-    ctx.fillStyle = '#007bff';
-    ctx.fillRect(x, y, barWidth - 2, barHeight);
+  // Draw line
+  ctx.beginPath();
+  votingData.forEach((d, i) => {
+    const x = padding.left + i * pointSpacing;
+    const y = height - padding.bottom - (d.count / maxCount) * chartHeight;
+    if (i === 0) {
+      ctx.moveTo(x, y);
+    } else {
+      ctx.lineTo(x, y);
+    }
+  });
+  ctx.strokeStyle = '#007bff';
+  ctx.lineWidth = 2.5;
+  ctx.stroke();
 
-    // Draw value on top of bar
+  // Draw points
+  votingData.forEach((d, i) => {
     if (d.count > 0) {
-      ctx.fillStyle = '#333';
-      ctx.font = '10px sans-serif';
-      ctx.textAlign = 'center';
-      ctx.fillText(d.count, x + barWidth/2, y - 5);
+      const x = padding.left + i * pointSpacing;
+      const y = height - padding.bottom - (d.count / maxCount) * chartHeight;
+
+      ctx.beginPath();
+      ctx.arc(x, y, 4, 0, 2 * Math.PI);
+      ctx.fillStyle = '#007bff';
+      ctx.fill();
+      ctx.strokeStyle = '#fff';
+      ctx.lineWidth = 2;
+      ctx.stroke();
     }
   });
 
@@ -581,100 +640,34 @@ for (var i = 0; i < tables.length; i++) {
   ctx.lineTo(padding.left, height - padding.bottom);
   ctx.stroke();
 
-  // Draw x-axis labels (show all hours for 2-hour window)
+  // Draw x-axis labels (show every Nth label to avoid overlap)
   ctx.fillStyle = '#666';
-  ctx.font = '11px sans-serif';
+  ctx.font = '10px sans-serif';
   ctx.textAlign = 'center';
+  const labelInterval = Math.max(1, Math.floor(votingData.length / 12)); // Show ~12 labels max
   votingData.forEach((d, i) => {
-    const x = padding.left + i * barWidth + barWidth/2;
-    const hour = new Date(d.time).getHours();
-    const minute = new Date(d.time).getMinutes();
-    ctx.fillText(hour + ':' + (minute < 10 ? '0' : '') + minute, x, height - padding.bottom + 20);
+    if (i % labelInterval === 0 || i === votingData.length - 1) {
+      const x = padding.left + i * pointSpacing;
+      ctx.fillText(d.display_time, x, height - padding.bottom + 20);
+    }
   });
 
-  // Draw y-axis label
+  // Draw axis labels
+  ctx.fillStyle = '#333';
+  ctx.font = 'bold 12px sans-serif';
+
+  // Y-axis label
   ctx.save();
-  ctx.translate(15, height/2);
-  ctx.rotate(-Math.PI/2);
+  ctx.translate(20, height / 2);
+  ctx.rotate(-Math.PI / 2);
   ctx.textAlign = 'center';
-  ctx.fillText('Votes', 0, 0);
+  ctx.fillText('Votes per 15s', 0, 0);
   ctx.restore();
+
+  // X-axis label
+  ctx.textAlign = 'center';
+  ctx.fillText('Time', width / 2, height - 10);
 })();
 
-// ========================================
-// COVERAGE HEATMAP
-// ========================================
-(() => {
-  const matrix = {{ coverage_matrix.matrix | tojson }};
-  const projectNames = {{ coverage_matrix.project_names | tojson }};
-  const canvas = document.getElementById('coverageHeatmap');
-  if (!canvas || matrix.length === 0) return;
-
-  const n = matrix.length;
-  const cellSize = Math.max(20, Math.min(40, 800 / n));
-  const width = n * cellSize + 200; // Extra space for labels
-  const height = n * cellSize + 80;
-
-  canvas.width = width;
-  canvas.height = height;
-  const ctx = canvas.getContext('2d');
-
-  const maxValue = Math.max(...matrix.flat());
-
-  // Draw heatmap cells
-  for (let i = 0; i < n; i++) {
-    for (let j = 0; j < n; j++) {
-      const value = matrix[i][j];
-      const intensity = maxValue > 0 ? value / maxValue : 0;
-
-      // Color gradient from white to blue
-      const color = `rgb(${255 - intensity * 200}, ${255 - intensity * 150}, 255)`;
-
-      ctx.fillStyle = color;
-      ctx.fillRect(100 + j * cellSize, 20 + i * cellSize, cellSize - 1, cellSize - 1);
-
-      // Draw value if significant
-      if (value > 0 && cellSize > 15) {
-        ctx.fillStyle = intensity > 0.5 ? '#fff' : '#333';
-        ctx.font = `${Math.min(cellSize / 2, 10)}px sans-serif`;
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        ctx.fillText(value, 100 + j * cellSize + cellSize/2, 20 + i * cellSize + cellSize/2);
-      }
-    }
-  }
-
-  // Draw row labels (truncated project names)
-  ctx.fillStyle = '#333';
-  ctx.font = '10px sans-serif';
-  ctx.textAlign = 'right';
-  ctx.textBaseline = 'middle';
-  for (let i = 0; i < Math.min(n, 20); i++) { // Limit to 20 labels
-    const name = projectNames[i].length > 12 ? projectNames[i].substring(0, 10) + '...' : projectNames[i];
-    ctx.fillText(name, 95, 20 + i * cellSize + cellSize/2);
-  }
-
-  // Draw legend
-  ctx.fillStyle = '#333';
-  ctx.font = 'bold 11px sans-serif';
-  ctx.textAlign = 'left';
-  ctx.fillText('Comparisons:', 100, height - 10);
-
-  const legendWidth = 100;
-  const legendX = 220;
-  for (let i = 0; i <= 10; i++) {
-    const intensity = i / 10;
-    const color = `rgb(${255 - intensity * 200}, ${255 - intensity * 150}, 255)`;
-    ctx.fillStyle = color;
-    ctx.fillRect(legendX + i * (legendWidth / 10), height - 20, legendWidth / 10, 15);
-  }
-  ctx.strokeRect(legendX, height - 20, legendWidth, 15);
-
-  ctx.fillStyle = '#333';
-  ctx.font = '10px sans-serif';
-  ctx.fillText('0', legendX, height - 5);
-  ctx.textAlign = 'right';
-  ctx.fillText(maxValue, legendX + legendWidth, height - 5);
-})();
 </script>
 {% endblock %}
