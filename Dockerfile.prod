@@ -71,7 +71,7 @@ stderr_logfile=/dev/stderr\n\
 stderr_logfile_maxbytes=0\n\
 \n\
 [program:gavel]\n\
-command=gunicorn -b 0.0.0.0:5000 -w 4 gavel:app\n\
+command=gunicorn -b 0.0.0.0:5000 gavel:app\n\
 autostart=true\n\
 autorestart=true\n\
 stdout_logfile=/dev/stdout\n\
