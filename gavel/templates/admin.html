@@ -69,61 +69,32 @@ table {
 
 <div class="item">
   <div class="banner">
-    <h2>Statistical Summary Dashboard</h2>
+    <h2>Statistical Summary</h2>
   </div>
   <div class="info">
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 20px;">
-      <div style="padding: 15px; background: #f8f9fa; border-radius: 8px; border-left: 4px solid #007bff;">
-        <div style="font-size: 12px; color: #6c757d; margin-bottom: 5px;">TOTAL COMPARISONS</div>
-        <div style="font-size: 28px; font-weight: bold; color: #007bff;">{{ statistical_summary.total_comparisons }}</div>
-      </div>
-      <div style="padding: 15px; background: #f8f9fa; border-radius: 8px; border-left: 4px solid #28a745;">
-        <div style="font-size: 12px; color: #6c757d; margin-bottom: 5px;">ACTIVE JUDGES</div>
-        <div style="font-size: 28px; font-weight: bold; color: #28a745;">{{ statistical_summary.active_judges }}</div>
-        <div style="font-size: 11px; color: #6c757d;">of {{ statistical_summary.total_judges }} total</div>
-      </div>
-      <div style="padding: 15px; background: #f8f9fa; border-radius: 8px; border-left: 4px solid #ffc107;">
-        <div style="font-size: 12px; color: #6c757d; margin-bottom: 5px;">AVG COMPARISONS/PROJECT</div>
-        <div style="font-size: 28px; font-weight: bold; color: #ffc107;">{{ statistical_summary.avg_comparisons_per_project }}</div>
-      </div>
-      <div style="padding: 15px; background: #f8f9fa; border-radius: 8px; border-left: 4px solid #17a2b8;">
-        <div style="font-size: 12px; color: #6c757d; margin-bottom: 5px;">COMPLETION</div>
-        <div style="font-size: 28px; font-weight: bold; color: #17a2b8;">{{ statistical_summary.completion_percentage }}%</div>
-      </div>
-      <div style="padding: 15px; background: #f8f9fa; border-radius: 8px; border-left: 4px solid #6610f2;">
-        <div style="font-size: 12px; color: #6c757d; margin-bottom: 5px;">CONVERGENCE STATUS</div>
-        <div style="font-size: 20px; font-weight: bold; color: #6610f2;">{{ statistical_summary.convergence_status }}</div>
-        <div style="font-size: 11px; color: #6c757d;">Avg σ²: {{ statistical_summary.avg_uncertainty }}</div>
-      </div>
-      <div style="padding: 15px; background: #f8f9fa; border-radius: 8px; border-left: 4px solid #dc3545;">
-        <div style="font-size: 12px; color: #6c757d; margin-bottom: 5px;">VOTES NEEDED</div>
-        <div style="font-size: 28px; font-weight: bold; color: #dc3545;">{{ statistical_summary.estimated_votes_needed }}</div>
-        <div style="font-size: 11px; color: #6c757d;">to converge</div>
-      </div>
-    </div>
+    <p><strong>Total Comparisons:</strong> {{ statistical_summary.total_comparisons }}</p>
+    <p><strong>Active Judges:</strong> {{ statistical_summary.active_judges }} of {{ statistical_summary.total_judges }} total</p>
+    <p><strong>Avg Comparisons/Project:</strong> {{ statistical_summary.avg_comparisons_per_project }}</p>
+    <p><strong>Completion:</strong> {{ statistical_summary.completion_percentage }}%</p>
+    <p><strong>Convergence Status:</strong> {{ statistical_summary.convergence_status }} (Avg σ²: {{ statistical_summary.avg_uncertainty }})</p>
+    <p><strong>Estimated Votes Needed:</strong> {{ statistical_summary.estimated_votes_needed }} to converge</p>
     {% if statistical_summary.high_uncertainty_projects %}
-    <details style="margin-top: 15px;">
-      <summary style="cursor: pointer; font-weight: bold; color: #dc3545;">⚠️ Top 5 Projects with High Uncertainty</summary>
-      <ul style="margin-top: 10px;">
-        {% for project_name, sigma_sq in statistical_summary.high_uncertainty_projects %}
-        <li>{{ project_name }} (σ²: {{ sigma_sq | round(3) }})</li>
-        {% endfor %}
-      </ul>
-    </details>
+    <p><strong>⚠️ High Uncertainty Projects:</strong></p>
+    <ul>
+      {% for project_name, sigma_sq in statistical_summary.high_uncertainty_projects %}
+      <li>{{ project_name }} (σ²: {{ sigma_sq | round(3) }})</li>
+      {% endfor %}
+    </ul>
     {% endif %}
   </div>
 </div>
 
 <div class="item">
   <div class="banner">
-    <h2>Voting Activity Timeline (Last 24 Hours)</h2>
+    <h2>Voting Activity (Last 2 Hours)</h2>
   </div>
   <div class="info">
-    <div style="margin-bottom: 15px;">
-      <strong>Last Hour:</strong> {{ voting_timeline.votes_last_hour }} votes |
-      <strong>Peak Hour:</strong> {{ voting_timeline.peak_hour or 'N/A' }} |
-      <strong>Avg/Hour:</strong> {{ voting_timeline.avg_votes_per_hour | round(1) }}
-    </div>
+    <p><strong>Last Hour:</strong> {{ voting_timeline.votes_last_hour }} votes | <strong>Peak Hour:</strong> {{ voting_timeline.peak_hour or 'N/A' }} | <strong>Avg/Hour:</strong> {{ voting_timeline.avg_votes_per_hour | round(1) }}</p>
     <canvas id="votingTimelineChart" style="max-height: 300px;"></canvas>
   </div>
 </div>
@@ -170,21 +141,19 @@ table {
     <h2>Project Coverage Heatmap</h2>
   </div>
   <div class="info">
-    <div style="margin-bottom: 15px;">
-      <strong>Coverage:</strong> {{ coverage_matrix.coverage_percentage | round(1) }}% of possible pairs compared |
-      <strong>Avg Comparisons per Pair:</strong> {{ coverage_matrix.avg_comparisons_per_pair | round(1) }}
-    </div>
+    <p><strong>Coverage:</strong> {{ coverage_matrix.coverage_percentage | round(1) }}% of possible pairs compared</p>
+    <p><strong>Avg Comparisons per Pair:</strong> {{ coverage_matrix.avg_comparisons_per_pair | round(1) }}</p>
     {% if coverage_matrix.under_compared_pairs %}
     <details>
-      <summary style="cursor: pointer; font-weight: bold; color: #dc3545;">⚠️ Under-Compared Project Pairs</summary>
-      <ul style="margin-top: 10px; font-size: 13px;">
+      <summary style="cursor: pointer; font-weight: bold; color: #dc3545;">Under-Compared Project Pairs</summary>
+      <ul style="margin-top: 10px;">
         {% for pair in coverage_matrix.under_compared_pairs %}
         <li>{{ pair.project_a }} ↔ {{ pair.project_b }} ({{ pair.comparisons }} comparisons)</li>
         {% endfor %}
       </ul>
     </details>
     {% endif %}
-    <div id="heatmapContainer" style="overflow-x: auto; margin-top: 15px;">
+    <div style="overflow-x: auto; margin-top: 15px;">
       <canvas id="coverageHeatmap"></canvas>
     </div>
   </div>
@@ -612,16 +581,15 @@ for (var i = 0; i < tables.length; i++) {
   ctx.lineTo(padding.left, height - padding.bottom);
   ctx.stroke();
 
-  // Draw x-axis labels (every 4 hours)
+  // Draw x-axis labels (show all hours for 2-hour window)
   ctx.fillStyle = '#666';
   ctx.font = '11px sans-serif';
   ctx.textAlign = 'center';
   votingData.forEach((d, i) => {
-    if (i % 4 === 0) {
-      const x = padding.left + i * barWidth + barWidth/2;
-      const hour = new Date(d.time).getHours();
-      ctx.fillText(hour + ':00', x, height - padding.bottom + 20);
-    }
+    const x = padding.left + i * barWidth + barWidth/2;
+    const hour = new Date(d.time).getHours();
+    const minute = new Date(d.time).getMinutes();
+    ctx.fillText(hour + ':' + (minute < 10 ? '0' : '') + minute, x, height - padding.bottom + 20);
   });
 
   // Draw y-axis label
@@ -643,9 +611,9 @@ for (var i = 0; i < tables.length; i++) {
   if (!canvas || matrix.length === 0) return;
 
   const n = matrix.length;
-  const cellSize = Math.min(30, 600 / n);
-  const width = n * cellSize + 150; // Extra space for labels
-  const height = n * cellSize + 50;
+  const cellSize = Math.max(20, Math.min(40, 800 / n));
+  const width = n * cellSize + 200; // Extra space for labels
+  const height = n * cellSize + 80;
 
   canvas.width = width;
   canvas.height = height;

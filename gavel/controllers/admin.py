@@ -50,7 +50,7 @@ def admin():
 
     # New analytics data
     coverage_matrix = analytics.get_coverage_matrix()
-    voting_timeline = analytics.get_voting_timeline(hours=24)
+    voting_timeline = analytics.get_voting_timeline(hours=2)
     statistical_summary = analytics.get_statistical_summary()
 
     # Get all decisions for the decisions table (sorted by most recent first)
