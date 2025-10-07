@@ -114,7 +114,7 @@ def hackpsu_auth_required(f):
         if not user_data:
             # Redirect to auth flow with return URL
             auth_login_url = os.environ.get('AUTH_LOGIN_URL', 'http://localhost:3000/login')
-            redirect_url = f'{auth_login_url}?redirect={request.url}'
+            redirect_url = f'{auth_login_url}?returnTo={request.url}'
             print(f"[DEBUG] No user data, redirecting to: {redirect_url}")
             return redirect(redirect_url)
 
@@ -154,7 +154,7 @@ def hackpsu_admin_required(f):
 
         if not user_data:
             auth_login_url = os.environ.get('AUTH_LOGIN_URL', 'http://localhost:3000/login')
-            return redirect(f'{auth_login_url}?redirect={request.url}')
+            return redirect(f'{auth_login_url}?returnTo={request.url}')
 
         # Check admin permissions
         if not check_admin_permission(user_data):
