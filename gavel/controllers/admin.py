@@ -48,6 +48,14 @@ def admin():
     G = analytics.build_comparison_graph()
     graph_data = analytics.generate_graph_data_for_visualization(G)
 
+    # New analytics data
+    coverage_matrix = analytics.get_coverage_matrix()
+    voting_timeline = analytics.get_voting_timeline(hours=24)
+    statistical_summary = analytics.get_statistical_summary()
+
+    # Get all decisions for the decisions table (sorted by most recent first)
+    all_decisions = Decision.query.order_by(Decision.time.desc()).all()
+
     return render_template(
         'admin.html',
         annotators=annotators,
@@ -57,7 +65,11 @@ def admin():
         items=items,
         votes=len(decisions),
         setting_closed=setting_closed,
-        graph_data=graph_data
+        graph_data=graph_data,
+        coverage_matrix=coverage_matrix,
+        voting_timeline=voting_timeline,
+        statistical_summary=statistical_summary,
+        all_decisions=all_decisions
     )
 
 @app.route('/admin/item', methods=['POST'])

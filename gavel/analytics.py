@@ -1,10 +1,12 @@
 """
 Advanced analytics for CrowdBT algorithm performance and network analysis.
 """
-from gavel.models import Item, Decision
+from gavel.models import Item, Decision, Annotator
 import networkx as nx
 from collections import defaultdict
 import numpy as np
+from datetime import datetime, timedelta
+from sqlalchemy import func
 
 
 def build_comparison_graph():
@@ -103,3 +105,214 @@ def generate_graph_data_for_visualization(G):
         })
 
     return {'nodes': nodes, 'links': links}
+
+
+# ========================================
+# 3. PROJECT COVERAGE HEATMAP
+# ========================================
+
+def get_coverage_matrix():
+    """
+    Generate a comparison coverage matrix showing which project pairs have been compared.
+    Returns a matrix where cell (i,j) shows how many times project i was compared to project j.
+    """
+    items = Item.query.filter(Item.active == True).order_by(Item.id).all()
+    decisions = Decision.query.all()
+
+    # Create project ID to index mapping
+    project_ids = [item.id for item in items]
+    id_to_idx = {pid: idx for idx, pid in enumerate(project_ids)}
+
+    # Initialize matrix
+    n = len(project_ids)
+    matrix = [[0 for _ in range(n)] for _ in range(n)]
+
+    # Fill matrix with comparison counts
+    for dec in decisions:
+        winner_idx = id_to_idx.get(dec.winner_id)
+        loser_idx = id_to_idx.get(dec.loser_id)
+
+        if winner_idx is not None and loser_idx is not None:
+            matrix[winner_idx][loser_idx] += 1
+            matrix[loser_idx][winner_idx] += 1  # Symmetric
+
+    # Calculate coverage statistics
+    total_possible_comparisons = n * (n - 1) // 2
+    actual_comparisons = sum(1 for i in range(n) for j in range(i+1, n) if matrix[i][j] > 0)
+    coverage_percentage = (actual_comparisons / total_possible_comparisons * 100) if total_possible_comparisons > 0 else 0
+
+    # Find under-compared pairs
+    avg_comparisons_per_pair = sum(matrix[i][j] for i in range(n) for j in range(i+1, n)) / total_possible_comparisons if total_possible_comparisons > 0 else 0
+
+    under_compared_pairs = []
+    for i in range(n):
+        for j in range(i+1, n):
+            if matrix[i][j] < avg_comparisons_per_pair * 0.5:  # Less than 50% of average
+                under_compared_pairs.append({
+                    'project_a': items[i].name,
+                    'project_b': items[j].name,
+                    'comparisons': matrix[i][j]
+                })
+
+    return {
+        'matrix': matrix,
+        'project_ids': project_ids,
+        'project_names': [item.name for item in items],
+        'coverage_percentage': coverage_percentage,
+        'avg_comparisons_per_pair': avg_comparisons_per_pair,
+        'under_compared_pairs': under_compared_pairs[:10]  # Top 10
+    }
+
+
+# ========================================
+# 4. VOTING ACTIVITY TIMELINE
+# ========================================
+
+def get_voting_timeline(hours=24):
+    """
+    Get voting activity over time.
+    Returns hourly vote counts for the last N hours.
+    """
+    from gavel import db
+
+    decisions = Decision.query.order_by(Decision.time).all()
+
+    if not decisions:
+        return {
+            'hourly_data': [],
+            'total_votes': 0,
+            'votes_last_hour': 0,
+            'peak_hour': None,
+            'avg_votes_per_hour': 0
+        }
+
+    # Get time range
+    now = datetime.utcnow()
+    start_time = now - timedelta(hours=hours)
+
+    # Filter decisions in time range
+    recent_decisions = [d for d in decisions if d.time >= start_time]
+
+    # Create hourly buckets
+    hourly_counts = defaultdict(int)
+    for dec in recent_decisions:
+        hour_bucket = dec.time.replace(minute=0, second=0, microsecond=0)
+        hourly_counts[hour_bucket] += 1
+
+    # Fill in missing hours with 0
+    hourly_data = []
+    current = start_time.replace(minute=0, second=0, microsecond=0)
+    while current <= now:
+        count = hourly_counts.get(current, 0)
+        hourly_data.append({
+            'time': current.isoformat(),
+            'hour': current.strftime('%Y-%m-%d %H:%M'),
+            'count': count
+        })
+        current += timedelta(hours=1)
+
+    # Calculate statistics
+    total_votes = len(decisions)
+    votes_last_hour = hourly_counts.get(now.replace(minute=0, second=0, microsecond=0), 0)
+    peak_hour_data = max(hourly_data, key=lambda x: x['count']) if hourly_data else None
+    peak_hour = peak_hour_data['hour'] if peak_hour_data else None
+    avg_votes_per_hour = sum(h['count'] for h in hourly_data) / len(hourly_data) if hourly_data else 0
+
+    return {
+        'hourly_data': hourly_data,
+        'total_votes': total_votes,
+        'votes_last_hour': votes_last_hour,
+        'peak_hour': peak_hour,
+        'avg_votes_per_hour': avg_votes_per_hour
+    }
+
+
+# ========================================
+# 7. STATISTICAL SUMMARY DASHBOARD
+# ========================================
+
+def get_statistical_summary():
+    """
+    Calculate comprehensive statistical summary for dashboard.
+    """
+    from gavel import crowd_bt
+
+    items = Item.query.filter(Item.active == True).all()
+    judges = Annotator.query.all()
+    decisions = Decision.query.all()
+
+    if not items or not decisions:
+        return {
+            'total_comparisons': 0,
+            'total_projects': len(items),
+            'total_judges': len(judges),
+            'avg_comparisons_per_project': 0,
+            'avg_comparisons_per_judge': 0,
+            'completion_percentage': 0,
+            'convergence_status': 'Not Started',
+            'avg_uncertainty': 0,
+            'estimated_votes_needed': 0
+        }
+
+    # Basic counts
+    total_comparisons = len(decisions)
+    total_projects = len(items)
+    total_judges = len(judges)
+    active_judges = len([j for j in judges if j.active])
+
+    # Comparisons per project
+    project_comparison_counts = defaultdict(int)
+    for dec in decisions:
+        project_comparison_counts[dec.winner_id] += 1
+        project_comparison_counts[dec.loser_id] += 1
+
+    avg_comparisons_per_project = sum(project_comparison_counts.values()) / (2 * total_projects) if total_projects > 0 else 0
+
+    # Comparisons per judge
+    judge_comparison_counts = defaultdict(int)
+    for dec in decisions:
+        judge_comparison_counts[dec.annotator_id] += 1
+
+    avg_comparisons_per_judge = total_comparisons / total_judges if total_judges > 0 else 0
+
+    # Completion percentage (based on minimum comparisons needed)
+    # Assume we want at least 10 comparisons per project
+    min_comparisons_needed = total_projects * 10
+    completion_percentage = min(100, (total_comparisons / min_comparisons_needed * 100)) if min_comparisons_needed > 0 else 0
+
+    # Convergence analysis
+    avg_uncertainty = sum(float(item.sigma_sq) for item in items) / len(items)
+    initial_sigma_sq = float(crowd_bt.SIGMA_SQ_PRIOR)
+
+    if avg_uncertainty < 0.5:
+        convergence_status = 'Converged'
+    elif avg_uncertainty < 1.0:
+        convergence_status = 'Nearly Converged'
+    elif avg_uncertainty < initial_sigma_sq * 0.8:
+        convergence_status = 'In Progress'
+    else:
+        convergence_status = 'Early Stage'
+
+    # Estimate votes needed
+    estimated_votes_needed = estimate_votes_to_convergence(target_avg_sigma_sq=0.5)
+
+    # Projects with high uncertainty
+    high_uncertainty_projects = sorted(
+        [(item.name, float(item.sigma_sq)) for item in items],
+        key=lambda x: x[1],
+        reverse=True
+    )[:5]
+
+    return {
+        'total_comparisons': total_comparisons,
+        'total_projects': total_projects,
+        'total_judges': total_judges,
+        'active_judges': active_judges,
+        'avg_comparisons_per_project': round(avg_comparisons_per_project, 1),
+        'avg_comparisons_per_judge': round(avg_comparisons_per_judge, 1),
+        'completion_percentage': round(completion_percentage, 1),
+        'convergence_status': convergence_status,
+        'avg_uncertainty': round(avg_uncertainty, 3),
+        'estimated_votes_needed': estimated_votes_needed if estimated_votes_needed else 0,
+        'high_uncertainty_projects': high_uncertainty_projects
+    }
