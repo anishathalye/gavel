@@ -26,9 +26,11 @@ def build_comparison_graph():
     edge_weights = defaultdict(int)
 
     for dec in decisions:
-        # Directed edge from winner to loser
-        edge = (dec.winner.id, dec.loser.id)
-        edge_weights[edge] += 1
+        # Only add edges if both winner and loser are in the graph (i.e., both are active)
+        if dec.winner.id in G.nodes and dec.loser.id in G.nodes:
+            # Directed edge from winner to loser
+            edge = (dec.winner.id, dec.loser.id)
+            edge_weights[edge] += 1
 
     for (winner_id, loser_id), weight in edge_weights.items():
         G.add_edge(winner_id, loser_id, weight=weight)
