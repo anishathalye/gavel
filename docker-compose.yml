@@ -33,20 +33,32 @@ services:
       timeout: 3s
       retries: 5
 
+  # HackPSU Auth Service
+  auth:
+    build:
+      context: .
+      dockerfile: Dockerfile.auth
+    container_name: gavel-auth
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env.auth
+
   # Gavel Web Application
   web:
     build: .
     container_name: gavel-web
-    network_mode: "host"
+    ports:
+      - "5001:5001"
     environment:
-      # Database (use localhost since we're on host network)
-      DATABASE_URL: postgresql://gavel:gavel_dev_password@localhost:5432/gavel
-      DB_URI: postgresql://gavel:gavel_dev_password@localhost:5432/gavel
+      # Database (use container networking)
+      DATABASE_URL: postgresql://gavel:gavel_dev_password@db:5432/gavel
+      DB_URI: postgresql://gavel:gavel_dev_password@db:5432/gavel
       ADMIN_PASSWORD: adminpassword
 
-      # Redis (use localhost since we're on host network)
-      REDIS_URL: redis://localhost:6379/0
-      BROKER_URI: redis://localhost:6379/0
+      # Redis (use container networking)
+      REDIS_URL: redis://redis:6379/0
+      BROKER_URI: redis://redis:6379/0
 
       # Flask
       SECRET_KEY: dev-secret-key-change-in-production
@@ -56,9 +68,9 @@ services:
       AUTH_ENVIRONMENT: production
       MIN_JUDGE_ROLE: 2
       MIN_ADMIN_ROLE: 4
-      AUTH_SERVER_URL: http://localhost:3000/api/sessionUser
+      AUTH_SERVER_URL: http://auth:3000/api/sessionUser
       AUTH_LOGIN_URL: http://localhost:3000/login
-      AUTH_LOGOUT_URL: http://localhost:3000/api/sessionLogout
+      AUTH_LOGOUT_URL: http://auth:3000/api/sessionLogout
       GAVEL_URL: http://localhost:5001
       PORT: 5001
 
@@ -129,3 +141,8 @@ services:
 volumes:
   postgres_data:
   redis_data:
+
+networks:
+  default:
+    name: gavel-network
+    driver: bridge
