@@ -37,6 +37,9 @@ def health():
 @hackpsu_auth_required
 def index():
     annotator = get_current_annotator()
+
+    # db.session.expire_all()
+
     if Setting.value_of(SETTING_CLOSED) == SETTING_TRUE:
         return render_template(
             'closed.html',
@@ -232,3 +235,69 @@ def perform_vote(annotator, next_won):
     winner.sigma_sq = u_winner_sigma_sq
     loser.mu = u_loser_mu
     loser.sigma_sq = u_loser_sigma_sq
+
+from flask import jsonify
+
+@app.route('/api/judge_notes')
+@hackpsu_auth_required
+def get_judge_notes():
+    annotator = get_current_annotator()
+
+    # Retrieve all notes made by this judge (if stored in Decision model)
+    decisions = Decision.query.filter_by(annotator_id=annotator.id).all()
+
+    # Build a clean list of notes and associated project names
+    notes = []
+    for d in decisions:
+        if d.notes:  # only include those with actual notes
+            notes.append({
+                "project": d.winner.name if d.winner else "(Unknown Project)",
+                "note": d.notes
+                
+            })
+            
+
+    # Sort newest first 
+    notes = sorted(notes, key=lambda x: x["project"].lower())
+
+    return jsonify(notes)
+
+
+@app.route('/api/all_notes')
+@hackpsu_auth_required
+def all_notes():
+    """Return all projects (winner or loser) and all notes from all judges."""
+    decisions = Decision.query.filter(Decision.notes.isnot(None)).all()
+
+    data = {}
+
+    for d in decisions:
+        # For each decision, include the winner and loser projects if they exist
+        projects = []
+        if d.winner:
+            projects.append(d.winner.name)
+        if d.loser:
+            projects.append(d.loser.name)
+
+        for project_name in projects:
+            if project_name not in data:
+                data[project_name] = []
+            note_text = d.notes.strip()
+            if note_text and note_text not in data[project_name]:
+                data[project_name].append(note_text)
+
+    # Convert dict → list for frontend
+    formatted = [{"project": name, "notes": notes} for name, notes in data.items()]
+    formatted.sort(key=lambda x: x["project"].lower())
+
+    return jsonify(formatted)
+
+
+#automatic redirect when judging closes
+@app.route('/api/status')
+def status():
+    """Returns whether judging is closed."""
+    # db.session.expire_all()  #  Make sure we check fresh DB data
+    is_closed = Setting.value_of(SETTING_CLOSED) == SETTING_TRUE
+    return jsonify({"closed": is_closed})
+

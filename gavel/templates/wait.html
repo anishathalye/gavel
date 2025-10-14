@@ -1,5 +1,6 @@
 {% extends "layout.html" %}
 {% block title %}Wait{% endblock %}
+
 {% block content %}
 <div class="item">
   <div class="banner" id="wait-header">
@@ -8,5 +9,103 @@
   <div class="info">
     {{ content }}
   </div>
+
+  <!-- Notes section -->
+  <div id="notes-container" style="margin-top: 2rem;">
+    <h2 style="margin-bottom: 1rem;">All Judges' Notes</h2>
+    <div id="notes" class="notes-grid">
+      <p><i>Fetching latest notes...</i></p>
+    </div>
+  </div>
 </div>
+
+<!-- Poll API script -->
+<script>
+  async function checkClosedStatus() {
+    try {
+      const res = await fetch('/api/status');
+      if (!res.ok) return;
+      const data = await res.json();
+      if (data.closed) {
+        // Reload to switch automatically to Closed page
+        window.location.reload();
+      }
+    } catch (err) {
+      console.error("Error checking closed status:", err);
+    }
+  }
+
+  async function fetchAllNotes() {
+    try {
+      const res = await fetch('/api/all_notes');
+      if (!res.ok) throw new Error('Network error');
+      const data = await res.json();
+
+      const notesDiv = document.getElementById('notes');
+      notesDiv.innerHTML = "";
+
+      if (data.length === 0) {
+        notesDiv.innerHTML = "<p><i>No judged projects yet...</i></p>";
+        return;
+      }
+
+      data.forEach(item => {
+        if (item.notes.length > 0) {
+          const div = document.createElement('div');
+          div.classList.add('note-card');
+          div.innerHTML = `
+            <div class="note-title">${item.project}</div>
+            <ul class="note-list">
+              ${item.notes.map(n => `<li>"${n}"</li>`).join('')}
+            </ul>
+          `;
+          notesDiv.appendChild(div);
+        }
+      });
+    } catch (err) {
+      console.error("Error fetching notes:", err);
+    }
+  }
+
+  // Fetch immediately and poll every 1 second
+  fetchAllNotes();
+  setInterval(fetchAllNotes, 1000);      // every 1s for notes
+  setInterval(checkClosedStatus, 1000);  // every 1s to check if judging is closed
+</script>
+
+
+<!--Styling-->
+<style>
+  .notes-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+  }
+  .note-card {
+    background: #fffdfa;
+    border: 1px solid #e2dede;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.06);
+    padding: 1rem 1.2rem;
+    transition: all 0.2s ease;
+  }
+  .note-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+  }
+  .note-title {
+    font-weight: bold;
+    font-size: 1.1rem;
+    color: #003366;
+    margin-bottom: 0.5rem;
+  }
+  .note-list {
+    list-style: disc;
+    padding-left: 1.2rem;
+    color: #444;
+  }
+  .note-list li {
+    margin-bottom: 0.3rem;
+  }
+</style>
 {% endblock %}
