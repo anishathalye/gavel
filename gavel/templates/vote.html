@@ -11,7 +11,6 @@
     {% endwith %}
   </div>
 </div>
-
 <div class="item">
   <div class="banner-tight" id="current-header">
     <h1>Current</h1>
@@ -31,6 +30,7 @@
   <div class="info">
     <form action="{{ url_for('vote') }}" method="post">
       <p class="center">Which one is better?</p>
+      {% include "timer.html" %}
       <div id="vote-previous" class="radio-button button-left">
         <input type="radio" name="action" id="vote-previous-radio" value="Previous">
         <label for="vote-previous-radio">Previous</label>
@@ -56,13 +56,12 @@
           style="width: 100%; padding: 0.75rem; border: 1px solid #e4e4e4; border-radius: 4px; font-family: inherit; resize: vertical;"
         ></textarea>
       </div>
-
       <input type="submit" name="action" value="Submit" id="vote-submit" class="button-full button-gap">
       <input type="hidden" name="prev_id" value="{{ prev.id }}">
       <input type="hidden" name="next_id" value="{{ next.id }}">
       <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
     </form>
-
+    <script src="{{ url_for('static', filename='js/timer.js') }}"></script>
     <script src="{{ url_for('static', filename='js/smart-button-toggle.js') }}"></script>
   </div>
 </div>

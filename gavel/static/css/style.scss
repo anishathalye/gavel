@@ -354,3 +354,13 @@ input[type=submit].neutral {
     text-align: center;
   }
 }
+
+#startButton {
+    font-size: 1.5rem;
+    padding: 0.5rem 1rem;
+    background-color: $dark;
+    color: $light;
+    border: none;
+    cursor: pointer;
+    margin-bottom: 1rem;
+}

@@ -1,0 +1,10 @@
+<div id = "timer-container">
+    <label for="duration">Set Timer (defaults to 3 min): </label>
+    <input type="range" id="minutesRange" min="3" max="5" value = "3" step = "1">
+    <button id = "startButton" type = "button">Start Timer</button>
+    <div id = "timer">0:00</div>
+</div>
+<script>
+  const pingSoundPath = "{{ url_for('static', filename='sounds/ping.mp3') }}";
+</script>
+<script src="{{ url_for('static', filename='sounds/ping.mp3') }}"></script>
