@@ -297,3 +297,18 @@ def email_invite_links(annotators):
         utils.send_sendgrid_emails(emails)
     else:
         utils.send_emails.delay(emails)
+
+@app.route('/admin/live-data')
+@hackpsu_admin_required
+def admin_live_data():
+    """Return a lightweight JSON snapshot for auto-refresh."""
+    stats.check_send_telemetry()
+    statistical_summary = analytics.get_statistical_summary()
+    coverage_matrix = analytics.get_coverage_matrix()
+    voting_timeline = analytics.get_voting_timeline(hours=2)
+
+    return {
+        "statistical_summary": statistical_summary,
+        "coverage_matrix": coverage_matrix,
+        "voting_timeline": voting_timeline,
+    }
