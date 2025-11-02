@@ -39,4 +39,4 @@ wcwidth==0.2.5
 webassets==2.0
 Werkzeug==2.0.1
 xlrd==2.0.1
-zipp==3.5.0
+zipp==3.19.1
