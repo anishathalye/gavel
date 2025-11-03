@@ -4,6 +4,7 @@ from gavel.constants import *
 import gavel.settings as settings
 import gavel.utils as utils
 import gavel.crowd_bt as crowd_bt
+from gavel.firebase_session_auth import hackpsu_auth_required
 from flask import (
     redirect,
     render_template,
@@ -26,58 +27,50 @@ def requires_open(redirect_to):
         return decorated
     return decorator
 
-def requires_active_annotator(redirect_to):
-    def decorator(f):
-        @wraps(f)
-        def decorated(*args, **kwargs):
-            annotator = get_current_annotator()
-            if annotator is None or not annotator.active:
-                return redirect(url_for(redirect_to))
-            else:
-                return f(*args, **kwargs)
-        return decorated
-    return decorator
 
+@app.route('/health')
+def health():
+    """Health check endpoint - no auth required"""
+    return {'status': 'ok', 'service': 'gavel'}, 200
 
 @app.route('/')
+@hackpsu_auth_required
 def index():
     annotator = get_current_annotator()
-    if annotator is None:
+
+    # db.session.expire_all()
+
+    if Setting.value_of(SETTING_CLOSED) == SETTING_TRUE:
         return render_template(
-            'logged_out.html',
-            content=utils.render_markdown(settings.LOGGED_OUT_MESSAGE)
+            'closed.html',
+            content=utils.render_markdown(settings.CLOSED_MESSAGE)
         )
+    if not annotator.active:
+        return render_template(
+            'disabled.html',
+            content=utils.render_markdown(settings.DISABLED_MESSAGE)
+        )
+    if not annotator.read_welcome:
+        return redirect(url_for('welcome'))
+    maybe_init_annotator()
+    if annotator.next is None:
+        return render_template(
+            'wait.html',
+            content=utils.render_markdown(settings.WAIT_MESSAGE)
+        )
+    elif annotator.prev is None:
+        return render_template('begin.html', item=annotator.next)
     else:
-        if Setting.value_of(SETTING_CLOSED) == SETTING_TRUE:
-            return render_template(
-                'closed.html',
-                content=utils.render_markdown(settings.CLOSED_MESSAGE)
-            )
-        if not annotator.active:
-            return render_template(
-                'disabled.html',
-                content=utils.render_markdown(settings.DISABLED_MESSAGE)
-            )
-        if not annotator.read_welcome:
-            return redirect(url_for('welcome'))
-        maybe_init_annotator()
-        if annotator.next is None:
-            return render_template(
-                'wait.html',
-                content=utils.render_markdown(settings.WAIT_MESSAGE)
-            )
-        elif annotator.prev is None:
-            return render_template('begin.html', item=annotator.next)
-        else:
-            return render_template('vote.html', prev=annotator.prev, next=annotator.next)
+        return render_template('vote.html', prev=annotator.prev, next=annotator.next)
 
 @app.route('/vote', methods=['POST'])
 @requires_open(redirect_to='index')
-@requires_active_annotator(redirect_to='index')
+@hackpsu_auth_required
 def vote():
     def tx():
         annotator = get_current_annotator()
         if annotator.prev.id == int(request.form['prev_id']) and annotator.next.id == int(request.form['next_id']):
+            notes = request.form.get('notes', '').strip() or None
             if request.form['action'] == 'Skip':
                 annotator.ignore.append(annotator.next)
             else:
@@ -85,10 +78,10 @@ def vote():
                 if annotator.prev.active and annotator.next.active:
                     if request.form['action'] == 'Previous':
                         perform_vote(annotator, next_won=False)
-                        decision = Decision(annotator, winner=annotator.prev, loser=annotator.next)
+                        decision = Decision(annotator, winner=annotator.prev, loser=annotator.next, notes=notes)
                     elif request.form['action'] == 'Current':
                         perform_vote(annotator, next_won=True)
-                        decision = Decision(annotator, winner=annotator.next, loser=annotator.prev)
+                        decision = Decision(annotator, winner=annotator.next, loser=annotator.prev, notes=notes)
                     db.session.add(decision)
                 annotator.next.viewed.append(annotator) # counted as viewed even if deactivated
                 annotator.prev = annotator.next
@@ -100,7 +93,7 @@ def vote():
 
 @app.route('/begin', methods=['POST'])
 @requires_open(redirect_to='index')
-@requires_active_annotator(redirect_to='index')
+@hackpsu_auth_required
 def begin():
     def tx():
         annotator = get_current_annotator()
@@ -118,22 +111,27 @@ def begin():
 
 @app.route('/logout')
 def logout():
+    import os
     session.pop(ANNOTATOR_ID, None)
-    return redirect(url_for('index'))
+    # Redirect to HackPSU auth server logout
+    auth_logout_url = os.environ.get('AUTH_LOGOUT_URL', 'http://localhost:3000/api/sessionLogout')
+    gavel_url = os.environ.get('GAVEL_URL', 'http://localhost:5000')
+    return redirect(f'{auth_logout_url}?redirect={gavel_url}')
 
-@app.route('/login/<secret>/')
-def login(secret):
-    annotator = Annotator.by_secret(secret)
-    if annotator is None:
-        session.pop(ANNOTATOR_ID, None)
-        session.modified = True
-    else:
-        session[ANNOTATOR_ID] = annotator.id
-    return redirect(url_for('index'))
+# Old secret-based login removed - using HackPSU Firebase auth instead
+# @app.route('/login/<secret>/')
+# def login(secret):
+#     annotator = Annotator.by_secret(secret)
+#     if annotator is None:
+#         session.pop(ANNOTATOR_ID, None)
+#         session.modified = True
+#     else:
+#         session[ANNOTATOR_ID] = annotator.id
+#     return redirect(url_for('index'))
 
 @app.route('/welcome/')
 @requires_open(redirect_to='index')
-@requires_active_annotator(redirect_to='index')
+@hackpsu_auth_required
 def welcome():
     return render_template(
         'welcome.html',
@@ -142,7 +140,7 @@ def welcome():
 
 @app.route('/welcome/done', methods=['POST'])
 @requires_open(redirect_to='index')
-@requires_active_annotator(redirect_to='index')
+@hackpsu_auth_required
 def welcome_done():
     def tx():
         annotator = get_current_annotator()
@@ -237,3 +235,69 @@ def perform_vote(annotator, next_won):
     winner.sigma_sq = u_winner_sigma_sq
     loser.mu = u_loser_mu
     loser.sigma_sq = u_loser_sigma_sq
+
+from flask import jsonify
+
+@app.route('/api/judge_notes')
+@hackpsu_auth_required
+def get_judge_notes():
+    annotator = get_current_annotator()
+
+    # Retrieve all notes made by this judge (if stored in Decision model)
+    decisions = Decision.query.filter_by(annotator_id=annotator.id).all()
+
+    # Build a clean list of notes and associated project names
+    notes = []
+    for d in decisions:
+        if d.notes:  # only include those with actual notes
+            notes.append({
+                "project": d.winner.name if d.winner else "(Unknown Project)",
+                "note": d.notes
+                
+            })
+            
+
+    # Sort newest first 
+    notes = sorted(notes, key=lambda x: x["project"].lower())
+
+    return jsonify(notes)
+
+
+@app.route('/api/all_notes')
+@hackpsu_auth_required
+def all_notes():
+    """Return all projects (winner or loser) and all notes from all judges."""
+    decisions = Decision.query.filter(Decision.notes.isnot(None)).all()
+
+    data = {}
+
+    for d in decisions:
+        # For each decision, include the winner and loser projects if they exist
+        projects = []
+        if d.winner:
+            projects.append(d.winner.name)
+        if d.loser:
+            projects.append(d.loser.name)
+
+        for project_name in projects:
+            if project_name not in data:
+                data[project_name] = []
+            note_text = d.notes.strip()
+            if note_text and note_text not in data[project_name]:
+                data[project_name].append(note_text)
+
+    # Convert dict → list for frontend
+    formatted = [{"project": name, "notes": notes} for name, notes in data.items()]
+    formatted.sort(key=lambda x: x["project"].lower())
+
+    return jsonify(formatted)
+
+
+#automatic redirect when judging closes
+@app.route('/api/status')
+def status():
+    """Returns whether judging is closed."""
+    # db.session.expire_all()  #  Make sure we check fresh DB data
+    is_closed = Setting.value_of(SETTING_CLOSED) == SETTING_TRUE
+    return jsonify({"closed": is_closed})
+

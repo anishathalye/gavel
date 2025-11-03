@@ -1,11 +1,11 @@
 from gavel import app
 from gavel.models import *
-import gavel.utils as utils
+from gavel.firebase_session_auth import hackpsu_admin_required
 from flask import Response
 
 @app.route('/api/items.csv')
 @app.route('/api/projects.csv')
-@utils.requires_auth
+@hackpsu_admin_required
 def item_dump():
     items = Item.query.order_by(desc(Item.mu)).all()
     data = [['Mu', 'Sigma Squared', 'Name', 'Location', 'Description', 'Active']]
@@ -21,7 +21,7 @@ def item_dump():
 
 @app.route('/api/annotators.csv')
 @app.route('/api/judges.csv')
-@utils.requires_auth
+@hackpsu_admin_required
 def annotator_dump():
     annotators = Annotator.query.all()
     data = [['Name', 'Email', 'Description', 'Secret']]
@@ -34,7 +34,7 @@ def annotator_dump():
     return Response(utils.data_to_csv_string(data), mimetype='text/csv')
 
 @app.route('/api/decisions.csv')
-@utils.requires_auth
+@hackpsu_admin_required
 def decisions_dump():
     decisions = Decision.query.all()
     data = [['Annotator ID', 'Winner ID', 'Loser ID', 'Time']]

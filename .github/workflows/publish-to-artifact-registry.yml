@@ -1,0 +1,41 @@
+# .github/workflows/publish-to-artifact-registry.yml
+name: Build & Push to Google Artifact Registry
+
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v3
+        with:
+          # A GCP service-account JSON with Artifact Registry Writer role
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+      - name: Configure GCloud
+        uses: google-github-actions/setup-gcloud@v3
+        with:
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+
+      - name: Configure Docker to use Artifact Registry
+        run: |
+          gcloud auth configure-docker us-east4-docker.pkg.dev -q
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: Dockerfile.prod
+          push: true
+          tags: us-east4-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/gavel/image:latest,us-east4-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/gavel/image:${{ github.sha }}
