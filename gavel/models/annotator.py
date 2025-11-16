@@ -56,7 +56,7 @@ class Annotator(db.Model):
         if uid is None:
             return None
         try:
-            annotator = cls.query.with_for_update().get(uid)
+            annotator = cls.query.get(uid)
         except NoResultFound:
             annotator = None
         return annotator
