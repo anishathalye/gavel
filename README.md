@@ -93,11 +93,17 @@ gavel:celery worker`.
 Before starting the app, copy `config.template.yaml` to `config.yaml` and set
 all the required settings (the ones that don't have default values).
 
-Most settings can either be set in `config.yaml` or set as environment
-variables. There's more detailed documentation in `config.template.yaml`.
+
+Most settings can either be set in `config.yaml` or set as environment variables. There's more detailed documentation in `config.template.yaml`.
 
 If you don't want to use the config file and use only environment variables,
 set the environment variable `IGNORE_CONFIG_FILE=true`.
+
+### Google Site Verification (Heroku/SEO)
+
+If you need to verify your site with Google Search Console (e.g., [to avoid Chrome labeling your site as "dangerous" when deploying to Heroku](https://stackoverflow.com/questions/78442495/why-do-i-get-dangerous-site-warning-for-my-heroku-app-even-after-i-registered)), follow [Google's instructions](https://support.google.com/webmasters/answer/9008080?hl=en). Use the "HTML file upload" method which directs you to the [Google Search Console](https://search.google.com/search-console/not-verified?original_url=/search-console/ownership&original_resource_id). You can use the "URL Prefix" (e.g., `https://<my-app-name>-<app-id>.herokuapp.com`) method rather than the domain verification option, which just means it doesn't cover other domains like m://my-heroku-app-name-a1b2c3.herokuapp.com (note the `m` rather than `https`). A custom domain can be set via the app's Heroku settings, but that is not covered here.
+
+Once you download the file, you can use the `GOOGLE_SITE_VERIFICATION_FILENAME` environment variable. When set (for example, to `googlea1b2c3d4e5.html`), the app will automatically serve a file at the root path with the correct content for Google verification. You only need the filename; the file will be automatically generated based on the filename environment variable (i.e., after this step you can ignore the file you manually downloaded). Back in the Google Search Console, you will need to click "Verify". NOTE: The site verification process may take a few days.
 
 ## Troubleshooting
 
