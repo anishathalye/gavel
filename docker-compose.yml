@@ -1,0 +1,148 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  db:
+    image: postgres:14-alpine
+    container_name: gavel-postgres
+    environment:
+      POSTGRES_DB: gavel
+      POSTGRES_USER: gavel
+      POSTGRES_PASSWORD: gavel_dev_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U gavel"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # Redis for Celery
+  redis:
+    image: redis:7-alpine
+    container_name: gavel-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  # HackPSU Auth Service
+  auth:
+    build:
+      context: .
+      dockerfile: Dockerfile.auth
+    container_name: gavel-auth
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env.auth
+
+  # Gavel Web Application
+  web:
+    build: .
+    container_name: gavel-web
+    ports:
+      - "5001:5001"
+    environment:
+      # Database (use container networking)
+      DATABASE_URL: postgresql://gavel:gavel_dev_password@db:5432/gavel
+      DB_URI: postgresql://gavel:gavel_dev_password@db:5432/gavel
+      ADMIN_PASSWORD: adminpassword
+
+      # Redis (use container networking)
+      REDIS_URL: redis://redis:6379/0
+      BROKER_URI: redis://redis:6379/0
+
+      # Flask
+      SECRET_KEY: dev-secret-key-change-in-production
+      DEBUG: "true"
+
+      # HackPSU Firebase Auth
+      AUTH_ENVIRONMENT: production
+      MIN_JUDGE_ROLE: 2
+      MIN_ADMIN_ROLE: 4
+      AUTH_SERVER_URL: http://auth:3000/api/sessionUser
+      AUTH_LOGIN_URL: http://localhost:3000/login
+      AUTH_LOGOUT_URL: http://auth:3000/api/sessionLogout
+      GAVEL_URL: http://localhost:5001
+      PORT: 5001
+
+      # Email (disabled for local dev)
+      DISABLE_EMAIL: "true"
+      EMAIL_FROM: noreply@localhost
+      EMAIL_USER: unused
+      EMAIL_PASSWORD: unused
+
+      # Other settings
+      PROXY: "false"
+      SEND_STATS: "false"
+      MIN_VIEWS: 0
+      TIMEOUT: 5.0
+
+      # Project sync from HackPSU API
+      ENABLE_PROJECT_SYNC: "true"
+      HACKPSU_API_URL: "https://apiv3.staging.hackpsu.org/judging/projects"
+      PROJECT_SYNC_INTERVAL: 300  # seconds (5 minutes)
+
+      # Ignore config file, use env vars
+      IGNORE_CONFIG_FILE: "true"
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - ./gavel:/app/gavel
+      - ./static:/app/static
+    command: >
+      sh -c "
+        echo 'Waiting for database...' &&
+        sleep 2 &&
+        echo 'Initializing database...' &&
+        python initialize.py &&
+        echo 'Starting Gavel...' &&
+        python runserver.py
+      "
+
+  # Celery Worker (for email tasks, optional for local dev)
+  celery:
+    build: .
+    container_name: gavel-celery
+    environment:
+      # Database
+      DATABASE_URL: postgresql://gavel:gavel_dev_password@db:5432/gavel
+      DB_URI: postgresql://gavel:gavel_dev_password@db:5432/gavel
+
+      # Redis
+      REDIS_URL: redis://redis:6379/0
+      BROKER_URI: redis://redis:6379/0
+
+      # Flask
+      SECRET_KEY: dev-secret-key-change-in-production
+
+      # Other settings
+      DISABLE_EMAIL: "true"
+      IGNORE_CONFIG_FILE: "true"
+    depends_on:
+      - db
+      - redis
+      - web
+    volumes:
+      - ./gavel:/app/gavel
+    command: celery -A gavel:celery worker --loglevel=info
+
+volumes:
+  postgres_data:
+  redis_data:
+
+networks:
+  default:
+    name: gavel-network
+    driver: bridge

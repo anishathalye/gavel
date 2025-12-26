@@ -1,5 +1,65 @@
 {% extends "layout.html" %}
 {% block title %}Admin{% endblock %}
+{% block head %}
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<style>
+.graph-container {
+  width: 100%;
+  height: 600px;
+  border: 1px solid #e4e4e4;
+  border-radius: 4px;
+  background: #ffffff;
+  position: relative;
+  overflow: hidden;
+}
+.graph-tooltip {
+  position: absolute;
+  padding: 8px 12px;
+  background: rgba(0, 0, 0, 0.85);
+  color: white;
+  border-radius: 4px;
+  font-size: 12px;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s;
+  z-index: 1000;
+}
+.node {
+  cursor: pointer;
+  stroke: #173753;
+  stroke-width: 1.5px;
+}
+.link {
+  stroke: #999;
+  stroke-opacity: 0.6;
+}
+
+/* Table overflow handling */
+.info {
+  overflow-x: auto;
+  width: 100%;
+}
+
+table {
+  min-width: 100%;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .graph-container {
+    height: 400px;
+  }
+
+  table {
+    font-size: 14px;
+  }
+
+  td, th {
+    padding: 0.5rem;
+  }
+}
+</style>
+{% endblock %}
 {% block content %}
 <div class="item">
   <div class="banner" id="admin-header">
@@ -9,10 +69,86 @@
 
 <div class="item">
   <div class="banner">
-    <h2>Stats</h2>
+    <h2>Statistical Summary</h2>
   </div>
   <div class="info">
-    <p><strong>Votes: </strong>{{ votes }}</p>
+    <p><strong>Total Comparisons:</strong> {{ statistical_summary.total_comparisons }}</p>
+    <p><strong>Active Judges:</strong> {{ statistical_summary.active_judges }} of {{ statistical_summary.total_judges }} total</p>
+    <p><strong>Avg Comparisons/Project:</strong> {{ statistical_summary.avg_comparisons_per_project }}</p>
+    <p><strong>Completion:</strong> {{ statistical_summary.completion_percentage }}%</p>
+    <p><strong>Convergence Status:</strong> {{ statistical_summary.convergence_status }} (Avg σ²: {{ statistical_summary.avg_uncertainty }})</p>
+    <p><strong>Estimated Votes Needed:</strong> {{ statistical_summary.estimated_votes_needed }} to converge</p>
+    <p><strong>Coverage:</strong> {{ coverage_matrix.coverage_percentage | round(1) }}% of possible pairs compared</p>
+    <p><strong>Avg Comparisons per Pair:</strong> {{ coverage_matrix.avg_comparisons_per_pair | round(1) }}</p>
+    <p><strong>Votes Last Minute:</strong> {{ voting_timeline.votes_last_minute }}</p>
+    <p><strong>Peak Activity:</strong> {{ voting_timeline.peak_time or 'N/A' }}</p>
+    <p><strong>Avg Votes/Minute:</strong> {{ voting_timeline.avg_votes_per_minute | round(2) }}</p>
+    {% if statistical_summary.high_uncertainty_projects %}
+    <p><strong>High Uncertainty Projects:</strong></p>
+    <ul>
+      {% for project_name, sigma_sq in statistical_summary.high_uncertainty_projects %}
+      <li>{{ project_name }} (σ²: {{ sigma_sq | round(3) }})</li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+    {% if coverage_matrix.under_compared_pairs %}
+    <details>
+      <summary style="cursor: pointer; font-weight: bold; color: #dc3545;">Under-Compared Project Pairs</summary>
+      <ul style="margin-top: 10px;">
+        {% for pair in coverage_matrix.under_compared_pairs %}
+        <li>{{ pair.project_a }} ↔ {{ pair.project_b }} ({{ pair.comparisons }} comparisons)</li>
+        {% endfor %}
+      </ul>
+    </details>
+    {% endif %}
+  </div>
+</div>
+
+<div class="item">
+  <div class="banner">
+    <h2>Voting Activity Timeline (15s intervals, Last 2 Hours)</h2>
+  </div>
+  <div class="info">
+    <div style="width: 100%; height: 400px;">
+      <canvas id="votingTimelineChart"></canvas>
+    </div>
+  </div>
+</div>
+
+<div class="item">
+  <div class="banner">
+    <h2>All Decisions ({{ all_decisions | length }} total)</h2>
+  </div>
+  <div class="info">
+    <details open>
+      <summary style="cursor: pointer; font-weight: bold; margin-bottom: 10px;">View All Decisions</summary>
+      <div style="overflow-x: auto; margin-top: 10px;">
+        <table id="decisions" style="width: 100%; font-size: 13px;">
+          <thead>
+            <tr>
+              <th data-sort-method="number">ID</th>
+              <th data-sort-method="caseInsensitiveSort">Judge</th>
+              <th data-sort-method="caseInsensitiveSort">Winner</th>
+              <th data-sort-method="caseInsensitiveSort">Loser</th>
+              <th data-sort-method="caseInsensitiveSort" class="sort-default" data-sort-order="desc">Time</th>
+              <th data-sort-method="caseInsensitiveSort">Notes</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for decision in all_decisions %}
+            <tr>
+              <td>{{ decision.id }}</td>
+              <td><a href="{{ url_for('annotator_detail', annotator_id=decision.annotator.id) }}">{{ decision.annotator.name }}</a></td>
+              <td><a href="{{ url_for('item_detail', item_id=decision.winner.id) }}" style="color: #28a745; font-weight: bold;">{{ decision.winner.name }}</a></td>
+              <td><a href="{{ url_for('item_detail', item_id=decision.loser.id) }}" style="color: #dc3545;">{{ decision.loser.name }}</a></td>
+              <td>{{ decision.time.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+              <td>{% if decision.notes %}{{ decision.notes }}{% endif %}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </details>
   </div>
 </div>
 
@@ -94,6 +230,8 @@
           <th data-sort-method="caseInsensitiveSort">Email</th>
           <th data-sort-method="caseInsensitiveSort">Description</th>
           <th data-sort-method="number">Votes</th>
+          <th data-sort-method="number">Alpha</th>
+          <th data-sort-method="number">Beta</th>
           <th data-sort-method="number">Next (Id)</th>
           <th data-sort-method="number">Previous (Id)</th>
           <th data-sort-method="number" data-sort-order="desc">Updated</th>
@@ -110,6 +248,8 @@
           <td>{{ annotator.email }}</td>
           <td>{{ annotator.description }}</td>
           <td>{{ counts.get(annotator.id, 0) }}</td>
+          <td>{{ annotator.alpha | round(4) }}</td>
+          <td>{{ annotator.beta | round(4) }}</td>
           <td data-sort="{{ annotator.next_id or -1 }}">{{ annotator.next_id }}</td>
           <td data-sort="{{ annotator.prev_id or -1 }}">{{ annotator.prev_id }}</td>
           <td data-sort="{{ annotator.updated | utcdatetime_epoch }}">{{ annotator.updated | utcdatetime_local }}</td>
@@ -146,7 +286,33 @@
 
 <div class="item">
   <div class="banner">
-    <h2>Add Projects</h2>
+    <h2>Comparison Network</h2>
+  </div>
+  <div class="info">
+    <div class="graph-container" id="comparison-graph"></div>
+    <div class="graph-tooltip" id="graph-tooltip"></div>
+    <p style="margin-top: 1rem; color: #666; font-size: 0.9rem;">
+      Node size represents project score (μ). Links show win relationships. Drag nodes to explore.
+    </p>
+  </div>
+</div>
+
+<div class="item">
+  <div class="banner">
+    <h2>Sync Projects from API</h2>
+  </div>
+  <div class="info">
+    <p>Automatically sync projects from HackPSU API (runs every 5 minutes)</p>
+    <form action="{{ url_for('sync_projects') }}" method="post">
+      <input type="submit" value="Sync Now" class="button-full positive">
+      <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+    </form>
+  </div>
+</div>
+
+<div class="item">
+  <div class="banner">
+    <h2>Add Projects Manually</h2>
   </div>
   <div class="info">
     <p>Add name, location, description (CSV format)</p>
@@ -216,9 +382,338 @@
 var tables = [
   document.getElementById('items'),
   document.getElementById('annotators'),
+  document.getElementById('decisions'),
 ];
 for (var i = 0; i < tables.length; i++) {
-  new Tablesort(tables[i]);
+  if (tables[i]) {
+    new Tablesort(tables[i]);
+  }
 }
+
+// D3.js Force-Directed Graph
+(function() {
+  const graphData = {{ graph_data | tojson }};
+  const container = document.getElementById('comparison-graph');
+  const tooltip = document.getElementById('graph-tooltip');
+
+  if (!graphData.nodes.length) {
+    container.innerHTML = '<div style="display: flex; align-items: center; justify-content: center; height: 100%; color: #666;">No comparison data available yet.</div>';
+    return;
+  }
+
+  const width = container.clientWidth;
+  const height = container.clientHeight;
+
+  const svg = d3.select('#comparison-graph')
+    .append('svg')
+    .attr('width', width)
+    .attr('height', height);
+
+  // Color scale based on mu score
+  const muValues = graphData.nodes.map(d => d.mu);
+  const colorScale = d3.scaleSequential(d3.interpolateRdYlGn)
+    .domain([Math.min(...muValues), Math.max(...muValues)]);
+
+  // Create force simulation
+  const simulation = d3.forceSimulation(graphData.nodes)
+    .force('link', d3.forceLink(graphData.links)
+      .id(d => d.id)
+      .distance(100)
+      .strength(0.5))
+    .force('charge', d3.forceManyBody().strength(-300))
+    .force('center', d3.forceCenter(width / 2, height / 2))
+    .force('collision', d3.forceCollide().radius(d => d.size + 5));
+
+  // Create links
+  const link = svg.append('g')
+    .selectAll('line')
+    .data(graphData.links)
+    .enter()
+    .append('line')
+    .attr('class', 'link')
+    .attr('stroke-width', d => Math.sqrt(d.weight));
+
+  // Create arrow markers
+  svg.append('defs').selectAll('marker')
+    .data(['arrow'])
+    .enter()
+    .append('marker')
+    .attr('id', 'arrow')
+    .attr('viewBox', '0 -5 10 10')
+    .attr('refX', 20)
+    .attr('refY', 0)
+    .attr('markerWidth', 6)
+    .attr('markerHeight', 6)
+    .attr('orient', 'auto')
+    .append('path')
+    .attr('d', 'M0,-5L10,0L0,5')
+    .attr('fill', '#999');
+
+  link.attr('marker-end', 'url(#arrow)');
+
+  // Create nodes
+  const node = svg.append('g')
+    .selectAll('circle')
+    .data(graphData.nodes)
+    .enter()
+    .append('circle')
+    .attr('class', 'node')
+    .attr('r', d => d.size)
+    .attr('fill', d => colorScale(d.mu))
+    .call(d3.drag()
+      .on('start', dragstarted)
+      .on('drag', dragged)
+      .on('end', dragended))
+    .on('mouseover', function(event, d) {
+      d3.select(this)
+        .transition()
+        .duration(200)
+        .attr('r', d.size * 1.3);
+
+      tooltip.style.opacity = 1;
+      tooltip.innerHTML = `
+        <strong>${d.name}</strong><br/>
+        μ: ${d.mu.toFixed(4)}<br/>
+        σ²: ${d.sigma_sq.toFixed(4)}
+      `;
+    })
+    .on('mousemove', function(event) {
+      tooltip.style.left = (event.pageX + 10) + 'px';
+      tooltip.style.top = (event.pageY - 10) + 'px';
+    })
+    .on('mouseout', function(event, d) {
+      d3.select(this)
+        .transition()
+        .duration(200)
+        .attr('r', d.size);
+
+      tooltip.style.opacity = 0;
+    });
+
+  // Update positions on simulation tick
+  simulation.on('tick', () => {
+    link
+      .attr('x1', d => d.source.x)
+      .attr('y1', d => d.source.y)
+      .attr('x2', d => d.target.x)
+      .attr('y2', d => d.target.y);
+
+    node
+      .attr('cx', d => Math.max(d.size, Math.min(width - d.size, d.x)))
+      .attr('cy', d => Math.max(d.size, Math.min(height - d.size, d.y)));
+  });
+
+  // Drag functions
+  function dragstarted(event, d) {
+    if (!event.active) simulation.alphaTarget(0.3).restart();
+    d.fx = d.x;
+    d.fy = d.y;
+  }
+
+  function dragged(event, d) {
+    d.fx = event.x;
+    d.fy = event.y;
+  }
+
+  function dragended(event, d) {
+    if (!event.active) simulation.alphaTarget(0);
+    d.fx = null;
+    d.fy = null;
+  }
+
+  // Update link stroke width based on comparison count (weight)
+  link.attr('stroke-width', d => Math.sqrt(d.weight) + 1);
+})();
+
+// ========================================
+// VOTING TIMELINE CHART (Line Chart with Area Fill)
+// ========================================
+(() => {
+  const votingData = {{ voting_timeline.timeline_data | tojson }};
+  const canvas = document.getElementById('votingTimelineChart');
+  if (!canvas) return;
+
+  const ctx = canvas.getContext('2d');
+  const container = canvas.parentElement;
+  const width = container.clientWidth;
+  const height = container.clientHeight || 400;
+  canvas.width = width;
+  canvas.height = height;
+
+  const padding = {top: 30, right: 40, bottom: 50, left: 60};
+  const chartWidth = width - padding.left - padding.right;
+  const chartHeight = height - padding.top - padding.bottom;
+
+  if (votingData.length === 0) {
+    ctx.fillStyle = '#666';
+    ctx.font = '14px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('No voting data available', width / 2, height / 2);
+    return;
+  }
+
+  const maxCount = Math.max(...votingData.map(d => d.count), 1);
+  const pointSpacing = chartWidth / (votingData.length - 1 || 1);
+
+  // Draw grid lines
+  ctx.strokeStyle = '#e0e0e0';
+  ctx.lineWidth = 1;
+  const numGridLines = 5;
+  for (let i = 0; i <= numGridLines; i++) {
+    const y = padding.top + (chartHeight / numGridLines) * i;
+    ctx.beginPath();
+    ctx.moveTo(padding.left, y);
+    ctx.lineTo(width - padding.right, y);
+    ctx.stroke();
+
+    // Y-axis labels
+    const value = Math.round(maxCount * (1 - i / numGridLines));
+    ctx.fillStyle = '#666';
+    ctx.font = '11px sans-serif';
+    ctx.textAlign = 'right';
+    ctx.fillText(value, padding.left - 10, y + 4);
+  }
+
+  // Create gradient for area fill
+  const gradient = ctx.createLinearGradient(0, padding.top, 0, height - padding.bottom);
+  gradient.addColorStop(0, 'rgba(0, 123, 255, 0.3)');
+  gradient.addColorStop(1, 'rgba(0, 123, 255, 0.05)');
+
+  // Draw area fill
+  ctx.beginPath();
+  ctx.moveTo(padding.left, height - padding.bottom);
+  votingData.forEach((d, i) => {
+    const x = padding.left + i * pointSpacing;
+    const y = height - padding.bottom - (d.count / maxCount) * chartHeight;
+    if (i === 0) {
+      ctx.lineTo(x, y);
+    } else {
+      ctx.lineTo(x, y);
+    }
+  });
+  ctx.lineTo(width - padding.right, height - padding.bottom);
+  ctx.closePath();
+  ctx.fillStyle = gradient;
+  ctx.fill();
+
+  // Draw line
+  ctx.beginPath();
+  votingData.forEach((d, i) => {
+    const x = padding.left + i * pointSpacing;
+    const y = height - padding.bottom - (d.count / maxCount) * chartHeight;
+    if (i === 0) {
+      ctx.moveTo(x, y);
+    } else {
+      ctx.lineTo(x, y);
+    }
+  });
+  ctx.strokeStyle = '#007bff';
+  ctx.lineWidth = 2.5;
+  ctx.stroke();
+
+  // Draw points
+  votingData.forEach((d, i) => {
+    if (d.count > 0) {
+      const x = padding.left + i * pointSpacing;
+      const y = height - padding.bottom - (d.count / maxCount) * chartHeight;
+
+      ctx.beginPath();
+      ctx.arc(x, y, 4, 0, 2 * Math.PI);
+      ctx.fillStyle = '#007bff';
+      ctx.fill();
+      ctx.strokeStyle = '#fff';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+    }
+  });
+
+  // Draw axes
+  ctx.strokeStyle = '#333';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(padding.left, height - padding.bottom);
+  ctx.lineTo(width - padding.right, height - padding.bottom);
+  ctx.stroke();
+
+  ctx.beginPath();
+  ctx.moveTo(padding.left, padding.top);
+  ctx.lineTo(padding.left, height - padding.bottom);
+  ctx.stroke();
+
+  // Draw x-axis labels (show every Nth label to avoid overlap)
+  ctx.fillStyle = '#666';
+  ctx.font = '10px sans-serif';
+  ctx.textAlign = 'center';
+  const labelInterval = Math.max(1, Math.floor(votingData.length / 12)); // Show ~12 labels max
+  votingData.forEach((d, i) => {
+    if (i % labelInterval === 0 || i === votingData.length - 1) {
+      const x = padding.left + i * pointSpacing;
+      ctx.fillText(d.display_time, x, height - padding.bottom + 20);
+    }
+  });
+
+  // Draw axis labels
+  ctx.fillStyle = '#333';
+  ctx.font = 'bold 12px sans-serif';
+
+  // Y-axis label
+  ctx.save();
+  ctx.translate(20, height / 2);
+  ctx.rotate(-Math.PI / 2);
+  ctx.textAlign = 'center';
+  ctx.fillText('Votes per 15s', 0, 0);
+  ctx.restore();
+
+  // X-axis label
+  ctx.textAlign = 'center';
+  ctx.fillText('Time', width / 2, height - 10);
+})();
+
+async function refreshDashboard() {
+  try {
+    const response = await fetch("/admin/live-data");
+    const data = await response.json();
+
+    const stats = data.statistical_summary;
+    const coverage = data.coverage_matrix;
+    const timeline = data.voting_timeline;
+
+    // Update text in Statistical Summary section
+    document.querySelectorAll(".info p").forEach(p => {
+      if (p.innerText.includes("Total Comparisons")) {
+        p.innerHTML = `<strong>Total Comparisons:</strong> ${stats.total_comparisons}`;
+      } else if (p.innerText.includes("Active Judges")) {
+        p.innerHTML = `<strong>Active Judges:</strong> ${stats.active_judges} of ${stats.total_judges} total`;
+      } else if (p.innerText.includes("Avg Comparisons/Project")) {
+        p.innerHTML = `<strong>Avg Comparisons/Project:</strong> ${stats.avg_comparisons_per_project.toFixed(2)}`;
+      } else if (p.innerText.includes("Completion")) {
+        p.innerHTML = `<strong>Completion:</strong> ${stats.completion_percentage.toFixed(1)}%`;
+      } else if (p.innerText.includes("Convergence Status")) {
+        p.innerHTML = `<strong>Convergence Status:</strong> ${stats.convergence_status} (Avg σ²: ${stats.avg_uncertainty.toFixed(3)})`;
+      } else if (p.innerText.includes("Estimated Votes Needed")) {
+        p.innerHTML = `<strong>Estimated Votes Needed:</strong> ${stats.estimated_votes_needed}`;
+      } else if (p.innerText.includes("Coverage:")) {
+        p.innerHTML = `<strong>Coverage:</strong> ${coverage.coverage_percentage.toFixed(1)}% of possible pairs compared`;
+      } else if (p.innerText.includes("Avg Comparisons per Pair")) {
+        p.innerHTML = `<strong>Avg Comparisons per Pair:</strong> ${coverage.avg_comparisons_per_pair.toFixed(1)}`;
+      } else if (p.innerText.includes("Votes Last Minute")) {
+        p.innerHTML = `<strong>Votes Last Minute:</strong> ${timeline.votes_last_minute}`;
+      } else if (p.innerText.includes("Peak Activity")) {
+        p.innerHTML = `<strong>Peak Activity:</strong> ${timeline.peak_time || 'N/A'}`;
+      } else if (p.innerText.includes("Avg Votes/Minute")) {
+        p.innerHTML = `<strong>Avg Votes/Minute:</strong> ${timeline.avg_votes_per_minute.toFixed(2)}`;
+      }
+    });
+
+    console.log(" Auto-refreshed admin stats at", new Date().toLocaleTimeString());
+  } catch (err) {
+    console.error("Error refreshing dashboard:", err);
+  }
+}
+
+// Run immediately + every 25 seconds
+refreshDashboard();
+setInterval(refreshDashboard, 25000);
+
 </script>
 {% endblock %}

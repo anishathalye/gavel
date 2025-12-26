@@ -4,11 +4,15 @@ from gavel.constants import *
 import gavel.settings as settings
 import gavel.utils as utils
 import gavel.stats as stats
+import gavel.analytics as analytics
+from gavel.firebase_session_auth import hackpsu_admin_required
+from gavel.project_sync import sync_projects_from_api
 from flask import (
     redirect,
     render_template,
     request,
     url_for,
+    flash,
 )
 import urllib.parse
 import xlrd
@@ -16,7 +20,7 @@ import xlrd
 ALLOWED_EXTENSIONS = set(['csv', 'xlsx', 'xls'])
 
 @app.route('/admin/')
-@utils.requires_auth
+@hackpsu_admin_required
 def admin():
     stats.check_send_telemetry()
     annotators = Annotator.query.order_by(Annotator.id).all()
@@ -39,6 +43,19 @@ def admin():
                 skipped[i.id] = skipped.get(i.id, 0) + 1
     # settings
     setting_closed = Setting.value_of(SETTING_CLOSED) == SETTING_TRUE
+
+    # Graph visualization data
+    G = analytics.build_comparison_graph()
+    graph_data = analytics.generate_graph_data_for_visualization(G)
+
+    # New analytics data
+    coverage_matrix = analytics.get_coverage_matrix()
+    voting_timeline = analytics.get_voting_timeline(hours=2)
+    statistical_summary = analytics.get_statistical_summary()
+
+    # Get all decisions for the decisions table (sorted by most recent first)
+    all_decisions = Decision.query.order_by(Decision.time.desc()).all()
+
     return render_template(
         'admin.html',
         annotators=annotators,
@@ -48,10 +65,15 @@ def admin():
         items=items,
         votes=len(decisions),
         setting_closed=setting_closed,
+        graph_data=graph_data,
+        coverage_matrix=coverage_matrix,
+        voting_timeline=voting_timeline,
+        statistical_summary=statistical_summary,
+        all_decisions=all_decisions
     )
 
 @app.route('/admin/item', methods=['POST'])
-@utils.requires_auth
+@hackpsu_admin_required
 def item():
     action = request.form['action']
     if action == 'Submit':
@@ -120,7 +142,7 @@ def parse_upload_form():
 
 
 @app.route('/admin/item_patch', methods=['POST'])
-@utils.requires_auth
+@hackpsu_admin_required
 def item_patch():
     def tx():
         item = Item.by_id(request.form['item_id'])
@@ -137,7 +159,7 @@ def item_patch():
     return redirect(url_for('item_detail', item_id=item.id))
 
 @app.route('/admin/annotator', methods=['POST'])
-@utils.requires_auth
+@hackpsu_admin_required
 def annotator():
     action = request.form['action']
     if action == 'Submit':
@@ -188,7 +210,7 @@ def annotator():
     return redirect(url_for('admin'))
 
 @app.route('/admin/setting', methods=['POST'])
-@utils.requires_auth
+@hackpsu_admin_required
 def setting():
     key = request.form['key']
     if key == 'closed':
@@ -198,8 +220,18 @@ def setting():
         db.session.commit()
     return redirect(url_for('admin'))
 
+@app.route('/admin/sync-projects', methods=['POST'])
+@hackpsu_admin_required
+def sync_projects():
+    """Manually trigger project sync from HackPSU API"""
+    try:
+        sync_projects_from_api()
+        return redirect(url_for('admin'))
+    except Exception as e:
+        return utils.server_error(f'Failed to sync projects: {str(e)}')
+
 @app.route('/admin/item/<item_id>/')
-@utils.requires_auth
+@hackpsu_admin_required
 def item_detail(item_id):
     item = Item.by_id(item_id)
     if not item:
@@ -221,7 +253,7 @@ def item_detail(item_id):
         )
 
 @app.route('/admin/annotator/<annotator_id>/')
-@utils.requires_auth
+@hackpsu_admin_required
 def annotator_detail(annotator_id):
     annotator = Annotator.by_id(annotator_id)
     if not annotator:
@@ -244,7 +276,9 @@ def annotator_detail(annotator_id):
         )
 
 def annotator_link(annotator):
-        return url_for('login', secret=annotator.secret, _external=True)
+        import os
+        gavel_url = os.environ.get('GAVEL_URL', 'http://localhost:5000')
+        return gavel_url
 
 def email_invite_links(annotators):
     if settings.DISABLE_EMAIL or annotators is None:
@@ -263,3 +297,18 @@ def email_invite_links(annotators):
         utils.send_sendgrid_emails(emails)
     else:
         utils.send_emails.delay(emails)
+
+@app.route('/admin/live-data')
+@hackpsu_admin_required
+def admin_live_data():
+    """Return a lightweight JSON snapshot for auto-refresh."""
+    stats.check_send_telemetry()
+    statistical_summary = analytics.get_statistical_summary()
+    coverage_matrix = analytics.get_coverage_matrix()
+    voting_timeline = analytics.get_voting_timeline(hours=2)
+
+    return {
+        "statistical_summary": statistical_summary,
+        "coverage_matrix": coverage_matrix,
+        "voting_timeline": voting_timeline,
+    }

@@ -10,8 +10,10 @@ class Decision(db.Model):
     loser_id = db.Column(db.Integer, db.ForeignKey('item.id'))
     loser = db.relationship('Item', foreign_keys=[loser_id], uselist=False)
     time = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
+    notes = db.Column(db.Text, nullable=True)
 
-    def __init__(self, annotator, winner, loser):
+    def __init__(self, annotator, winner, loser, notes=None):
         self.annotator = annotator
         self.winner = winner
         self.loser = loser
+        self.notes = notes
